@@ -1,0 +1,59 @@
+.notFoundContainer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background-color: var(--background-color);
+  }
+  
+  .title {
+    color: var(--heading-color);
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .message {
+    color: var(--blog-post-text-color);
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .funnyGif {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 30px;
+    border-radius: 8px;
+  }
+  
+  .returnButton {
+    display: inline-block;
+    background-color: var(--button-color);
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .returnButton:hover {
+    background-color: var(--button-hover-color);
+  }
+  
+  @media (max-width: 600px) {
+    .title {
+      font-size: 2rem;
+    }
+  
+    .message {
+      font-size: 1rem;
+    }
+  
+    .returnButton {
+      font-size: 0.9rem;
+      padding: 10px 20px;
+    }
+  }

@@ -1,0 +1,54 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .content {
+    background-color: #1f2937;
+    padding: 2rem;
+    border-radius: 8px;
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #9ca3af;
+  }
+  
+  .heading {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .toggleButton {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-align: center;
+    display: block;
+  }
+  
+  .toggleButton:hover {
+    color: #2563eb;
+  }
