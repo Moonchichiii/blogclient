@@ -1,5 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { logout as logoutAPI } from '../api/auth';  // Import the logout API function
+
+export const logoutUser = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutAPI();
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Logout failed');
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -23,14 +37,21 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    logout: (state) => {
-      state.isAuthenticated = false;
+    clearError: (state) => {
       state.error = null;
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isAuthenticated = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.payload;
+      });
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, clearError,logout } = authSlice.actions;
 export default authSlice.reducer;

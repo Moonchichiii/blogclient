@@ -1,0 +1,171 @@
+.navbarContainer {
+    position: relative;
+}
+
+.nav {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.burger {
+    position: relative;
+    width: 40px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+    display: block;
+    z-index: 1001;
+    margin-left: auto; /* Move burger to the right */
+}
+
+.burger span {
+    display: block;
+    position: absolute;
+    height: 4px;
+    width: 100%;
+    background: var(--text-color);
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+}
+
+.burger span:nth-of-type(1) {
+    top: 0px;
+    transform-origin: left center;
+}
+
+.burger span:nth-of-type(2) {
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+}
+
+.burger span:nth-of-type(3) {
+    top: 100%;
+    transform-origin: left center;
+    transform: translateY(-100%);
+}
+
+/* Animation for open state */
+.burger span.open:nth-of-type(1) {
+    transform: rotate(45deg);
+    top: 0;
+    left: 5px;
+}
+
+.burger span.open:nth-of-type(2) {
+    width: 0%;
+    opacity: 0;
+}
+
+.burger span.open:nth-of-type(3) {
+    transform: rotate(-45deg);
+    top: 28px;
+    left: 5px;
+}
+
+.menuContainer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    transition: right 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.menuOpen {
+    right: 0;
+}
+
+.navLinks,
+.authButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.navLinks a,
+.authButton {
+    color: var(--text-color);
+    text-decoration: none;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.navLinks a:hover,
+.authButton:hover {
+    color: var(--nav-link-hover-color);
+}
+
+.authButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.header {
+    padding: 6rem 2rem 2rem;
+    background: var(--background-color);
+}
+
+.header h1 {
+    font-family: var(--heading-font);
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0;
+    color: var(--heading-color);
+}
+
+@media screen and (min-width: 768px) {
+    .burger {
+        display: none;
+    }
+
+    .menuContainer {
+        position: static;
+        background-color: transparent;
+        backdrop-filter: none;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+
+    .navLinks,
+    .authButtons {
+        flex-direction: row;
+        margin-bottom: 0;
+    }
+
+    .navLinks a,
+    .authButton {
+        margin: 0 0.5rem;
+    }
+
+    .header {
+        padding: 4rem 2rem 2rem;
+    }
+
+    .header h1 {
+        font-size: 3rem;
+    }
+}

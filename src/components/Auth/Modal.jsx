@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Modal.module.css';
 import { SignInForm, SignUpForm } from './AuthForm';
+import EmailConfirmation from './EmailConfirmation';
 
-const Modal = ({ isOpen, onClose }) => {
-  const [isLogin, setIsLogin] = useState(true);
+const Modal = ({ isOpen, onClose, initialView }) => {
+  const [view, setView] = useState(initialView);
+
+  useEffect(() => {
+    setView(initialView);
+  }, [initialView]);
 
   if (!isOpen) return null;
 
@@ -13,17 +18,32 @@ const Modal = ({ isOpen, onClose }) => {
         <button onClick={onClose} className={styles.closeButton}>
           &times;
         </button>
-        <h2 className={styles.heading}>
-          {isLogin ? 'Sign in to your account' : 'Create a new account'}
-        </h2>
-        {isLogin ? (
-          <SignInForm onSuccess={onClose} />
-        ) : (
-          <SignUpForm onSuccess={onClose} />
+        {view === 'signin' && (
+          <>
+            <h2 className={styles.heading}>Sign in to your account</h2>
+            <SignInForm onSuccess={onClose} />
+            <button className={styles.toggleButton} onClick={() => setView('signup')}>
+              Need an account? Sign up
+            </button>
+          </>
         )}
-        <button className={styles.toggleButton} onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
-        </button>
+        {view === 'signup' && (
+          <>
+            <h2 className={styles.heading}>Create a new account</h2>
+            <SignUpForm onSuccess={() => setView('emailConfirmation')} />
+            <button className={styles.toggleButton} onClick={() => setView('signin')}>
+              Already have an account? Sign in
+            </button>
+          </>
+        )}
+        {view === 'emailConfirmation' && (
+          <EmailConfirmation 
+            isInModal={true}
+            onSuccess={() => {
+              setView('signin');
+            }}
+          />
+        )}
       </div>
     </div>
   );

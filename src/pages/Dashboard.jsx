@@ -11,7 +11,6 @@ const Dashboard = () => {
       <p className={styles.info}>Email: {user?.email}</p>
       <p className={styles.info}>Bio: {user?.profile?.bio}</p>
       <p className={styles.info}>Location: {user?.profile?.location}</p>
-      <button className={styles.logoutButton}>Logout</button>
     </div>
   );
 };

@@ -22,17 +22,20 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('signin');
   const { toast, showToast } = useToast();
+
+  const handleOpenModal = (type) => {
+    setModalType(type);
+    setIsModalOpen(true);
+  };
 
   return (
     <Router>
       <ErrorBoundary>
         <div className={styles.app}>
-          <Layout>
-            <button className={styles.authButton} onClick={() => setIsModalOpen(true)}>
-              Sign In / Sign Up
-            </button>
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <Layout onOpenModal={handleOpenModal}>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} initialView={modalType} />
             <Toast {...toast} />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
@@ -46,7 +49,17 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/activate/:uidb64/:token" element={<EmailConfirmation />} />
+                <Route 
+                  path="/activate/:uidb64/:token" 
+                  element={
+                    <EmailConfirmation 
+                      onSuccess={() => {
+                        showToast('Email confirmed successfully!', 'success');
+                        handleOpenModal('signin');
+                      }}
+                    />
+                  } 
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
