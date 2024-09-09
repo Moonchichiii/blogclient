@@ -3,7 +3,7 @@ import styles from './Modal.module.css';
 import { SignInForm, SignUpForm } from './AuthForm';
 import EmailConfirmation from './EmailConfirmation';
 
-const Modal = ({ isOpen, onClose, initialView }) => {
+const Modal = ({ isOpen, onClose, initialView, showToast }) => {
   const [view, setView] = useState(initialView);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Modal = ({ isOpen, onClose, initialView }) => {
         {view === 'signin' && (
           <>
             <h2 className={styles.heading}>Sign in to your account</h2>
-            <SignInForm onSuccess={onClose} />
+            <SignInForm onSuccess={onClose} showToast={showToast} />
             <button className={styles.toggleButton} onClick={() => setView('signup')}>
               Need an account? Sign up
             </button>
@@ -30,18 +30,19 @@ const Modal = ({ isOpen, onClose, initialView }) => {
         {view === 'signup' && (
           <>
             <h2 className={styles.heading}>Create a new account</h2>
-            <SignUpForm onSuccess={() => setView('emailConfirmation')} />
+            <SignUpForm onSuccess={() => setView('emailConfirmation')} showToast={showToast} />
             <button className={styles.toggleButton} onClick={() => setView('signin')}>
               Already have an account? Sign in
             </button>
           </>
         )}
         {view === 'emailConfirmation' && (
-          <EmailConfirmation 
+          <EmailConfirmation
             isInModal={true}
             onSuccess={() => {
               setView('signin');
             }}
+            showToast={showToast}
           />
         )}
       </div>

@@ -3,10 +3,9 @@ import { useDispatch } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
 import { setUser } from '../../store/userSlice';
 import { login, register } from '../../api/auth';
-import { Eye, EyeOff, Mail, User, Calendar, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, User, Lock } from 'lucide-react';
 import styles from './AuthForm.module.css';
 import Cookies from 'js-cookie';
-
 
 const InputField = ({ icon: Icon, ...props }) => (
   <div className={styles.inputContainer}>
@@ -36,27 +35,31 @@ const PasswordInput = ({ ...props }) => {
   );
 };
 
-const SignInForm = ({ onSuccess }) => {
-    const [formData, setFormData] = useState({ email: '', password: '' });
-    const dispatch = useDispatch();
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      dispatch(loginStart());
-      try {
-        const response = await login(formData);      
+const SignInForm = ({ onSuccess, showToast }) => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const response = await login(formData);
+      if (response.data.user.is_active) {
         Cookies.set('access_token', response.data.access, { secure: true, sameSite: 'strict' });
         Cookies.set('refresh_token', response.data.refresh, { secure: true, sameSite: 'strict' });
         dispatch(loginSuccess());
-        if (response.data.user) {
-          dispatch(setUser(response.data.user));
-        }
+        dispatch(setUser(response.data.user));
         onSuccess();
-      } catch (error) {
-        dispatch(loginFailure(error.response?.data?.message || 'An error occurred'));
+        showToast('Login successful!', 'success');
+      } else {
+        dispatch(loginFailure('Please verify your email before logging in.'));
+        showToast('Please verify your email before logging in.', 'error');
       }
-    };
-
+    } catch (error) {
+      dispatch(loginFailure(error.response?.data?.message || 'An error occurred'));
+      showToast(error.response?.data?.message || 'An error occurred', 'error');
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -81,26 +84,28 @@ const SignInForm = ({ onSuccess }) => {
   );
 };
 
-const SignUpForm = ({ onSuccess }) => {
-    const [formData, setFormData] = useState({
-      email: '',
-      password1: '',
-      password2: '',
-      profile_name: '',
-    });
-    const dispatch = useDispatch();
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      dispatch(loginStart());
-      try {
-        const response = await register(formData);
-        dispatch(loginSuccess());
-        onSuccess();
-      } catch (error) {
-        dispatch(loginFailure(error.response?.data?.message || 'An error occurred'));
-      }
-    };
+const SignUpForm = ({ onSuccess, showToast }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password1: '',
+    password2: '',
+    profile_name: '',
+  });
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      await register(formData);
+      dispatch(loginSuccess());
+      onSuccess();
+      showToast('Registration successful! Please check your email to verify your account.', 'success');
+    } catch (error) {
+      dispatch(loginFailure(error.response?.data?.message || 'An error occurred'));
+      showToast(error.response?.data?.message || 'An error occurred', 'error');
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>

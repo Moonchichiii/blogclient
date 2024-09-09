@@ -35,7 +35,7 @@ const App = () => {
       <ErrorBoundary>
         <div className={styles.app}>
           <Layout onOpenModal={handleOpenModal}>
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} initialView={modalType} />
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} initialView={modalType} showToast={showToast} />
             <Toast {...toast} />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
@@ -49,16 +49,17 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route 
-                  path="/activate/:uidb64/:token" 
+                <Route
+                  path="/activate/:uidb64/:token"
                   element={
-                    <EmailConfirmation 
+                    <EmailConfirmation
                       onSuccess={() => {
                         showToast('Email confirmed successfully!', 'success');
                         handleOpenModal('signin');
                       }}
+                      showToast={showToast}
                     />
-                  } 
+                  }
                 />
                 <Route path="*" element={<NotFound />} />
               </Routes>
