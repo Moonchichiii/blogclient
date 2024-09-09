@@ -7,7 +7,7 @@ const Toast = ({ message, type, duration = 3000 }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, duration - 300); 
+    }, duration - 700); 
 
     return () => clearTimeout(timer);
   }, [duration]);

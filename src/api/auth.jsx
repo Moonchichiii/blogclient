@@ -4,3 +4,5 @@ export const login = (credentials) => api.post('/api/accounts/login/', credentia
 export const register = (userData) => api.post('/api/accounts/register/', userData);
 export const logout = () => api.post('/api/accounts/logout/');
 export const confirmEmail = (uidb64, token) => api.get(`/api/accounts/activate/${uidb64}/${token}/`);
+export const resendVerification = (email) => api.post('/api/accounts/resend-verification/', { email });
+export const setupTwoFactor = () => api.post('/api/accounts/setup-2fa/');

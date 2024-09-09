@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { api } from '../../api/apiConfig';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import styles from './TwoFactorSetup.module.css';
 
 const TwoFactorSetup = ({ showToast }) => {
-  const [qrCode, setQrCode] = useState(null);
-  const [secretKey, setSecretKey] = useState(null);
+  const [qrCode, setQrCode] = useState('');
+  const [secretKey, setSecretKey] = useState('');
 
   const setupTwoFactor = async () => {
     try {
@@ -26,7 +26,7 @@ const TwoFactorSetup = ({ showToast }) => {
       </button>
       {qrCode && (
         <div className={styles.qrCodeContainer}>
-          <QRCode value={qrCode} />
+          <QRCodeSVG value={qrCode} size={256} />
           <p>Scan this QR code with your authenticator app</p>
         </div>
       )}

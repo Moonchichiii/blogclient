@@ -25,7 +25,7 @@ const PasswordStrength = ({ password }) => {
   return (
     <div className={styles.passwordStrength}>
       <div className={styles.strengthMeter}>
-        <div className={styles.strengthBar} style={{ width: `${strength * 25}%` }} />
+        <div className={styles.strengthBar} data-strength={strength} />
       </div>
       <ul className={styles.requirementsList}>
         <li className={requirements.length ? styles.met : ''}>At least 8 characters</li>

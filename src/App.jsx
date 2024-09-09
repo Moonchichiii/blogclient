@@ -14,6 +14,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const EmailConfirmation = lazy(() => import('./components/Auth/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const TwoFactorSetupPage = lazy(() => import('./components/Auth/TwoFactorSetupPage'));
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -49,18 +50,24 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route
-                  path="/activate/:uidb64/:token"
-                  element={
-                    <EmailConfirmation
-                      onSuccess={() => {
-                        showToast('Email confirmed successfully!', 'success');
-                        handleOpenModal('signin');
-                      }}
-                      showToast={showToast}
-                    />
-                  }
-                />
+               <Route
+    path="/activate/:uidb64/:token"
+    element={
+      <EmailConfirmation
+        onSuccess={() => {
+          showToast('Email confirmed successfully!', 'success');
+          navigate('/setup-2fa');
+        }}
+        showToast={showToast}
+      />
+    }
+  />
+  <Route
+    path="/setup-2fa"
+    element={
+      <TwoFactorSetupPage showToast={showToast} />
+    }
+  />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
