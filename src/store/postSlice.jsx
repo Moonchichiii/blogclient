@@ -1,37 +1,53 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../api/apiConfig';
+import { postEndpoints } from '../api/endpoints';
 
-
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await api.get('/api/posts/');
-  return response.data;
-});
-
-export const createPost = createAsyncThunk('posts/createPost', async (postData) => {
-    const formData = new FormData();
-    formData.append('title', postData.title);
-    formData.append('content', postData.content);
-    if (postData.image) {
-      formData.append('image', postData.image);
+export const fetchPosts = createAsyncThunk(
+  'posts/fetchPosts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await postEndpoints.getPosts();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
     }
-  
-    const response = await api.post('/api/posts/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  });
+  }
+);
 
-export const updatePost = createAsyncThunk('posts/updatePost', async ({ id, postData }) => {
-  const response = await api.put(`/api/posts/${id}/`, postData);
-  return response.data;
-});
+export const createPost = createAsyncThunk(
+  'posts/createPost',
+  async (postData, { rejectWithValue }) => {
+    try {
+      const response = await postEndpoints.createPost(postData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
+    }
+  }
+);
 
-export const deletePost = createAsyncThunk('posts/deletePost', async (id) => {
-  await api.delete(`/api/posts/${id}/`);
-  return id;
-});
+export const updatePost = createAsyncThunk(
+  'posts/updatePost',
+  async ({ id, postData }, { rejectWithValue }) => {
+    try {
+      const response = await postEndpoints.updatePost(id, postData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
+    }
+  }
+);
+
+export const deletePost = createAsyncThunk(
+  'posts/deletePost',
+  async (id, { rejectWithValue }) => {
+    try {
+      await postEndpoints.deletePost(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: 'posts',
@@ -52,10 +68,10 @@ const postSlice = createSlice({
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.posts.push(action.payload);
+        state.posts.unshift(action.payload);
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(post => post.id === action.payload.id);

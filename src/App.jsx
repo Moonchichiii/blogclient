@@ -5,9 +5,11 @@ import Modal from './components/Auth/Modal';
 import Layout from './components/Layout/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingFallback from './components/Loaders/LoadingFallback';
+import useAuth from './hooks/useAuth';
 import Toast from './components/Toast/Toast';
 import useToast from './hooks/useToast';
 import styles from './App.module.css';
+import { Loader } from 'lucide-react';
 
 // Lazy imports for your components
 const Landing = lazy(() => import('./pages/Landing/Landing'));
@@ -16,7 +18,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const EmailConfirmation = lazy(() => import('./components/Auth/EmailConfirmation/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./components/Auth/TwoFactor/TwoFactorSetupPage'));
-const Blog = lazy(() => import('./pages/Blog/Blog')); // <-- New Blog import
+const Blog = lazy(() => import('./pages/Blog/Blog')); 
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -78,6 +80,12 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <Loader className="animate-spin" />;
+  }
+
   return (
     <Router>
       <AppContent />

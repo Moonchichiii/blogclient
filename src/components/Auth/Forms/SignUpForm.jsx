@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../../../store/authSlice';
-import { register } from '../../../api/auth';
+import { authEndpoints } from '../../../api/endpoints';
 import styles from './AuthForm.module.css';
 import { InputField, PasswordInput, Mail, User } from './AuthFormCommon';
 import PasswordStrength from '../Utils/PasswordStrength';
@@ -31,7 +31,7 @@ const SignUpForm = ({ onSuccess, showToast }) => {
 
     dispatch(loginStart());
     try {
-      await register(formData);
+      await authEndpoints.register(formData);
       dispatch(loginSuccess());
       showToast('Registration successful! Please check your email to verify your account.', 'success');
       onSuccess('emailConfirmation');

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch } from 'react-redux';
-import { createPost, updatePost, deletePost } from '../../store/postSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePost, deletePost } from '../../store/postSlice';
 import styles from './BlogModal.module.css';
 
-const BlogModal = ({ isOpen, onRequestClose, post, isAuthenticated, isAuthor }) => {
+const BlogModal = ({ isOpen, onRequestClose, post }) => {
     const dispatch = useDispatch();
+    const currentUser = useSelector(state => state.auth.user);
     const [editMode, setEditMode] = useState(false);
     const [editedPost, setEditedPost] = useState(post);
+    const [comment, setComment] = useState('');
+
+    const isAuthor = currentUser && currentUser.id === post.author;
 
     const handleEdit = () => {
         setEditMode(true);
@@ -21,6 +25,13 @@ const BlogModal = ({ isOpen, onRequestClose, post, isAuthenticated, isAuthor }) 
     const handleDelete = () => {
         dispatch(deletePost(post.id));
         onRequestClose();
+    };
+
+    const handleComment = () => {
+        // Here you would dispatch an action to add a comment
+        // For now, we'll just log it
+        console.log('New comment:', comment);
+        setComment('');
     };
 
     return (
@@ -46,14 +57,18 @@ const BlogModal = ({ isOpen, onRequestClose, post, isAuthenticated, isAuthor }) 
                         <p>{post.content}</p>
                     </>
                 )}
-                {isAuthenticated && (
-                    <div className={styles.commentsSection}>
-                        <h3>Comments</h3>
-                        {post.comments.map((comment, index) => (
-                            <p key={index}>{comment.content} - {comment.author_name}</p>
-                        ))}
-                    </div>
-                )}
+                <div className={styles.commentsSection}>
+                    <h3>Comments</h3>
+                    {post.comments && post.comments.map((comment, index) => (
+                        <p key={index}>{comment.content} - {comment.author_name}</p>
+                    ))}
+                    <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Add a comment..."
+                    />
+                    <button onClick={handleComment}>Post Comment</button>
+                </div>
                 {isAuthor && !editMode && (
                     <>
                         <button onClick={handleEdit}>Edit</button>

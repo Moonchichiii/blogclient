@@ -8,7 +8,7 @@ import postReducer from './postSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'] 
+  whitelist: ['auth']
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);

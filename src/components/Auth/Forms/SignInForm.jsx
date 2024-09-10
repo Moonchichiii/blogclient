@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure } from '../../../store/authSlice';
-import { setUser } from '../../../store/userSlice';
-import { login } from '../../../api/auth';
-import Cookies from 'js-cookie';
+import { loginStart, loginFailure } from '../../../store/authSlice';
+import useAuth from '../../../hooks/useAuth';
 import styles from './AuthForm.module.css';
 import { InputField, PasswordInput, Mail, Lock } from './AuthFormCommon';
 import ResendVerification from '../Utils/ResendVerification';
@@ -13,23 +11,20 @@ const SignInForm = ({ onSuccess, showToast }) => {
   const [requireOTP, setRequireOTP] = useState(false);
   const [showResendVerification, setShowResendVerification] = useState(false);
   const dispatch = useDispatch();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
     try {
       const response = await login(formData);
-      if (response.data.require_otp) {
+      if (response.require_otp) {
         setRequireOTP(true);
         showToast('Please enter your OTP', 'info');
-      } else if (response.data.require_email_verification) {
+      } else if (response.require_email_verification) {
         setShowResendVerification(true);
         showToast('Please verify your email before logging in', 'warning');
       } else {
-        Cookies.set('access_token', response.data.access, { secure: true, sameSite: 'strict' });
-        Cookies.set('refresh_token', response.data.refresh, { secure: true, sameSite: 'strict' });
-        dispatch(loginSuccess());
-        dispatch(setUser(response.data.user));
         onSuccess();
         showToast('Login successful!', 'success');
       }
