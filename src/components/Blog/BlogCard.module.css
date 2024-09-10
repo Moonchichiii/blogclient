@@ -1,45 +1,110 @@
 .blogCard {
     background-color: var(--blog-post-background);
-    margin-bottom: 1em;
-    padding: 1em;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    margin-bottom: 1.5em;
+    padding: 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 100%;
 }
 
 .blogCard:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.blogHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1em;
 }
 
 .blogImage {
     width: 100%;
+    height: auto;
+    max-height: 250px;
     border-radius: 10px;
+    object-fit: cover;
     margin-bottom: 0.5em;
 }
 
 .blogTitle {
     font-family: var(--heading-font);
     color: var(--heading-color);
-    font-size: 1.5em;
+    font-size: 1.75em;
+    text-align: center;
     margin-bottom: 0.5em;
 }
 
-.blogExcerpt {
+.blogContent {
     font-family: var(--body-font);
     color: var(--blog-post-text-color);
-    margin-bottom: 0.5em;
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.blogExcerpt {
+    margin-bottom: 1.5em;
+}
+
+.blogFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.postInfo {
+    font-size: 0.9em;
+    color: var(--secondary-text-color);
+    margin-bottom: 1em;
+}
+
+.author {
+    font-weight: 600;
+    margin-right: 1em;
+}
+
+.rating {
+    font-weight: 500;
 }
 
 .readMoreButton {
     background-color: var(--button-color);
     color: var(--text-color);
-    padding: 0.5em 1em;
+    padding: 0.75em 1.5em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .readMoreButton:hover {
     background-color: var(--button-hover-color);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .blogCard {
+        padding: 1em;
+    }
+
+    .blogTitle {
+        font-size: 1.5em;
+    }
+
+    .blogExcerpt {
+        font-size: 0.9em;
+    }
+
+    .readMoreButton {
+        font-size: 0.9em;
+        padding: 0.6em 1.2em;
+    }
 }

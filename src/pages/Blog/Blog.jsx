@@ -10,7 +10,7 @@ const POSTS_PER_PAGE = 10;
 
 const Blog = () => {
     const dispatch = useDispatch();
-    const { posts, status, error } = useSelector(state => state.posts);
+    const { posts = [], status, error } = useSelector(state => state.posts);
     const { isAuthenticated } = useSelector(state => state.auth);
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +22,7 @@ const Blog = () => {
     }, [status, dispatch]);
 
     const filteredPosts = useMemo(() => {
+        if (!Array.isArray(posts)) return [];
         return posts.filter(post =>
             post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             post.content.toLowerCase().includes(searchQuery.toLowerCase())

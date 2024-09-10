@@ -62,6 +62,10 @@
   background-color: var(--button-color);
   color: var(--text-color);
   border: solid 1px transparent;
+  border-top-left-radius: 20px;
+border-top-right-radius: 50px;
+border-bottom-right-radius: 20px;
+border-bottom-left-radius: 75px;
   padding: 0.50em 1.2em;
   border-radius: 12px;
   cursor: pointer;

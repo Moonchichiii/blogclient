@@ -22,7 +22,6 @@ const PostForm = () => {
             ...prevState,
             [name]: value
         }));
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
         }
@@ -33,6 +32,7 @@ const PostForm = () => {
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
                 setErrors(prevErrors => ({ ...prevErrors, image: 'Image must be less than 2MB' }));
+                showToast('Image must be less than 2MB', 'warning', 5000);
                 return;
             }
             setFormData(prevState => ({ ...prevState, image: file }));
@@ -65,6 +65,8 @@ const PostForm = () => {
             } catch (error) {
                 showToast('Failed to create post. Please try again.', 'error', 5000);
             }
+        } else {
+            showToast('Please fix the errors in the form', 'warning', 5000);
         }
     };
 

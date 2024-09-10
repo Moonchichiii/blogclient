@@ -1,0 +1,23 @@
+.myPostsContainer {
+    padding: 20px;
+}
+
+.postCard {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.postActions {
+    display: flex;
+    gap: 10px;
+}
+
+.postActions a, .postActions button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
