@@ -15,6 +15,7 @@ import { Loader } from 'lucide-react';
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const Home = lazy(() => import('./pages/Home/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
+const Profile = lazy(() => import('./pages/Profile/Profile')); 
 const EmailConfirmation = lazy(() => import('./components/Auth/EmailConfirmation/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./components/Auth/TwoFactor/TwoFactorSetupPage'));
@@ -46,25 +47,12 @@ const AppContent = () => {
           <Toast {...toast} />
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-            <Route path="/home" element={<Home showToast={showToast} />} />
-            <Route path="/blog" element={<Blog showToast={showToast} />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard showToast={showToast} />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/home" element={<Home showToast={showToast} />} />
+              <Route path="/blog" element={<Blog showToast={showToast} />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard showToast={showToast} /></ProtectedRoute>} />
+              <Route path="/profile-settings" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> 
               <Route path="/activate/:uidb64/:token" element={<EmailConfirmation showToast={showToast} />} />
-              <Route
-                path="/setup-2fa"
-                element={
-                  <ProtectedRoute>
-                    <TwoFactorSetupPage showToast={showToast} />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage showToast={showToast} /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -62,6 +62,8 @@
 
 .navLinks a:hover {
     color: var(--button-hover-color);
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
 }
 
 .buttons {
@@ -76,7 +78,7 @@
     font-family: var(--heading-font);            
     background: transparent;
     border: solid 1px transparent;
-    font-size: 1em;
+    font-size: 0.8em;
     margin: 0.5em;
     background-color: var(--button-color);
     border-radius: 12px;

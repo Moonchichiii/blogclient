@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { User, FileText, MessageSquare, Star, Users, PlusCircle } from 'lucide-react';
@@ -5,7 +6,7 @@ import Modal from 'react-modal';
 import PostForm from '../../components/Posts/PostForm';
 import styles from './Dashboard.module.css';
 
-Modal.setAppElement('#root'); // Set the root element for accessibility
+Modal.setAppElement('#root'); 
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.user);
@@ -16,14 +17,24 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
+      <div className={styles.profileHeader}>
       <h1 className={styles.title}>Welcome, {user?.profile_name}</h1>
+        {user?.profile?.image && (
+          <img 
+            src={user.profile.image} 
+            alt={`${user.profile_name}'s profile`} 
+            className={styles.profileImage}
+          />
+        )}
+        
+      </div>
       <div className={styles.bentoGrid}>
         <div className={styles.bentoBox}>
           <User size={24} />
           <h2>Profile</h2>
           <p>Email: {user?.email}</p>
           <p>Bio: {user?.profile?.bio}</p>
-          <p>Location: {user?.profile?.location}</p>
+          <Link to="/profile-settings" className={styles.actionButton}>Settings</Link>
         </div>
         <div className={styles.bentoBox}>
           <FileText size={24} />
