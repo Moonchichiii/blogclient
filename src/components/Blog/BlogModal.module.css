@@ -1,0 +1,37 @@
+.modal {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.modalContent {
+    font-family: var(--body-font);
+    color: var(--text-color);
+}
+
+.modalImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 1em;
+}
+
+.commentsSection {
+    margin-top: 2em;
+}
+
+.closeModalButton {
+    background-color: var(--button-color);
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.closeModalButton:hover {
+    background-color: var(--button-hover-color);
+}

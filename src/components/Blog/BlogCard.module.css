@@ -1,0 +1,45 @@
+.blogCard {
+    background-color: var(--blog-post-background);
+    margin-bottom: 1em;
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.blogCard:hover {
+    transform: translateY(-5px);
+}
+
+.blogImage {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 0.5em;
+}
+
+.blogTitle {
+    font-family: var(--heading-font);
+    color: var(--heading-color);
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.blogExcerpt {
+    font-family: var(--body-font);
+    color: var(--blog-post-text-color);
+    margin-bottom: 0.5em;
+}
+
+.readMoreButton {
+    background-color: var(--button-color);
+    color: var(--text-color);
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.readMoreButton:hover {
+    background-color: var(--button-hover-color);
+}

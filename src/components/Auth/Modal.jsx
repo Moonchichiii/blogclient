@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Modal.module.css';
-import { SignInForm, SignUpForm } from './AuthForm';
-import EmailConfirmation from './EmailConfirmation';
+import SignInForm from './Forms/SignInForm';
+import SignUpForm from './Forms/SignUpForm';
+import EmailConfirmation from './EmailConfirmation/EmailConfirmation';
 
 const Modal = ({ isOpen, onClose, initialView, showToast }) => {
   const [view, setView] = useState(initialView);

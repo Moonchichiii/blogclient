@@ -1,6 +1,6 @@
 :root {
   --background-color: #191923;
-  --heading-color: #6ACFC7;
+  --heading-color: #3D98B4;
   --text-color: #FBFEF9;
   --paragraph-texts: #0C1A1A;
   --blog-post-background: #333944;
@@ -14,7 +14,7 @@
   --nav-link-hover-color: #F39237;
   --footer-background-color: #1D1842;
   --footer-text-color: #E0FBFC;
-  --footer-heading-color: #6ACFC7;
+  --footer-heading-color: #3D98B4;
   --footer-link-color: #E0FBFC;
   --footer-link-hover-color: #F39237;
   --search-bar-border-color: #6ACFC7;
@@ -39,6 +39,13 @@
   flex-direction: column;
 }
 
+.lightMode {
+  --background-color: #fff;
+  --text-color: #333;
+  --nav-background-color: #444;
+  --button-color: #F39237;
+  --footer-background-color: #444;
+}
 .authButton {
   position: fixed;
   top: 1rem;
