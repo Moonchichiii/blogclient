@@ -21,7 +21,12 @@ const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./components/Auth/TwoFactor/TwoFactorSetupPage'));
 const Blog = lazy(() => import('./pages/Blog/Blog')); 
 
+const About = lazy(() => import('./pages/About/About')); 
+
+
 const MyPosts = lazy(() => import('./pages/Myposts/MyPosts')); 
+const EditPost = lazy(() => import('./pages/Myposts/EditPosts'));
+
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -51,11 +56,13 @@ const AppContent = () => {
             <Routes>
               <Route path="/home" element={<Home showToast={showToast} />} />
               <Route path="/blog" element={<Blog showToast={showToast} />} />
+              <Route path="/about" element={<About showToast={showToast} />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard showToast={showToast} /></ProtectedRoute>} />
               <Route path="/profile-settings" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> 
               <Route path="/activate/:uidb64/:token" element={<EmailConfirmation showToast={showToast} />} />
               <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage showToast={showToast} /></ProtectedRoute>} />
               <Route path="/my-posts" element={<ProtectedRoute><MyPosts /></ProtectedRoute>} />
+              <Route path="/edit-post/:id" element={<ProtectedRoute><EditPost /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

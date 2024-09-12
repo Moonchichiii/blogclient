@@ -28,8 +28,6 @@ const BlogModal = ({ isOpen, onRequestClose, post }) => {
     };
 
     const handleComment = () => {
-        // Here you would dispatch an action to add a comment
-        // For now, we'll just log it
         console.log('New comment:', comment);
         setComment('');
     };

@@ -18,6 +18,43 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const deleteAccount = createAsyncThunk(
+  'auth/deleteAccount',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authEndpoints.deleteAccount();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'Failed to delete account.');
+    }
+  }
+);
+
+export const setupTwoFactor = createAsyncThunk(
+  'auth/setupTwoFactor',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authEndpoints.setupTwoFactor();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'Failed to set up 2FA.');
+    }
+  }
+);
+
+export const updateEmail = createAsyncThunk(
+  'auth/updateEmail',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await authEndpoints.updateEmail({ email });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'Failed to update email.');
+    }
+  }
+);
+
+
 
 const authSlice = createSlice({
   name: 'auth',

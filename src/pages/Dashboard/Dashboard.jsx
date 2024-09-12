@@ -19,13 +19,13 @@ const Dashboard = () => {
     <div className={styles.dashboard}>
       <div className={styles.profileHeader}>
       <h1 className={styles.title}>Welcome, {user?.profile_name}</h1>
-        {user?.profile?.image && (
-          <img 
-            src={user.profile.image} 
-            alt={`${user.profile_name}'s profile`} 
-            className={styles.profileImage}
-          />
-        )}
+      {user?.profile?.image && (
+  <img 
+    src={user.profile.image} 
+    alt={`${user.profile_name}'s profile`} 
+    className={styles.profileImage}
+  />
+)}
         
       </div>
       <div className={styles.bentoGrid}>
@@ -37,11 +37,11 @@ const Dashboard = () => {
           <Link to="/profile-settings" className={styles.actionButton}>Settings</Link>
         </div>
         <div className={styles.bentoBox}>
-          <FileText size={24} />
-          <h2>My Posts</h2>
-          <p>Total Posts: {user?.posts?.length}</p>
-          <button className={styles.actionButton}>View Posts</button>
-        </div>
+  <FileText size={24} />
+  <h2>My Posts</h2>
+  <p>Total Posts: {user?.posts?.length}</p>
+  <Link to="/my-posts" className={styles.actionButton}>View Posts</Link>
+</div>
         <div className={styles.bentoBox}>
           <MessageSquare size={24} />
           <h2>My Comments</h2>

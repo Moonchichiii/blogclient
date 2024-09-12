@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createPost } from '../../store/postSlice';
+import { createPost, updatePost } from '../../store/postSlice';  // Import both actions
 import { Image, X } from 'lucide-react';
 import useToast from '../../hooks/useToast';
 import styles from './PostForm.module.css';
 
-const PostForm = () => {
+const PostForm = ({ post, onPostSubmit }) => {
     const dispatch = useDispatch();
     const { showToast } = useToast();
     const [formData, setFormData] = useState({
-        title: '',
-        content: '',
-        image: null
+        title: post ? post.title : '',
+        content: post ? post.content : '',
+        image: post ? post.image : null
     });
     const [errors, setErrors] = useState({});
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(post ? post.image : null); 
+
+    useEffect(() => {
+        if (post) {
+            setFormData({
+                title: post.title,
+                content: post.content,
+                image: post.image
+            });
+            setImagePreview(post.image || null);
+        }
+    }, [post]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,16 +41,20 @@ const PostForm = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+
             if (file.size > 2 * 1024 * 1024) {
-                setErrors(prevErrors => ({ ...prevErrors, image: 'Image must be less than 2MB' }));
+                setErrors({ image: 'Image must be less than 2MB' });
                 showToast('Image must be less than 2MB', 'warning', 5000);
                 return;
             }
-            setFormData(prevState => ({ ...prevState, image: file }));
+    
+
+            setFormData((prevState) => ({ ...prevState, image: file }));
             setImagePreview(URL.createObjectURL(file));
-            setErrors(prevErrors => ({ ...prevErrors, image: '' }));
+            setErrors((prevErrors) => ({ ...prevErrors, image: '' }));
         }
     };
+    
 
     const removeImage = () => {
         setFormData(prevState => ({ ...prevState, image: null }));
@@ -57,13 +72,26 @@ const PostForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
+            const data = new FormData();
+            data.append('title', formData.title);
+            data.append('content', formData.content);
+            if (formData.image && formData.image !== post?.image) {  
+                data.append('image', formData.image);
+            }
+
             try {
-                await dispatch(createPost(formData)).unwrap();
-                showToast('Post created successfully!', 'success', 5000);
-                setFormData({ title: '', content: '', image: null });
-                setImagePreview(null);
+                if (post) {
+                    // Update post
+                    await dispatch(updatePost({ id: post.id, postData: data })).unwrap();
+                    showToast('Post updated successfully!', 'success', 5000);
+                } else {
+                    // Create new post
+                    await dispatch(createPost(data)).unwrap();
+                    showToast('Post created successfully!', 'success', 5000);
+                }
+                onPostSubmit();  // Close the modal or redirect after submit
             } catch (error) {
-                showToast('Failed to create post. Please try again.', 'error', 5000);
+                showToast(`Failed to ${post ? 'update' : 'create'} post. Please try again.`, 'error', 5000);
             }
         } else {
             showToast('Please fix the errors in the form', 'warning', 5000);
@@ -98,7 +126,7 @@ const PostForm = () => {
             <div className={styles.formGroup}>
                 <label htmlFor="image" className={styles.imageUpload}>
                     <Image size={24} />
-                    <span>Upload Image</span>
+                    <span>{post ? 'Update Image' : 'Upload Image'}</span>  
                 </label>
                 <input
                     type="file"
@@ -118,7 +146,9 @@ const PostForm = () => {
                     </button>
                 </div>
             )}
-            <button type="submit" className={styles.submitButton}>Create Post</button>
+            <button type="submit" className={styles.submitButton}>
+                {post ? 'Update Post' : 'Create Post'}  
+            </button>
         </form>
     );
 };

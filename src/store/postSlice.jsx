@@ -1,19 +1,31 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { postEndpoints } from '../api/endpoints';
 
-// Async thunks for various post-related actions
 export const fetchPosts = createAsyncThunk(
-    'posts/fetchPosts',
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await postEndpoints.getPosts();
-        return response.data;
-      } catch (error) {
-        return rejectWithValue(error.response?.data || 'An error occurred while fetching posts');
-      }
+  'posts/fetchPosts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await postEndpoints.getPosts();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred while fetching posts');
     }
-  );
-  
+  }
+);
+
+export const fetchUserPosts = createAsyncThunk(
+  'posts/fetchUserPosts',
+  async (_, { rejectWithValue }) => {
+    try {
+
+      const response = await postEndpoints.getPosts({ params: { author: 'current' } });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'An error occurred while fetching user posts');
+    }
+  }
+);
+
 
 export const createPost = createAsyncThunk(
   'posts/createPost',
@@ -65,9 +77,9 @@ export const approvePost = createAsyncThunk(
 
 export const disapprovePost = createAsyncThunk(
   'posts/disapprovePost',
-  async (id, { rejectWithValue }) => {
+  async ({ id, reason }, { rejectWithValue }) => {
     try {
-      const response = await postEndpoints.disapprovePost(id);
+      const response = await postEndpoints.disapprovePost(id, reason);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'An error occurred while disapproving the post');
@@ -75,80 +87,61 @@ export const disapprovePost = createAsyncThunk(
   }
 );
 
-export const fetchUserPosts = createAsyncThunk(
-  'posts/fetchUserPosts',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await postEndpoints.getUserPosts();
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || 'An error occurred while fetching user posts');
-    }
-  }
-);
-
-// Initial state for the posts slice
 const initialState = {
   posts: [],
   status: 'idle',
   error: null,
 };
 
-// Slice for handling posts actions and reducers
 const postSlice = createSlice({
-    name: 'posts',
-    initialState: {
-      posts: [],  // Ensure posts are initialized to an empty array
-      status: 'idle',
-      error: null,
-    },
-    reducers: {},
-    extraReducers: (builder) => {
-      builder
-        .addCase(fetchPosts.pending, (state) => {
-          state.status = 'loading';
-        })
-        .addCase(fetchPosts.fulfilled, (state, action) => {
-          state.status = 'succeeded';
-          state.posts = action.payload;
-        })
-        .addCase(fetchPosts.rejected, (state, action) => {
-          state.status = 'failed';
-          state.error = action.payload;
-        })
-      // Fetch posts by the current user
+  name: 'posts',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.posts = action.payload;
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
+        console.log('Debugging fetchUserPosts.fulfilled');
         state.posts = action.payload;
         state.status = 'succeeded';
       })
-
-      // Create a new post
-      .addCase(createPost.fulfilled, (state, action) => {
-        state.posts.unshift(action.payload);
+      .addCase(fetchUserPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Something went wrong';
+        console.log('Error fetching user posts:', action.payload);
       })
-
-      // Update a post
+      .addCase(createPost.fulfilled, (state, action) => {
+        if (Array.isArray(state.posts)) {
+          state.posts.unshift(action.payload);
+        } else {
+          state.posts = [action.payload];
+        }
+      })
       .addCase(updatePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(post => post.id === action.payload.id);
         if (index !== -1) {
           state.posts[index] = action.payload;
         }
       })
-
-      // Delete a post
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter(post => post.id !== action.payload);
       })
-
-      // Approve a post
       .addCase(approvePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(post => post.id === action.payload.id);
         if (index !== -1) {
           state.posts[index] = action.payload;
         }
       })
-
-      // Disapprove a post
       .addCase(disapprovePost.fulfilled, (state, action) => {
         const index = state.posts.findIndex(post => post.id === action.payload.id);
         if (index !== -1) {

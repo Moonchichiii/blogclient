@@ -14,16 +14,21 @@ export const authEndpoints = {
 // User endpoints
 export const userEndpoints = {
   getCurrentUser: () => api.get('/api/accounts/current-user/'),
-  updateProfile: (userData) => api.put('/api/profiles/update-profile/', userData),
+  updateProfile: (userData) => multipartApi.put('/api/profiles/update-profile/', userData),
   uploadProfilePicture: (formData) => multipartApi.post('/api/profiles/upload-profile-picture/', formData),
 };
 
 // Post endpoints
 export const postEndpoints = {
-  getPosts: () => api.get('/api/posts/'),
-  getPost: (id) => api.get(`/api/posts/${id}/`),
+  getPosts: () => multipartApi.get('/api/posts/'),
+  getPost: (id) => multipartApi.get(`/api/posts/${id}/`),
   createPost: (postData) => multipartApi.post('/api/posts/', postData),
   updatePost: (id, postData) => multipartApi.put(`/api/posts/${id}/`, postData),
-  deletePost: (id) => api.delete(`/api/posts/${id}/`),
-  ratePost: (id, rating) => api.post(`/api/ratings/rate/`, { post: id, value: rating }),
+  deletePost: (id) => multipartApi.delete(`/api/posts/${id}/`),
+  getUserPosts: () => api.get('/api/posts/'), 
+  ratePost: (id, rating) => multipartApi.post(`/api/ratings/rate/`, { post: id, value: rating }),  
+  // Add approve and disapprove endpoints
+  approvePost: (id) => api.post(`/api/posts/${id}/approve/`),
+  disapprovePost: (id, reason) => api.post(`/api/posts/${id}/disapprove/`, { reason }),
 };
+

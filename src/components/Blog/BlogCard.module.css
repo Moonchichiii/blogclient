@@ -1,74 +1,79 @@
 .blogCard {
     background-color: var(--blog-post-background);
-    margin-bottom: 1.5em;
-    padding: 1.5em;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    max-width: 100%;
+    height: 100%;
 }
 
 .blogCard:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .blogHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1em;
+    position: relative;
+    overflow: hidden;
 }
 
 .blogImage {
     width: 100%;
-    height: auto;
-    max-height: 250px;
-    border-radius: 10px;
+    height: 200px;
     object-fit: cover;
-    margin-bottom: 0.5em;
+    transition: transform 0.3s ease;
+}
+
+.blogCard:hover .blogImage {
+    transform: scale(1.05);
+}
+
+.blogContent {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .blogTitle {
     font-family: var(--heading-font);
     color: var(--heading-color);
-    font-size: 1.75em;
-    text-align: center;
-    margin-bottom: 0.5em;
-}
-
-.blogContent {
-    font-family: var(--body-font);
-    color: var(--blog-post-text-color);
-    text-align: center;
-    margin-bottom: 1em;
-    font-size: 1em;
-    line-height: 1.6;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 .blogExcerpt {
-    margin-bottom: 1.5em;
+    font-family: var(--body-font);
+    color: var(--blog-post-text-color);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
 }
 
 .blogFooter {
+    padding: 1rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.03);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
+    flex-wrap: wrap;
 }
 
 .postInfo {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     color: var(--secondary-text-color);
-    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .author {
     font-weight: 600;
-    margin-right: 1em;
+    margin-bottom: 0.25rem;
 }
 
 .rating {
@@ -78,33 +83,64 @@
 .readMoreButton {
     background-color: var(--button-color);
     color: var(--text-color);
-    padding: 0.75em 1.5em;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .readMoreButton:hover {
     background-color: var(--button-hover-color);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+}
+
+.adminActions {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.adminButton {
+    background-color: var(--admin-button-color, #f0f0f0);
+    color: var(--admin-button-text-color, #333);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 0 0.5rem;
+}
+
+.adminButton:hover {
+    background-color: var(--admin-button-hover-color, #e0e0e0);
 }
 
 @media (max-width: 768px) {
-    .blogCard {
-        padding: 1em;
+    .blogContent {
+        padding: 1rem;
     }
 
     .blogTitle {
-        font-size: 1.5em;
+        font-size: 1.3rem;
     }
 
     .blogExcerpt {
-        font-size: 0.9em;
+        font-size: 0.9rem;
+    }
+
+    .blogFooter {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .readMoreButton {
-        font-size: 0.9em;
-        padding: 0.6em 1.2em;
+        margin-top: 1rem;
+        width: 100%;
     }
 }

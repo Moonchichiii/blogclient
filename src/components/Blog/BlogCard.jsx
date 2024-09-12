@@ -25,46 +25,56 @@ const BlogCard = ({ post }) => {
   };
 
   const handleDisapprove = async () => {
-    try {
-      await dispatch(disapprovePost(post.id)).unwrap();
-      showToast('Post disapproved successfully!', 'success');
-    } catch (error) {
-      showToast('Failed to disapprove post.', 'error');
+    const reason = prompt("Please provide a reason for disapproval:");
+    if (reason) {
+      try {
+        await dispatch(disapprovePost({ id: post.id, reason })).unwrap();
+        showToast('Post disapproved successfully!', 'success');
+      } catch (error) {
+        showToast('Failed to disapprove post.', 'error');
+      }
+    } else {
+      showToast('Disapproval reason is required.', 'warning');
     }
   };
-
+  
   const isAdmin = currentUser && currentUser.is_admin;
 
   return (
     <article className={styles.blogCard}>
       <header className={styles.blogHeader}>
-        <img src={post.image} alt={`Image for ${post.title}`} className={styles.blogImage} />
-        <h2 className={styles.blogTitle}>{post.title}</h2>
+        {post.image && <img src={post.image} alt={`Image for ${post.title}`} className={styles.blogImage} />}
       </header>
-      <section className={styles.blogContent}>
-        <p className={styles.blogExcerpt}>{post.content.substring(0, 100)}...</p>
-      </section>
+      <div className={styles.blogContent}>
+        <h2 className={styles.blogTitle}>{post.title}</h2>
+        <p className={styles.blogExcerpt}>{post.content.substring(0, 150)}...</p>
+      </div>
       <footer className={styles.blogFooter}>
         <div className={styles.postInfo}>
-          <span className={styles.author}>By: {post.author_name}</span>
+          <span className={styles.author}>Author: {post.author_name}</span>
           <span className={styles.rating}>
-            Rating: {post.average_rating?.toFixed(1) || 'N/A'} ({post.total_ratings} ratings)
+            {post.average_rating ? (
+              <>
+                <span role="img" aria-label="star">⭐</span>
+                {post.average_rating.toFixed(1)} ({post.total_ratings} ratings)
+              </>
+            ) : 'No ratings yet'}
           </span>
         </div>
         <button onClick={openModal} className={styles.readMoreButton}>
-          {isAuthenticated ? 'Read Full Post' : 'View Card'}
+          Read More
         </button>
-
-        {isAdmin && (
-          <div className={styles.adminActions}>
-            {!post.is_approved ? (
-              <button onClick={handleApprove} className={styles.adminButton}>Approve</button>
-            ) : (
-              <button onClick={handleDisapprove} className={styles.adminButton}>Disapprove</button>
-            )}
-          </div>
-        )}
       </footer>
+
+      {isAdmin && (
+        <div className={styles.adminActions}>
+          {!post.is_approved ? (
+            <button onClick={handleApprove} className={styles.adminButton}>Approve</button>
+          ) : (
+            <button onClick={handleDisapprove} className={styles.adminButton}>Disapprove</button>
+          )}
+        </div>
+      )}
 
       {isAuthenticated && (
         <BlogModal 
