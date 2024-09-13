@@ -24,7 +24,7 @@ const AboutPage = () => {
           </p>
         </div>
         <div className={styles.aboutImageContainer}>
-          <img src="../../assets/images/aboutside.png" alt="The Blog Community" className={styles.aboutImage} />
+          <img src="src/assets/images/aboutside.png" alt="The Blog Community" className={styles.aboutImage} />
         </div>
       </section>
       

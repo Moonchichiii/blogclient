@@ -126,6 +126,11 @@
 }
 
 @media screen and (max-width: 768px) {
+    
+    .navbarContainer {
+        position: sticky;
+    }
+    
     .navLinks {
         flex-direction: column;
     }
