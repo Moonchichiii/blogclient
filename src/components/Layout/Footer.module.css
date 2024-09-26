@@ -1,6 +1,6 @@
 .footer {
     background-color: var(--footer-background-color);
-    color: var(--footer-text-color);
+    color: var(--text-color);
     padding: 4em 2em;
     font-family: var(--body-font);
     position: relative;
@@ -23,7 +23,8 @@
 .footerSection h3 {
     font-family: var(--heading-font);
     font-size: 1.2em;
-    color: var(--footer-heading-color);
+    color: var(--heading-color);
+    font-weight: 600;
     margin-bottom: 1em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -32,7 +33,7 @@
 .footerSection p {
     font-size: 0.9em;
     line-height: 1.6;
-    color: var(--footer-text-color);
+    color: var(--text-color);
 }
 
 .footerSection ul {
@@ -45,14 +46,14 @@
 }
 
 .footerSection ul li a {
-    color: var(--footer-link-color);
+    color: var(--text-color);
     text-decoration: none;
     transition: color 0.3s ease-in-out;
     font-size: 0.9em;
 }
 
 .footerSection ul li a:hover {
-    color: var(--footer-link-hover-color);
+    color: var(--accent-color);
 }
 
 .contactForm {
@@ -67,15 +68,26 @@
     position: relative;
 }
 
-.inputContainer input {
-    width: 100%;
+.inputContainer input,
+.subjectInput {
+    width: 92%;
     padding: 0.75em 1em;
-    border: 1px solid var(--footer-text-color);
-    background-color: transparent;
-    color: var(--footer-text-color);
+    background-color: var(--card-background);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);    
     font-size: 0.9em;
     border-radius: 20px;
+    transition: border-color 0.3s ease;
+}
+
+.inputContainer input {
     padding-right: 45px;
+}
+
+.inputContainer input:focus,
+.subjectInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
 }
 
 .inputContainer button {
@@ -83,21 +95,15 @@
     right: 10px;
     background-color: transparent;
     border: none;
-    color: var(--footer-text-color);
+    color: var(--text-color);
     cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+    padding: 0.5em;
 }
 
 .inputContainer button:hover {
-    color: var(--button-hover-color);
-}
-
-.subjectInput {
-    padding: 0.75em 1em;
-    border: 1px solid var(--footer-text-color);
-    background-color: transparent;
-    color: var(--footer-text-color);
-    border-radius: 20px;
-    width: 100%;
+    transform: scale(1.3);
+    color: var(--accent-color);
 }
 
 .footerBottom {
@@ -114,15 +120,17 @@
     display: flex;
     gap: 1em;
     list-style: none;
+    font-size: 3em;
 }
 
 .socials li a {
-    color: var(--footer-link-color);
+    color: var(--text-color);
     transition: color 0.3s ease-in-out;
 }
 
 .socials li a:hover {
-    color: var(--footer-link-hover-color);
+    color: var(--accent-color);
+    transform: scale(1.7);
 }
 
 /* Scroll to Top */
@@ -130,33 +138,45 @@
     position: fixed;
     bottom: 2em;
     right: 2em;
+    z-index: 1000;
 }
 
 .scrollToTop {
-    background: none;
+    background: var(--card-background);
     border: none;
     cursor: pointer;
-    color: var(--footer-text-color);
+    color: var(--text-color);
     display: flex;
     align-items: center;
-    transition: transform 0.3s;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .scrollToTop:hover {
-    transform: scale(1.1);
+    transform: scale(1.7);
+    color: var(--accent-color);
+    background-color: transparent;
 }
 
 .arrowIcon {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     transition: transform 0.3s ease;
 }
 
 .scrollToTop:hover .arrowIcon {
-    transform: scale(1.2);
+    transform: translateY(-2px);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .footer {
+        padding: 3em 1em;
+    }
+
     .footerContent {
         flex-direction: column;
     }
@@ -178,10 +198,11 @@
     }
 
     .scrollToTop {
-        font-size: 0.8em;
+        width: 35px;
+        height: 35px;
     }
 
     .arrowIcon {
-        font-size: 1.8rem;
+        font-size: 1.2rem;
     }
 }

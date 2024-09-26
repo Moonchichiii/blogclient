@@ -11,18 +11,15 @@ const Profile = () => {
   const { user, loading, error } = useSelector((state) => state.user);
   const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [is2FAEnabled, setIs2FAEnabled] = useState(false); 
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [formData, setFormData] = useState({
     profile_name: '',
     bio: '',
     email: '',
   });
-  
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [qrCode, setQrCode] = useState('');
-  
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -74,7 +71,7 @@ const Profile = () => {
     try {
       await dispatch(deleteAccount()).unwrap();
       showToast('Account deleted successfully!', 'success');
-      setIsModalOpen(false); // Close modal after deletion
+      setIsModalOpen(false); 
     } catch {
       showToast('Failed to delete account.', 'error');
     }

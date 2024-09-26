@@ -29,6 +29,7 @@ const Footer = () => {
                     <ul>
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/about">About</Link></li>
+                        <li><Link to="/blog">Blog</Link></li>
                         {isAuthenticated && <li><Link to="/dashboard">Dashboard</Link></li>}
                         <li><Link to="/terms">Terms</Link></li>
                         <li><Link to="/privacy">Privacy</Link></li>
@@ -54,27 +55,27 @@ const Footer = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
-                            <button type="submit" aria-label="Send"><Send size={16} /></button>
+                            <button type="submit" aria-label="Send">
+                                <Send size={16} />
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <div className={styles.footerBottom}>
-                <p>&copy; 2024 The Blog. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} The Blog. All rights reserved.</p>
                 <ul className={styles.socials}>
-                    <li><a href="#"><Facebook size={20} /></a></li>
-                    <li><a href="#"><Twitter size={20} /></a></li>
-                    <li><a href="#"><Instagram size={20} /></a></li>
-                    <li><a href="#"><Linkedin size={20} /></a></li>
+                    <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a></li>
+                    <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><Twitter size={20} /></a></li>
+                    <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={20} /></a></li>
+                    <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a></li>
                 </ul>
             </div>
 
             <div className={styles.scrollToTopContainer}>
-                <a href="#top" className={styles.scrollToTopLink}>
-                    <button className={styles.scrollToTop} aria-label="Scroll to top">
-                        <ArrowUp className={styles.arrowIcon} />
-                    </button>
+                <a href="#top" className={styles.scrollToTop} aria-label="Scroll to top">
+                    <ArrowUp size={20} className={styles.arrowIcon} />
                 </a>
             </div>
         </footer>

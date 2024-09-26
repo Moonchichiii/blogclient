@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { User, FileText, MessageSquare, Star, Users, PlusCircle } from 'lucide-react';
 import Modal from 'react-modal';
-import PostForm from '../../components/Posts/PostForm';
+import PostForm from '../Blog/PostForm';
 import styles from './Dashboard.module.css';
 
 Modal.setAppElement('#root'); 

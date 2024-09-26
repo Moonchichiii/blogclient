@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../../../api/apiConfig';
+import { api } from '../../api/apiConfig';
 import styles from './ResendVerification.module.css';
 
 const ResendVerification = ({ showToast }) => {

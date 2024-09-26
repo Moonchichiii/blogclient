@@ -12,29 +12,31 @@
 
 .searchIcon {
     position: absolute;
-    left: 12px;
+    left: 12px;    
     top: 50%;
     transform: translateY(-50%);
-    color: var(--paragraph-texts);
+    color: var(--text-color);
     pointer-events: none;
 }
 
 .searchInput {
     width: 100%;
-    padding: 12px 12px 12px 40px;
-    border: 2px solid var(--search-bar-border-color);
-    border-radius: 25px;
-    font-size: 1.1em;
-    color: var(--paragraph-texts);
-    outline: none;
-    transition: all 0.3s ease;
+    padding: 0.75rem 1rem;
+    padding-left: 40px;
+    background-color: var(--card-background);
+    border: 1px solid var(--input-border);
+    border-radius: 20px;
+    font-size: 0.9em;
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
 }
 
 .searchInput:focus {
-    border-color: var(--button-hover-color);
-    box-shadow: 0 0 0 3px rgba(var(--button-hover-color-rgb), 0.3);
+    border-color: var(--accent-color);
+    outline: none;
 }
 
 .searchInput::placeholder {
     color: var(--paragraph-texts-light);
 }
+

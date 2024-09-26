@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure } from '../../../store/authSlice';
-import { authEndpoints } from '../../../api/endpoints';
+import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
+import { authEndpoints } from '../../api/endpoints';
 import styles from './AuthForm.module.css';
 import { InputField, PasswordInput, Mail, User } from './AuthFormCommon';
-import PasswordStrength from '../Utils/PasswordStrength';
+import PasswordStrength from './PasswordStrength';
 
 const SignUpForm = ({ onSuccess, showToast }) => {
   const [formData, setFormData] = useState({

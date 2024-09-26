@@ -1,54 +1,73 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 300000;
   
+}
+
+.content {
+  margin-top: 3rem;
+  background-color: var(--card-background);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  width: 100%;
+  max-width: 30%;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-wrap: inherit;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--heading-color);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  margin-top: 1rem;
+  text-align: center;
+  display: block;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.toggleButton:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding-top: 5rem; 
+  }
+
   .content {
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 8px;
-    position: relative;
-    max-width: 500px;
-    width: 90%;
+    padding: 1rem;
+    max-width: 85%; 
   }
-  
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #9ca3af;
-  }
-  
-  .heading {
-    font-size: 1.75rem;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .toggleButton {
-    background: none;
-    border: none;
-    color: #3b82f6;
-    cursor: pointer;
-    margin-top: 1rem;
-    text-align: center;
-    display: block;
-  }
-  
-  .toggleButton:hover {
-    color: #2563eb;
-  }
+}

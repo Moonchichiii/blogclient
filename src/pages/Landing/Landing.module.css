@@ -2,44 +2,160 @@
   height: 100vh;
   width: 100vw;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: var(--background-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.landing.visible {
+  opacity: 1;
+}
+
+.content {
   text-align: center;
-  padding: 20px;
+  z-index: 2;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  max-width: 90%;
+  width: min(600px, 90vw);
 }
 
-.landing h1 {
+.content:hover {
+  transform: scale(1.02);
+}
+
+.title {
   color: var(--heading-color);
-  font-size: 3rem;
-  margin-bottom: 30px;
+  font-size: clamp(2rem, 8vw, 4rem);
+  margin-bottom: 0.5em;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
 }
 
-.link {
+.titleWord {
   display: inline-block;
-  background-color: var(--button-color);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+.titleWord:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.titleWord:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.subtitle {
   color: var(--text-color);
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  margin-bottom: 2em;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards 0.6s;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: var(--button-text-color);
   text-decoration: none;
-  padding: 15px 30px;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  transition: background-color 0.3s ease;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+  border-radius: 50px;
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
+  transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards 0.8s;
 }
 
-.link:hover {
-  background-color: var(--button-hover-color);
+.ctaButton:hover, .ctaButton:focus {
+  background-color: var(--accent-color-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
-@media (max-width: 600px) {
-  .landing h1 {
-    font-size: 2rem;
+.backgroundAnimation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  z-index: 1;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 90vw;
+    max-width: none;
   }
 
-  .link {
-    font-size: 1rem;
-    padding: 12px 24px;
+  .title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    margin-bottom: 0;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    margin-bottom: 0;
+  }
+
+  .ctaButton {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    padding: 0.5rem 1rem;
   }
 }

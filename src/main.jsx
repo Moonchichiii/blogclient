@@ -4,7 +4,10 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from './store/store'
 import App from './App.jsx'
+import Modal from 'react-modal'
 
+
+Modal.setAppElement('#root')
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../../../api/apiConfig';
+import { api } from '../../api/apiConfig';
 import { QRCodeSVG } from 'qrcode.react';
 import styles from './TwoFactorSetup.module.css';
 

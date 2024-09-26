@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginStart, loginFailure } from '../../../store/authSlice';
-import useAuth from '../../../hooks/useAuth';
+import { loginStart, loginFailure } from '../../store/authSlice';
+import useAuth from '../../hooks/useAuth';
 import styles from './AuthForm.module.css';
 import { InputField, PasswordInput, Mail, Lock } from './AuthFormCommon';
-import ResendVerification from '../Utils/ResendVerification';
+import ResendVerification from './ResendVerification';
 
 const SignInForm = ({ onSuccess, showToast }) => {
   const [formData, setFormData] = useState({ email: '', password: '', otp: '' });

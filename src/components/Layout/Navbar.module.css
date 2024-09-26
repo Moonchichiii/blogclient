@@ -1,159 +1,116 @@
-:root {
-    /* Colors */
-    --background-color: #191923;
-    --heading-color: #6ACFC7;
-    
-    --text-color: #FBFEF9;
-    --button-color: #3D5A80;
-    --button-hover-color: #F39237;
-    --nav-background-color: #1D1842;
-    --footer-background-color: #1D1842;
-    --button-border-radius: 12px;
-    --button-padding: 0.75em 1.5em;
-    --button-font-size: 1em;
-}
-
-/* Navbar Styles */
 .navbarContainer {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100%;
+    z-index: 9998;
+    background-color: var(--nav-background-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color var(--transition-fast);
+    padding: 0.5em 0;
 }
 
 .nav {
-    background-color: var(--background-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
-    flex-wrap: wrap;
+    padding: 1em 2em;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .logo {
-    font-family: 'Oswald', sans-serif;
-    font-size: 2.4em; 
-    font-weight: 900;
+    font-family: var(--heading-font);
+    font-size: 2.4em;
+    font-size: 2em;
+    font-weight: 700;    
     color: var(--heading-color);
-    text-decoration: none;
-    display: inline-block; 
-    text-underline-offset: 0.1em;
-    transition: color 0.3s ease-in-out;
+    transition: color var(--transition-normal);
 }
 
 .logo span {
-    font-weight: 400; 
-    color: var(--button-hover-color); 
+    font-weight: 400;
+    color: var(--accent-color);
 }
 
 .logo:hover {
-    color: var(--button-hover-color); 
+    color: var(--button-hover-color);
 }
 
+.navLinks {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+}
 
 .navLinks a {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 1.25em;
+    font-family: var(--heading-font);
+    font-size: 1.2em;
+    padding-bottom: 5px;
     color: var(--text-color);
-    margin-right: 1em;
-    text-decoration: none;
-    transition: color 0.3s;
+    margin: 0;
+    position: relative;
+    transition: color var(--transition-fast);
 }
 
+.navLinks a::after {
+    content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  bottom: 0;
+  left: 0;
+  transition: width var(--transition-normal);
+}
+
+.navLinks a:hover::after {
+    width: 100%;
+}
 
 .navLinks a:hover {
-    color: var(--button-hover-color);
-    transform: scale(1.05);
-    transition: transform 0.2s ease-in-out;
+    color: var(--nav-link-hover-color);
 }
 
 .buttons {
     display: flex;
     align-items: center;
+    gap:10px;
 }
 
-
-/* Auth Buttons */
 .authButton {
-    padding: 0.75em 1.5em;
-    font-family: var(--heading-font);            
-    background: transparent;
-    border: solid 1px transparent;
-    font-size: 0.8em;
-    margin: 0.5em;
-    background-color: var(--button-color);
-    border-radius: 12px;
+    padding: 0.55em 1em;    
+    font-family: var(--heading-font);
+    font-size: 0.8em;    
+    background-color: #b794f4;
     color: var(--text-color);
+    border: 1px solid transparent;
+    border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color var(--transition-fast);
 }
 
 .authButton:hover {
     background-color: transparent;
-    border: solid 1px var(--button-hover-color);
+    border-color: var(--button-hover-color);
     color: var(--button-hover-color);
-}
-
-.logoutButton:hover {
-    background-color: transparent;
-    border-color: #ff4d4d; 
-    color: #ff4d4d; 
 }
 
 .themeToggle {
-    padding: 0.45em 0.5em;
-    font-family: var(--heading-font);            
-    background: transparent;
-    border: solid 1px transparent;
-    font-size: 1em;
-    margin: 0.5em;
-    background-color: var(--button-color);
-    border-radius: 12px;
+    padding: 0.5em 0.75em;
+    background: var(--button-color);
+    border: none;
+    border-radius: var(--border-radius-md);
     color: var(--text-color);
+    margin-left: 1.5em;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 1em;
+    transition: all var(--transition-fast);
 }
+
 .themeToggle:hover {
-    background-color: transparent;
-    border: solid 1px var(--button-hover-color);
-    color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
 
-/* Menu Styles */
-.menuContainer {
-    display: flex;
-    align-items: center;
-}
-
-@media screen and (max-width: 768px) {
-    
-    .navbarContainer {
-        position: sticky;
-    }
-    
-    .navLinks {
-        flex-direction: column;
-    }
-
-    .buttons {
-        flex-direction: column;
-    }
-
-    .themeToggle {
-        margin: 1em 0;
-    }
-}
-
-/* Light Mode */
-.lightMode {
-    --background-color: #FFF;
-    --text-color: #333;
-    --button-color: #F39237;
-    --nav-background-color: #444;
-    --footer-background-color: #444;
-}
-
-/* Hamburger Menu */
 .burger {
     position: relative;
     width: 40px;
@@ -161,8 +118,10 @@
     background: transparent;
     cursor: pointer;
     display: block;
-    z-index: 1001;
-    margin-left: auto;
+}
+
+.burger input {
+    display: none;
 }
 
 .burger span {
@@ -174,11 +133,13 @@
     border-radius: 9px;
     opacity: 1;
     left: 0;
-    transition: 0.25s ease-in-out;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+    z-index: 9999;
 }
 
 .burger span:nth-of-type(1) {
-    top: 0;
+    top: 0px;
     transform-origin: left center;
 }
 
@@ -194,109 +155,95 @@
     transform: translateY(-100%);
 }
 
-.burger span.open:nth-of-type(1) {
+.burger input:checked ~ span:nth-of-type(1) {
     transform: rotate(45deg);
-    top: 0;
+    top: 0px;
     left: 5px;
 }
 
-.burger span.open:nth-of-type(2) {
-    width: 0;
+.burger input:checked ~ span:nth-of-type(2) {
+    width: 0%;
     opacity: 0;
 }
 
-.burger span.open:nth-of-type(3) {
+.burger input:checked ~ span:nth-of-type(3) {
     transform: rotate(-45deg);
     top: 28px;
     left: 5px;
 }
 
-/* Menu Animation */
 .menuContainer {
     position: fixed;
-    top: 0;
     right: -100%;
+    top: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    transition: right 0.3s ease-in-out;
+    height: 100vh;
+    background-color: rgba(18, 18, 23, 0.95);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 9997;
+    transition: right var(--transition-fast);
 }
 
 .menuOpen {
     right: 0;
 }
 
-/* Link and Button Styles */
-.navLinks, .authButtons {
+.mobileNavLinks {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 2rem;
+    gap: 1.5em;
+    z-index: 5;
 }
 
-.navLinks a, .authButton {
-    color: var(--text-color);
-    text-decoration: none;
+.mobileNavLinks a {
     font-family: var(--heading-font);
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin: 0.5rem 0;
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease;
+    font-size: 1.5em;
+    font-weight: 700;    
+    text-decoration: none;
+}
+.mobileNavLinks a:after {
+    content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  bottom: 0;
+  left: 0;
+  transition: width var(--transition-normal);    
 }
 
-.navLinks a:hover, .authButton:hover {
+.mobileNavLinks a:after {
     color: var(--nav-link-hover-color);
 }
 
-/* Header Styles */
-.header {
-    padding: 6rem 2rem 2rem;
-    background: var(--background-color);
-}
-
-.header h1 {
+.mobileButtons {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-family: var(--heading-font);
-    font-size: 2.5rem;
-    text-align: center;
-    margin: 0;
-    color: var(--heading-color);
+    font-size: 0.8em;    
+    gap: 1em;
+    z-index: 7;
 }
 
-@media screen and (min-width: 768px) {
+
+@media (min-width: 769px) {
     .burger {
         display: none;
     }
+}
 
-    .menuContainer {
-        position: static;
-        background-color: transparent;
-        backdrop-filter: none;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 0 1rem;
+@media (max-width: 768px) {
+    .navLinks, .buttons {
+        display: none;
     }
-
-    .navLinks, .authButtons {
-        flex-direction: row;
-        margin-bottom: 0;
-    }
-
-    .navLinks a, .authButton {
-        margin: 0 0.5rem;
-    }
-
-    .header {
-        padding: 4rem 2rem 2rem;
-    }
-
-    .header h1 {
-        font-size: 3rem;
+    
+    .burger {
+        display: block;
     }
 }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../../store/authSlice';
-import { setUser, fetchCurrentUser } from '../../../store/userSlice';
-import useAuth from '../../../hooks/useAuth';
+import { loginSuccess } from '../../store/authSlice';
+import { setUser, fetchCurrentUser } from '../../store/userSlice';
+import useAuth from '../../hooks/useAuth';
 import Cookies from 'js-cookie';
 import styles from './EmailConfirmation.module.css';
 
