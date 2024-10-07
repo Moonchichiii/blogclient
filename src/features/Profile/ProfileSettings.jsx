@@ -1,4 +1,3 @@
-// Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from 'react-query';
@@ -14,7 +13,7 @@ export const useProfile = () => {
   });
 };
 
-const Profile = () => {
+const ProfileSettings = () => {
   const dispatch = useDispatch();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
@@ -94,4 +93,4 @@ const Profile = () => {
   };
 };
 
-export default Profile;
+export default ProfileSettings;

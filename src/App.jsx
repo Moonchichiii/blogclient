@@ -1,10 +1,9 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Layout from './components/Layout/LayOut';
+import Layout from './components/Layout/Layout';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import useAuth from './features/Accounts/hooks/useAuth';
-
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from 'lucide-react';
@@ -13,10 +12,8 @@ import { Loader } from 'lucide-react';
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const Home = lazy(() => import('./pages/Home/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
-const ProfileSettings = lazy(() => import('./pages/ProfileSettings/ProfileSettings'));
-// const EmailConfirmation = lazy(() => import('./features/Accounts/EmailConfirmation'));
-import EmailConfirmation from './features/Accounts/EmailConfirmation';
-
+const Profile = lazy(() => import('./pages/Profile/Profile'));
+const EmailConfirmation = lazy(() => import('./features/Accounts/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetupPage'));
 const Blog = lazy(() => import('./pages/Blog/Blog'));
@@ -32,14 +29,14 @@ const AppContent = () => {
   return (
     <ErrorBoundary>
       <Layout>
-        <ToastContainer />
+        <ToastContainer /> 
         <Suspense fallback={<div className="loading-spinner"><Loader className="animate-spin" size={32} /></div>}>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/profile-settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+            <Route path="/profile-settings" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/activate/:uidb64/:token" element={<EmailConfirmation />} />
             <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage /></ProtectedRoute>} />
             <Route path="/blog" element={<Blog />} />

@@ -1,147 +1,68 @@
 .footer {
     background-color: var(--footer-background-color);
     color: var(--text-color);
-    padding: 4em 2em;
+    padding: var(--spacing-lg) var(--spacing-md);
     font-family: var(--body-font);
     position: relative;
-}
-
-.footerContent {
+  }
+  
+  .footerContent {
     display: flex;
     justify-content: space-between;
-    gap: 2em;
+    gap: var(--spacing-lg);
     max-width: 1200px;
     margin: 0 auto;
     flex-wrap: wrap;
-}
-
-.footerSection {
+  }
+  
+  .footerSection {
     flex: 1;
     min-width: 200px;
-}
-
-.footerSection h3 {
+  }
+  
+  .footerSection h3 {
     font-family: var(--heading-font);
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: var(--heading-color);
     font-weight: 600;
-    margin-bottom: 1em;
+    margin-bottom: var(--spacing-md);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-}
-
-.footerSection p {
-    font-size: 0.9em;
+  }
+  
+  .footerSection p {
+    font-size: 0.9rem;
     line-height: 1.6;
     color: var(--text-color);
-}
-
-.footerSection ul {
+  }
+  
+  .footerSection ul {
     list-style: none;
     padding: 0;
-}
-
-.footerSection ul li {
-    margin: 0.5em 0;
-}
-
-.footerSection ul li a {
+  }
+  
+  .footerSection ul li {
+    margin: var(--spacing-sm) 0;
+  }
+  
+  .footerSection ul li a {
     color: var(--text-color);
     text-decoration: none;
-    transition: color 0.3s ease-in-out;
-    font-size: 0.9em;
-}
-
-.footerSection ul li a:hover {
+    transition: color var(--transition-normal);
+    font-size: 0.9rem;
+  }
+  
+  .footerSection ul li a:hover {
     color: var(--accent-color);
-}
-
-.contactForm {
+  }
+  
+  .contactForm {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-}
-
-.inputContainer {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.inputContainer input,
-.subjectInput {
-    width: 92%;
-    padding: 0.75em 1em;
-    background-color: var(--card-background);
-    border: 1px solid var(--input-border);
-    color: var(--text-color);    
-    font-size: 0.9em;
-    border-radius: 20px;
-    transition: border-color 0.3s ease;
-}
-
-.inputContainer input {
-    padding-right: 45px;
-}
-
-.inputContainer input:focus,
-.subjectInput:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-
-.inputContainer button {
-    position: absolute;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    color: var(--text-color);
-    cursor: pointer;
-    transition: transform 0.3s, color 0.3s;
-    padding: 0.5em;
-}
-
-.inputContainer button:hover {
-    transform: scale(1.3);
-    color: var(--accent-color);
-}
-
-.footerBottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 2em;
-    margin-top: 2em;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.8em;
-}
-
-.socials {
-    display: flex;
-    gap: 1em;
-    list-style: none;
-    font-size: 3em;
-}
-
-.socials li a {
-    color: var(--text-color);
-    transition: color 0.3s ease-in-out;
-}
-
-.socials li a:hover {
-    color: var(--accent-color);
-    transform: scale(1.7);
-}
-
-/* Scroll to Top */
-.scrollToTopContainer {
-    position: fixed;
-    bottom: 2em;
-    right: 2em;
-    z-index: 1000;
-}
-
-.scrollToTop {
+    gap: var(--spacing-md);
+  }
+  
+  .scrollToTop {
     background: var(--card-background);
     border: none;
     cursor: pointer;
@@ -152,57 +73,39 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    transition: transform 0.3s, background-color 0.3s;
+    transition: transform var(--transition-normal), background-color var(--transition-normal);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.scrollToTop:hover {
-    transform: scale(1.7);
+  }
+  
+  .scrollToTop:hover {
+    transform: scale(1.1);
     color: var(--accent-color);
-    background-color: transparent;
-}
-
-.arrowIcon {
-    font-size: 1.5rem;
-    transition: transform 0.3s ease;
-}
-
-.scrollToTop:hover .arrowIcon {
-    transform: translateY(-2px);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+    background-color: var(--color-neutral-200);
+  }
+  
+  @media (max-width: 768px) {
     .footer {
-        padding: 3em 1em;
+      padding: var(--spacing-lg) var(--spacing-sm);
     }
-
+  
     .footerContent {
-        flex-direction: column;
+      flex-direction: column;
     }
-    
-    .footerSection {
-        text-align: center;
-        margin-bottom: 2em;
-    }
-
-    .footerBottom {
-        flex-direction: column;
-        gap: 1em;
-        text-align: center;
-    }
-
-    .scrollToTopContainer {
-        right: 1em;
-        bottom: 1em;
-    }
-
-    .scrollToTop {
-        width: 35px;
-        height: 35px;
-    }
-
+  }
+  
+  /* Scroll to Top Animation */
+  .scrollToTopContainer {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 1000;
+  }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .footer *,
+    .scrollToTop,
     .arrowIcon {
-        font-size: 1.2rem;
+      transition: none !important;
     }
-}
+  }

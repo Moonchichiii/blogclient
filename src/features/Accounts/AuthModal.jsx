@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from './Modal';
+import Modal from '../../components/Modal/Modal';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import EmailConfirmation from './EmailConfirmation';

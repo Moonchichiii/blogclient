@@ -2,17 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { authEndpoints } from '../../api/endpoints';
 
+
+// Async Thunks
 export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      console.log('Logging out user...');
       await authEndpoints.logout();
       Cookies.remove('access_token');
       Cookies.remove('refresh_token');
       console.log('User logged out successfully.');
     } catch (error) {
-      console.error('Logout failed:', error);
       return rejectWithValue(error.response?.data?.message || 'Logout failed');
     }
   }
@@ -54,8 +54,6 @@ export const updateEmail = createAsyncThunk(
   }
 );
 
-
-
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -74,6 +72,10 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
     },
+    loginFailure: (state) => {
+      state.isAuthenticated = false;
+      state.loading = false;
+    },
     refreshTokenSuccess: (state, action) => {
       state.accessToken = action.payload.accessToken;
       if (action.payload.refreshToken) {
@@ -90,5 +92,12 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, refreshTokenSuccess, logoutSuccess } = authSlice.actions;
+export const {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+  refreshTokenSuccess,
+  logout,
+} = authSlice.actions;
+
 export default authSlice.reducer;

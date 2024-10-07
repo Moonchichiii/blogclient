@@ -1,3 +1,10 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { authEndpoints } from '../../../api/endpoints';
+import { loginSuccess, logout } from '../authSlice'; // Use `logout`
+import { fetchCurrentUser } from '../../Profile/hooks/profileSlice';
+
 const useAuth = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -35,10 +42,10 @@ const useAuth = () => {
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  const logout = useCallback(() => {
+  const logoutUser = useCallback(() => {
     Cookies.remove('access_token');
     Cookies.remove('refresh_token');
-    dispatch(logoutSuccess());
+    dispatch(logout());
   }, [dispatch]);
 
   useEffect(() => {
@@ -46,6 +53,8 @@ const useAuth = () => {
   }, [isAuthenticated, refreshTokenPeriodically]);
 
   return useMemo(() => ({
-    login, logout, isAuthenticated, loading,
-  }), [login, logout, isAuthenticated, loading]);
+    login, logout: logoutUser, isAuthenticated, loading,
+  }), [login, logoutUser, isAuthenticated, loading]);
 };
+
+export default useAuth;

@@ -1,8 +1,8 @@
 import React from 'react';
-import { useProfile } from './Profile';
-import styles from './ProfileSettings.module.css';
+import { useProfile } from '../../features/Profile/ProfileSettings'; // Correct import path
+import styles from './Profile.module.css';
 
-const ProfileSettings = () => {
+const Profile = () => {
   const {
     user,
     formData,
@@ -60,4 +60,4 @@ const ProfileSettings = () => {
   );
 };
 
-export default ProfileSettings;
+export default Profile;

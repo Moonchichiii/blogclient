@@ -3,23 +3,19 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { loginStart, loginSuccess } from './authSlice';
 import { authEndpoints } from '../../api/endpoints';
+import { toast } from 'react-toastify';
 import styles from './AuthForm.module.css';
 
-const InputField = React.memo(({ icon: Icon, error, ...props }) => (
+const InputField = ({ icon: Icon, error, ...props }) => (
   <div className={styles.inputContainer}>
     <Icon className={styles.icon} size={20} />
     <input className={`${styles.inputField} ${error ? styles.inputError : ''}`} {...props} />
     {error && <span className={styles.errorMessage}>{error}</span>}
   </div>
-));
+);
 
 const PasswordInput = ({ error, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   return (
     <div className={styles.inputContainer}>
       <Lock className={styles.icon} size={20} />
@@ -31,7 +27,7 @@ const PasswordInput = ({ error, ...props }) => {
       <button
         type="button"
         className={styles.toggleButton}
-        onClick={togglePasswordVisibility}
+        onClick={() => setShowPassword(!showPassword)}
       >
         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
       </button>
@@ -46,7 +42,7 @@ const calculatePasswordStrength = (password) => {
   return 'Strong';
 };
 
-const SignUpForm = ({ onSuccess, showToast }) => {
+const SignUpForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     email: '',
     password1: '',
@@ -75,13 +71,16 @@ const SignUpForm = ({ onSuccess, showToast }) => {
       await authEndpoints.register(formData);
       dispatch(loginSuccess());
       onSuccess('emailConfirmation');
+      toast.success('Registration successful!');
     } catch (error) {
       if (error.response?.status === 400) {
         setErrors(error.response.data);
         const nonFieldErrors = error.response.data.non_field_errors;
         if (nonFieldErrors) {
-          showToast(nonFieldErrors.join(' '), 'error');
+          toast.error(nonFieldErrors.join(' '));
         }
+      } else {
+        toast.error('An error occurred during registration.');
       }
     }
   };

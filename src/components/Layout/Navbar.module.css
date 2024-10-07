@@ -7,243 +7,147 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: background-color var(--transition-fast);
     padding: 0.5em 0;
-}
-
-.nav {
+  }
+  
+  
+  .nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1em 2em;
     max-width: 1200px;
     margin: auto;
-}
-
-.logo {
+  }
+  
+  .logo {
     font-family: var(--heading-font);
-    font-size: 2.4em;
     font-size: 2em;
-    font-weight: 700;    
+    font-weight: 700;
     color: var(--heading-color);
     transition: color var(--transition-normal);
-}
-
-.logo span {
+  }
+  
+  .logo span {
     font-weight: 400;
     color: var(--accent-color);
-}
-
-.logo:hover {
-    color: var(--button-hover-color);
-}
-
-.navLinks {
+  }
+  
+  .navLinks {
     display: flex;
     align-items: center;
     gap: 1.5em;
-}
-
-.navLinks a {
+  }
+  
+  .navLinks a {
     font-family: var(--heading-font);
-    font-size: 1.2em;
+    font-size: 1.1em;
     padding-bottom: 5px;
     color: var(--text-color);
-    margin: 0;
     position: relative;
     transition: color var(--transition-fast);
-}
-
-.navLinks a::after {
+  }
+  
+  .navLinks a::after {
     content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  background: var(--accent-color);
-  bottom: 0;
-  left: 0;
-  transition: width var(--transition-normal);
-}
-
-.navLinks a:hover::after {
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    bottom: 0;
+    left: 0;
+    transition: width var(--transition-normal);
+  }
+  
+  .navLinks a:hover::after {
     width: 100%;
-}
-
-.navLinks a:hover {
-    color: var(--nav-link-hover-color);
-}
-
-.buttons {
+  }
+  
+  .buttons {
     display: flex;
     align-items: center;
-    gap:10px;
-}
-
-.authButton {
-    padding: 0.55em 1em;    
+    gap: 10px;
+  }
+  
+  .authButton {
+    padding: 0.55em 1em;
     font-family: var(--heading-font);
-    font-size: 0.8em;    
-    background-color: #b794f4;
-    color: var(--text-color);
+    font-size: 0.9em;
+    background-color: var(--button-primary);
+    color: var(--button-text-color);
     border: 1px solid transparent;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-    transition: background-color var(--transition-fast);
-}
-
-.authButton:hover {
-    background-color: transparent;
-    border-color: var(--button-hover-color);
-    color: var(--button-hover-color);
-}
-
-.themeToggle {
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  }
+  
+  .authButton:hover {
+    background-color: var(--button-primary-hover);
+  }
+  
+  .themeToggle {
     padding: 0.5em 0.75em;
-    background: var(--button-color);
+    background: var(--button-secondary);
     border: none;
     border-radius: var(--border-radius-md);
-    color: var(--text-color);
-    margin-left: 1.5em;
+    color: var(--button-text-color);
     cursor: pointer;
     transition: all var(--transition-fast);
-}
-
-.themeToggle:hover {
-    background-color: var(--button-hover-color);
-}
-
-.burger {
-    position: relative;
-    width: 40px;
-    height: 30px;
-    background: transparent;
-    cursor: pointer;
-    display: block;
-}
-
-.burger input {
+  }
+  
+  .themeToggle:hover {
+    background-color: var(--button-secondary-hover);
+  }
+  
+  .burger {
     display: none;
-}
-
-.burger span {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .burger span {
     display: block;
-    position: absolute;
-    height: 4px;
-    width: 100%;
-    background: var(--text-color);
-    border-radius: 9px;
-    opacity: 1;
-    left: 0;
-    transform: rotate(0deg);
-    transition: .25s ease-in-out;
-    z-index: 9999;
-}
-
-.burger span:nth-of-type(1) {
-    top: 0px;
-    transform-origin: left center;
-}
-
-.burger span:nth-of-type(2) {
-    top: 50%;
-    transform: translateY(-50%);
-    transform-origin: left center;
-}
-
-.burger span:nth-of-type(3) {
-    top: 100%;
-    transform-origin: left center;
-    transform: translateY(-100%);
-}
-
-.burger input:checked ~ span:nth-of-type(1) {
-    transform: rotate(45deg);
-    top: 0px;
-    left: 5px;
-}
-
-.burger input:checked ~ span:nth-of-type(2) {
-    width: 0%;
-    opacity: 0;
-}
-
-.burger input:checked ~ span:nth-of-type(3) {
-    transform: rotate(-45deg);
-    top: 28px;
-    left: 5px;
-}
-
-.menuContainer {
-    position: fixed;
-    right: -100%;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(18, 18, 23, 0.95);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9997;
-    transition: right var(--transition-fast);
-}
-
-.menuOpen {
-    right: 0;
-}
-
-.mobileNavLinks {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5em;
-    z-index: 5;
-}
-
-.mobileNavLinks a {
-    font-family: var(--heading-font);
-    font-size: 1.5em;
-    font-weight: 700;    
-    text-decoration: none;
-}
-.mobileNavLinks a:after {
-    content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  background: var(--accent-color);
-  bottom: 0;
-  left: 0;
-  transition: width var(--transition-normal);    
-}
-
-.mobileNavLinks a:after {
-    color: var(--nav-link-hover-color);
-}
-
-.mobileButtons {
-    margin-top: 2em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--heading-font);
-    font-size: 0.8em;    
-    gap: 1em;
-    z-index: 7;
-}
-
-
-@media (min-width: 769px) {
-    .burger {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    background-color: var(--text-color);
+    transition: all var(--transition-fast);
+  }
+  
+  .menuContainer {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
     .navLinks, .buttons {
-        display: none;
+      display: none;
     }
-    
+  
     .burger {
-        display: block;
+      display: block;
     }
-}
+  
+    .menuContainer {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100vh;
+      background-color: var(--nav-background-color);
+      transition: right var(--transition-fast);
+      z-index: 1001;
+    }
+  
+    .menuOpen {
+      right: 0;
+    }
+  }
+  
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }

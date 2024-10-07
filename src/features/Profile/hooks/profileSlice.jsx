@@ -1,4 +1,3 @@
-// profileSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userEndpoints } from '../../../api/endpoints';
 
@@ -31,16 +30,13 @@ export const updateUserProfile = createAsyncThunk(
 // Create the profile slice
 const profileSlice = createSlice({
   name: 'profile',
-  initialState: {
-    user: null,
-    loading: false,
-    error: null,
-  },
+  initialState: { user: null, loading: false, error: null },
   reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
     clearUser: (state) => {
       state.user = null;
-      state.loading = false;
-      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -75,5 +71,5 @@ const profileSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { clearUser } = profileSlice.actions;
+export const { setUser, clearUser } = profileSlice.actions;
 export default profileSlice.reducer;

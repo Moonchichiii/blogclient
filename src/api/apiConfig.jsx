@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { store } from '../store/store';
 import { refreshTokenSuccess, logout } from '../features/Accounts/authSlice';
-import showToast from '../utils/toast';
+import showToast from '../utils/Toast';
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -105,3 +105,5 @@ api.interceptors.response.use((response) => response, responseInterceptor);
 
 multipartApi.interceptors.request.use(requestInterceptor, (error) => Promise.reject(error));
 multipartApi.interceptors.response.use((response) => response, responseInterceptor);
+
+export default api;

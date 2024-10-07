@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component {
   };
 
   handleGoBack = () => {
-    this.props.history.push('/');
+    this.props.navigate('/'); // Use navigate function passed via props
   };
 
   render() {
@@ -38,4 +38,10 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default withRouter(ErrorBoundary);
+// Create a functional wrapper to use `useNavigate` and pass `navigate` as a prop
+const ErrorBoundaryWithRouter = (props) => {
+  const navigate = useNavigate();
+  return <ErrorBoundary {...props} navigate={navigate} />;
+};
+
+export default ErrorBoundaryWithRouter;

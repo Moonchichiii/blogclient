@@ -1,13 +1,25 @@
 :root {
-  /* Colors for Dark Mode (Autumn/Winter Theme) */
+  /* Dark Mode Colors */
   --background-color: #1c2331;
   --card-background: #2c3e50;
   --text-color: #ecf0f1;
-  --heading-color: #e67e22;
-  --primary-color: #3498db;
-  --secondary-color: #e74c3c;
-  --accent-color: #f39c12;
+  --heading-color: #fb8b24;
+  --primary-color: #5f0f40;
+  --secondary-color: #9a031e;
+  --accent-color: #e36414;
   --blog-background: #34495e;
+  --nav-background-color: #2c3e50;
+  --footer-background-color: #2c3e50;
+
+  /* Light Mode Colors */
+  --background-color-light: #f5e6d3;
+  --text-color-light: #4a4a4a;
+  --heading-color-light: #d35400;
+  --primary-color-light: #f9c74f;
+  --secondary-color-light: #90be6d;
+  --accent-color-light: #f8961e;
+  --nav-background-color-light: #ffffff;
+  --footer-background-color-light: #faf3e0;
 
   /* UI Colors */
   --success-color: #2ecc71;
@@ -18,12 +30,12 @@
   --nav-background-color: #2c3e50;
   --footer-background-color: #2c3e50;
   --input-border: #34495e;
-  --button-primary: #3498db;
-  --button-primary-hover: #2980b9;
-  --button-secondary: #95a5a6;
-  --button-secondary-hover: #7f8c8d;
+  --button-primary: #5f0f40;
+  --button-primary-hover: #9a031e;
+  --button-secondary: #e36414;
+  --button-secondary-hover: #fb8b24;
   --button-text-color: #ecf0f1;
-  --nav-link-hover-color: #f39c12;
+  --nav-link-hover-color: #fb8b24;
 
   /* Typography */
   --heading-font: 'Poppins', sans-serif;
@@ -45,28 +57,17 @@
   --transition-normal: 0.3s ease;
 }
 
-.lightMode {
-  /* Colors for Light Mode (Autumn/Winter Theme) */
-  --background-color: #f5f5f5;
-  --card-background: #ffffff;
-  --text-color: #333333;
-  --heading-color: #d35400;
-  --primary-color: #2980b9;
-  --secondary-color: #c0392b;
-  --accent-color: #d35400;
-  --blog-background: #ecf0f1;
-  --nav-background-color: #ffffff;
-  --footer-background-color: #ecf0f1;
-  --input-border: #bdc3c7;
-  --button-primary: #2980b9;
-  --button-primary-hover: #3498db;
-  --button-secondary: #95a5a6;
-  --button-secondary-hover: #7f8c8d;
-  --button-text-color: #ffffff;
-  --nav-link-hover-color: #d35400;
+body.lightMode {
+  --background-color: var(--background-color-light);
+  --text-color: var(--text-color-light);
+  --heading-color: var(--heading-color-light);
+  --primary-color: var(--primary-color-light);
+  --secondary-color: var(--secondary-color-light);
+  --accent-color: var(--accent-color-light);
+  --nav-background-color: var(--nav-background-color-light);
+  --footer-background-color: var(--footer-background-color-light);
 }
 
-/* Global Styles */
 body {
   font-family: var(--body-font);
   background-color: var(--background-color);
@@ -74,12 +75,15 @@ body {
   line-height: 1.6;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--heading-font);
   color: var(--heading-color);
   font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
 }
 
 a {
@@ -91,6 +95,7 @@ a {
 a:hover {
   color: var(--secondary-color);
 }
+
 
 /* Button Styles */
 .btn {
@@ -117,90 +122,41 @@ a:hover {
 
 .btn-secondary {
   background-color: var(--button-secondary);
-  color: var(--text-color);
+  color: var(--button-text-color);
 }
 
 .btn-secondary:hover {
   background-color: var(--button-secondary-hover);
 }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.loading-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* Theme toggle styles */
-.theme-toggle i {
-  color: var(--text-color);
-  font-size: 1.25em;
-  cursor: pointer;
-}
-
-
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  :root {
-    --spacing-md: 0.75rem;
-    --spacing-lg: 1.5rem;
+/* Responsive Typography */
+@media (max-width: 1200px) {
+  body {
+    font-size: 15px;
   }
+}
 
+@media (max-width: 992px) {
   body {
     font-size: 14px;
   }
-
-  .btn {
-    padding: 0.6em 1.2em;
-    font-size: 0.9rem;
-  }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
 }
 
-@media (max-width: 480px) {
-  :root {
-    --spacing-md: 0.5rem;
-    --spacing-lg: 1rem;
-  }
-
+@media (max-width: 768px) {
   body {
     font-size: 13px;
   }
-
-  .btn {
-    padding: 0.5em 1em;
-    font-size: 0.8rem;
-  }
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.8rem; }
 }
 
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
   }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-  :root {
-    --text-color: #000000;
-    --background-color: #ffffff;
-    --heading-color: #000000;
-    --accent-color: #0000ff;
-  }
-
-  .lightMode {
-    --text-color: #ffffff;
-    --background-color: #000000;
-    --heading-color: #ffffff;
-    --accent-color: #ffff00;
-  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
 }
