@@ -1,13 +1,13 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
+import Navbar from './NavBar';
 import Footer from './Footer';
 import styles from './Layout.module.css';
 
-const Layout = ({ children, onOpenModal }) => {
+const Layout = ({ children }) => {
   return (
     <div className={styles.layout}>
-      <Navbar onOpenModal={onOpenModal} />
+      <Navbar />
       <main className={styles.main}>
         {children}
         <Outlet />

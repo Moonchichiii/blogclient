@@ -1,20 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import authReducer from './authSlice';
-import userReducer from './userSlice';
-import postReducer from './postSlice';
-import commentReducer from './commentSlice';
-import ratingReducer from './ratingsSlice';
-import tagReducer from './tagsSlice';
+import authReducer from '../features/Accounts/authSlice';
+import userReducer from '../features/Profile/hooks/profileSlice';
+import postReducer from '../features/Posts/postSlice';
+import commentReducer from '../features/Comments/commentSlice';
+import ratingReducer from '../features/Ratings/ratingsSlice';
+import tagReducer from '../features/Tags/tagsSlice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth']
+  whitelist: ['auth'],
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+
 
 export const store = configureStore({
   reducer: {

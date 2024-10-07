@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Facebook, Twitter, Instagram, Linkedin, Send, ArrowUp } from 'lucide-react';
+import { Send, ArrowUp } from 'lucide-react';
+import { SiFacebook, SiTwitter, SiInstagram, SiLinkedin } from 'react-icons/si';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -65,12 +66,13 @@ const Footer = () => {
 
             <div className={styles.footerBottom}>
                 <p>&copy; {new Date().getFullYear()} The Blog. All rights reserved.</p>
-                <ul className={styles.socials}>
-                    <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a></li>
-                    <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><Twitter size={20} /></a></li>
-                    <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={20} /></a></li>
-                    <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20} /></a></li>
-                </ul>
+                <ul>
+    <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><SiFacebook size={20} /></a></li>
+    <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><SiTwitter size={20} /></a></li>
+    <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><SiInstagram size={20} /></a></li>
+    <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><SiLinkedin size={20} /></a></li>
+</ul>
+
             </div>
 
             <div className={styles.scrollToTopContainer}>

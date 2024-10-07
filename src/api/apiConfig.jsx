@@ -1,7 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { store } from '../store/store';
-import { refreshTokenSuccess, logout } from '../store/authSlice';
+import { refreshTokenSuccess, logout } from '../features/Accounts/authSlice';
+import showToast from '../utils/toast';
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -21,7 +22,7 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 const processQueue = (error, token = null) => {
-  refreshSubscribers.forEach(cb => cb(error, token));
+  refreshSubscribers.forEach((cb) => cb(error, token));
   refreshSubscribers = [];
 };
 
@@ -82,8 +83,25 @@ const responseInterceptor = async (error) => {
   return Promise.reject(error);
 };
 
-api.interceptors.request.use(requestInterceptor, error => Promise.reject(error));
-api.interceptors.response.use(response => response, responseInterceptor);
+// Response interceptor for handling errors globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    if (status && status !== 400) {
+      const { message, type } = error.response?.data || {};
+      if (message) {
+        showToast(message, type || 'error');
+      } else {
+        showToast('An unexpected error occurred.', 'error');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
-multipartApi.interceptors.request.use(requestInterceptor, error => Promise.reject(error));
-multipartApi.interceptors.response.use(response => response, responseInterceptor);
+api.interceptors.request.use(requestInterceptor, (error) => Promise.reject(error));
+api.interceptors.response.use((response) => response, responseInterceptor);
+
+multipartApi.interceptors.request.use(requestInterceptor, (error) => Promise.reject(error));
+multipartApi.interceptors.response.use((response) => response, responseInterceptor);

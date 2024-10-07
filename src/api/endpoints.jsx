@@ -1,6 +1,6 @@
 import { api, multipartApi } from './apiConfig';
 
-// Auth endpoints
+// Accounts endpoints
 export const authEndpoints = {
   login: (credentials) => api.post('/api/accounts/login/', credentials),
   register: (userData) => api.post('/api/accounts/register/', userData),
@@ -11,7 +11,7 @@ export const authEndpoints = {
   refreshToken: (refreshToken) => api.post('/api/accounts/token/refresh/', { refresh: refreshToken }),
 };
 
-// User endpoints
+// Profiles endpoints
 export const userEndpoints = {
   getCurrentUser: () => api.get('/api/accounts/current-user/'),
   updateProfile: (userData) => multipartApi.put('/api/profiles/update-profile/', userData),
@@ -20,25 +20,25 @@ export const userEndpoints = {
 
 // Post endpoints
 export const postEndpoints = {
+  getPostPreviews: (params) => api.get('/api/posts/previews/', { params }),
   fetchPost: (id) => multipartApi.get(`/api/posts/${id}/`),
   getPosts: (params) => multipartApi.get('/api/posts/', { params }),
   getPost: (id) => multipartApi.get(`/api/posts/${id}/`),
-  getUserPosts: (params) => multipartApi.get('/api/posts/', { 
-    params: { 
-      ...params, 
-      author: 'current' 
-    } 
-  }),
-
+  getUserPosts: (params) =>
+    multipartApi.get('/api/posts/', {
+      params: {
+        ...params,
+        author: 'current',
+      },
+    }),
   createPost: (postData) => multipartApi.post('/api/posts/', postData),
   updatePost: (id, postData) => multipartApi.put(`/api/posts/${id}/`, postData),
-  deletePost: (id) => multipartApi.delete(`/api/posts/${id}/`),    
-  ratePost: (id, rating) => multipartApi.post(`/api/ratings/rate/`, { post: id, value: rating }),  
+  deletePost: (id) => multipartApi.delete(`/api/posts/${id}/`),
+  ratePost: (id, rating) => multipartApi.post(`/api/ratings/rate/`, { post: id, value: rating }),
   // Approve and Disapprove endpoints
   approvePost: (id) => api.post(`/api/posts/${id}/approve/`),
   disapprovePost: (id, reason) => api.post(`/api/posts/${id}/disapprove/`, { reason }),
 };
-
 
 // Comment endpoints
 export const commentEndpoints = {
@@ -55,8 +55,12 @@ export const ratingEndpoints = {
 
 // Tag endpoints
 export const tagEndpoints = {
-  createTag: (contentType, objectId, taggedUserId) => 
-    api.post('/api/tags/create-tag/', { content_type: contentType, object_id: objectId, tagged_user: taggedUserId }),
+  createTag: (contentType, objectId, taggedUserId) =>
+    api.post('/api/tags/create-tag/', {
+      content_type: contentType,
+      object_id: objectId,
+      tagged_user: taggedUserId,
+    }),
 };
 
 // Follower endpoints

@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../../store/authSlice';
+import { logoutUser } from '../../features/Accounts/authSlice';
 import { Sun, Moon } from 'lucide-react';
 import styles from './Navbar.module.css';
+import AuthModal from '../../features/Accounts/AuthModal';
+import { queryClient } from '../../utils/queryClient';
+import { fetchPosts } from '../../features/Posts/postSlice'; // Adjust this import based on your slice location
 
-const Navbar = ({ onOpenModal }) => {
+const Navbar = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalView, setModalView] = useState('signin');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(() => {
-        return localStorage.getItem('theme') === 'dark';
-    });
+    const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // Prefetch posts when hovering over the "Blog" link
+    const prefetchPosts = () => {
+        queryClient.prefetchQuery('posts', fetchPosts);
+    };
+
+    const handleOpenModal = (view) => {
+        setModalView(view);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     const handleLogout = async () => {
-        await dispatch(logoutUser());
+        dispatch(logoutUser());
         navigate('/');
         setIsMenuOpen(false);
     };
@@ -25,24 +42,21 @@ const Navbar = ({ onOpenModal }) => {
     const closeMenu = () => setIsMenuOpen(false);
 
     const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
+        setIsDarkMode((prevMode) => !prevMode);
     };
 
     useEffect(() => {
         if (isDarkMode) {
-            document.body.classList.remove('lightMode');
+            document.body.classList.add('darkMode');
             localStorage.setItem('theme', 'dark');
         } else {
-            document.body.classList.add('lightMode');
+            document.body.classList.remove('darkMode');
             localStorage.setItem('theme', 'light');
         }
     }, [isDarkMode]);
 
     return (
-        
         <div className={styles.navbarContainer}>
-            <div id="top"></div>
-            
             <nav className={styles.nav} role="navigation" aria-label="Main Navigation">
                 <div className={styles.logo}>
                     <Link to="/">TheBlog<span>Client</span></Link>
@@ -50,14 +64,14 @@ const Navbar = ({ onOpenModal }) => {
                 <div className={styles.navLinks}>
                     <Link to="/home">Home</Link>
                     <Link to="/about">About</Link>
-                    <Link to="/blog">Blog</Link>
+                    <Link onMouseEnter={prefetchPosts} to="/blog">Blog</Link>
                     {isAuthenticated && <Link to="/dashboard">Dashboard</Link>}
                 </div>
                 <div className={styles.buttons}>
                     {!isAuthenticated ? (
                         <>
-                            <button onClick={() => onOpenModal('signin')} className={styles.authButton}>Sign In</button>
-                            <button onClick={() => onOpenModal('signup')} className={styles.authButton}>Sign Up</button>
+                            <button onClick={() => handleOpenModal('signin')} className={styles.authButton}>Sign In</button>
+                            <button onClick={() => handleOpenModal('signup')} className={styles.authButton}>Sign Up</button>
                         </>
                     ) : (
                         <button onClick={handleLogout} className={`${styles.authButton} ${styles.logoutButton}`}>Logout</button>
@@ -77,23 +91,27 @@ const Navbar = ({ onOpenModal }) => {
                 <div className={styles.mobileNavLinks}>
                     <Link to="/home" onClick={closeMenu}>Home</Link>
                     <Link to="/about" onClick={closeMenu}>About</Link>
-                    <Link to="/blog" onClick={closeMenu}>Blog</Link>
+                    <Link onMouseEnter={prefetchPosts} onClick={closeMenu} to="/blog">Blog</Link>
                     {isAuthenticated && <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>}
                 </div>
                 <div className={styles.mobileButtons}>
                     {!isAuthenticated ? (
                         <>
-                            <button onClick={() => { onOpenModal('signin'); closeMenu(); }} className={styles.authButton}>Sign In</button>
-                            <button onClick={() => { onOpenModal('signup'); closeMenu(); }} className={styles.authButton}>Sign Up</button>
-                            <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle theme">
-                        {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
+                            <button onClick={() => { handleOpenModal('signin'); closeMenu(); }} className={styles.authButton}>Sign In</button>
+                            <button onClick={() => { handleOpenModal('signup'); closeMenu(); }} className={styles.authButton}>Sign Up</button>
                         </>
                     ) : (
                         <button onClick={handleLogout} className={`${styles.authButton} ${styles.logoutButton}`}>Logout</button>
                     )}
                 </div>
             </div>
+
+            <AuthModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                initialView={modalView}
+                showToast={() => {}}
+            />
         </div>
     );
 };
