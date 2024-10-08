@@ -1,53 +1,68 @@
 :root {
-  /* Dark Mode Colors */
-  --background-color: #1c2331;
-  --card-background: #2c3e50;
-  --text-color: #ecf0f1;
-  --heading-color: #fb8b24;
-  --primary-color: #5f0f40;
-  --secondary-color: #9a031e;
-  --accent-color: #e36414;
-  --blog-background: #34495e;
-  --nav-background-color: #2c3e50;
-  --footer-background-color: #2c3e50;
+  /* Dark theme variables */
+  --background-color: #1a1a2e;
+  --card-background: #2a2f38;
+  --text-color: #f5f5f5;
+  --heading-color: #ffb703;
+  --primary-color: #457b9d;
+  --secondary-color: #e63946;
+  --accent-color: #ff8c00;
+  --accent-color-hover: #e67e22;
+  --blog-background: #3e444b;
+  --nav-background-color: #2a2f38;
+  --footer-background-color: #2a2f38;
+  --button-primary: #457b9d;
+  --button-primary-hover: #3d6e8d;
+  --button-secondary: #e63946;
+  --button-secondary-hover: #d62f3c;
+  --button-text-color: #fff;
+  --link-color: #f5f5f5;
+  --link-hover-color: #ffb703;
+  --input-border: #4a4a4a;
+  --error-color: #e74c3c;
+  --warning-color: #f39c12;
+  --success-color: #2ecc71;
 
-  /* Light Mode Colors */
+  /* Light theme variables */
   --background-color-light: #f5e6d3;
-  --text-color-light: #4a4a4a;
+  --card-background-light: #ffffff;
+  --text-color-light: #333;
   --heading-color-light: #d35400;
   --primary-color-light: #f9c74f;
   --secondary-color-light: #90be6d;
-  --accent-color-light: #f8961e;
+  --accent-color-light: #ff9900;
+  --accent-color-light-hover: #e67e22;
+  --blog-background-light: #faf3e0;
   --nav-background-color-light: #ffffff;
   --footer-background-color-light: #faf3e0;
+  --button-primary-light: #f9c74f;
+  --button-primary-hover-light: #f7b32b;
+  --button-secondary-light: #90be6d;
+  --button-secondary-hover-light: #7eae5d;
+  --button-text-color-light: #333;
+  --link-color-light: #333;
+  --link-hover-color-light: #d35400;
+  --input-border-light: #ccc;
 
-  /* UI Colors */
-  --success-color: #2ecc71;
-  --error-color: #e74c3c;
-  --warning-color: #f1c40f;
-
-  /* Typography */
+  /* Common variables */
   --heading-font: 'Poppins', sans-serif;
   --body-font: 'Inter', sans-serif;
-
-  /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
-
-  /* Border Radius */
+  --border-radius-sm: 4px;
   --border-radius-md: 8px;
-
-  /* Transitions */
+  --border-radius-lg: 16px;
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
 }
 
-body.lightMode {
-  --background-color: var(--background-color-light);
-  --text-color: var(--text-color-light);
-  --heading-color: var(--heading-color-light);
+/* Reset and base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -57,40 +72,69 @@ body {
   line-height: 1.6;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   font-size: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+body.lightMode {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+}
 
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--heading-font);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
   color: var(--heading-color);
-  font-weight: 600;
-  line-height: 1.2;
-  margin-bottom: 0.5em;
 }
 
+body.lightMode h1, 
+body.lightMode h2, 
+body.lightMode h3, 
+body.lightMode h4, 
+body.lightMode h5, 
+body.lightMode h6 {
+  color: var(--heading-color-light);
+}
+
+/* Font sizes */
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+p { font-size: clamp(1rem, 1.2vw, 1.25rem); }
+
+/* Links */
 a {
-  color: var(--accent-color);
+  color: var(--link-color);
   text-decoration: none;
   transition: color var(--transition-normal);
 }
 
 a:hover {
-  color: var(--secondary-color);
+  color: var(--link-hover-color);
 }
 
+body.lightMode a {
+  color: var(--link-color-light);
+}
 
-/* Button Styles */
-.btn {
-  cursor: pointer;
-  font-family: var(--body-font);
-  transition: all var(--transition-normal);
-  padding: 0.75em 1.5em;
-  font-size: 1rem;
+body.lightMode a:hover {
+  color: var(--link-hover-color-light);
+}
+
+/* Buttons */
+button {  
   border-radius: var(--border-radius-md);
+  font-family: var(--body-font);  
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
   border: none;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+}
+
+button:hover {
+  transform: translateY(-2px);
 }
 
 .btn-primary {
@@ -102,6 +146,15 @@ a:hover {
   background-color: var(--button-primary-hover);
 }
 
+body.lightMode .btn-primary {
+  background-color: var(--button-primary-light);
+  color: var(--button-text-color-light);
+}
+
+body.lightMode .btn-primary:hover {
+  background-color: var(--button-primary-hover-light);
+}
+
 .btn-secondary {
   background-color: var(--button-secondary);
   color: var(--button-text-color);
@@ -111,34 +164,81 @@ a:hover {
   background-color: var(--button-secondary-hover);
 }
 
-/* Responsive Typography */
-@media (max-width: 1200px) {
-  body {
-    font-size: 15px;
-  }
+body.lightMode .btn-secondary {
+  background-color: var(--button-secondary-light);
+  color: var(--button-text-color-light);
 }
 
-@media (max-width: 992px) {
-  body {
-    font-size: 14px;
-  }
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.75rem; }
+body.lightMode .btn-secondary:hover {
+  background-color: var(--button-secondary-hover-light);
 }
 
+/* Layout Structure */
+#root, .layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  padding: var(--spacing-lg);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+body.lightMode .main {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+}
+
+/* Input styles */
+.input-field {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--input-border);
+  border-radius: var(--border-radius-md);
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color var(--transition-normal);
+}
+
+body.lightMode .input-field {
+  background-color: var(--card-background-light);
+  color: var(--text-color-light);
+  border-color: var(--input-border-light);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+/* Error Messages */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-xs);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  body {
-    font-size: 13px;
+  .main {
+    padding: var(--spacing-md);
   }
-  h1 { font-size: 2.2rem; }
-  h2 { font-size: 1.8rem; }
 }
 
 @media (max-width: 480px) {
-  body {
-    font-size: 12px;
+  .main {
+    padding: var(--spacing-sm);
   }
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.6rem; }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

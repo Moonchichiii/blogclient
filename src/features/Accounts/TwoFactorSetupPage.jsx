@@ -34,13 +34,13 @@ const TwoFactorSetup = () => {
     navigate('/dashboard');
   };
 
-
   return (
     <div className={styles.twoFactorSetupContainer}>
       <h1 className={styles.heading}>Set Up Two-Factor Authentication</h1>
       {!isSetup ? (
         <>
-          <button onClick={setupTwoFactor} className={styles.setupButton}>Setup 2FA</button>
+          <button onClick={handleSetup} className={styles.setupButton}>Setup 2FA</button>
+
           {qrCode && (
             <div className={styles.qrCodeContainer}>
               <QRCodeSVG value={qrCode} size={256} />

@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { followerEndpoints, profileEndpoints } from '../api/endpoints';
 
 export const useFollowers = (userId) => {
+  
   const queryClient = useQueryClient();
 
   const followersQuery = useQuery(

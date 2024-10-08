@@ -1,59 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { userEndpoints } from '../../api/endpoints';
-import useToast from '../../hooks/useToast';
+import React from 'react';
+import { useProfile } from './hooks/useProfile';
+import styles from './ProfileSettings.module.css';
 
 const ProfileSettings = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  const { data: user, isLoading, error } = useQuery(['currentUser'], userEndpoints.getCurrentUser);
-
-  const [formData, setFormData] = useState({
-    profile_name: '',
-    bio: '',
-    email: '',
-  });
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        profile_name: user.profile_name || '',
-        bio: user.profile?.bio || '',
-        email: user.email || '',
-      });
-      setImagePreview(user.profile?.image || null);
-    }
-  }, [user]);
-
-  const updateProfileMutation = useMutation(userEndpoints.updateProfile, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['currentUser']);
-      showToast('Profile updated successfully!', 'success');
-      setIsEditing(false);
-    },
-    onError: () => {
-      showToast('Failed to update profile. Please try again.', 'error');
-    },
-  });
-
-  // Handle form changes and submit (same as before)
-
-  return {
-    user,
+  const {
+    profileData,
     formData,
     imagePreview,
     isLoading,
     error,
-    isEditing,
-    setIsEditing,
-    handleImageChange,
     handleChange,
+    handleImageChange,
     handleSubmit,
-  };
+  } = useProfile();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div className={styles.profileSettings}>
+      <h1>Profile Settings</h1>
+      {imagePreview && (
+        <img src={imagePreview} alt="Profile Preview" className={styles.profileImage} />
+      )}
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="profile_name">Profile Name</label>
+          <input
+            type="text"
+            id="profile_name"
+            name="profile_name"
+            value={formData.profile_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="bio">Bio</label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            rows="4"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="image">Profile Image</label>
+          <input
+            type="file"
+            id="image"
+            onChange={handleImageChange}
+            accept="image/*"
+          />
+        </div>
+        <button type="submit" className={styles.saveButton}>Save Changes</button>
+      </form>
+    </div>
+  );
 };
 
 export default ProfileSettings;

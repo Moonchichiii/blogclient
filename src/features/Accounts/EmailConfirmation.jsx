@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import styles from './EmailConfirmation.module.css';
@@ -13,9 +13,8 @@ const EmailConfirmation = () => {
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { login } = useAuth();
   const { uidb64, token } = useParams();
-  const location = useLocation();
+  const { login } = useAuth();
 
   const confirmEmailMutation = useMutation(
     () => authEndpoints.confirmEmail(uidb64, token),
@@ -24,9 +23,9 @@ const EmailConfirmation = () => {
         setStatus('success');
         Cookies.set('access_token', data.access, { secure: true, sameSite: 'strict' });
         Cookies.set('refresh_token', data.refresh, { secure: true, sameSite: 'strict' });
-        login({ email: data.email, password: '' });
         queryClient.invalidateQueries(['currentUser']);
-        showToast('Email verified successfully!', 'success');
+        showToast('Email verified successfully!', 'success');  
+        navigate('/setup-2fa');
       },
       onError: () => {
         setStatus('error');
@@ -34,7 +33,11 @@ const EmailConfirmation = () => {
       },
     }
   );
-
+  
+  useEffect(() => {
+    confirmEmailMutation.mutate();
+  }, []);
+  
   const resendVerificationMutation = useMutation(
     (email) => authEndpoints.resendVerification(email),
     {
@@ -49,18 +52,26 @@ const EmailConfirmation = () => {
     }
   );
 
-  useEffect(() => {
-    confirmEmailMutation.mutate();
-  }, []);
-
   const handleResendSubmit = (e) => {
     e.preventDefault();
+    
     if (!email) {
       showToast('Please enter your email before resending.', 'error');
       return;
     }
+  
     setIsResending(true);
-    resendVerificationMutation.mutate(email);
+  
+    resendVerificationMutation.mutate(email, {
+      onError: (error) => {
+        if (error.response?.status === 400 && error.response?.data?.message === 'User already verified') {
+          showToast('This email is already verified.', 'error');
+        } else {
+          showToast(error.response?.data?.message || 'An error occurred while resending the verification email.', 'error');
+        }
+        setIsResending(false);
+      }
+    });
   };
 
   return (

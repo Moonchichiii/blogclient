@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePosts } from './hooks/usePosts';
-import PostItem from './PostItem';
+import PostItem from './PostsItem';
 import { Loader } from 'lucide-react';
 import styles from './PostList.module.css';
 import { throttle } from 'lodash';

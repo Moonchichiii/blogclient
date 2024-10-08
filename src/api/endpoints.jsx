@@ -37,6 +37,7 @@ export const postEndpoints = {
   deletePost: (id) => multipartApi.delete(`/api/posts/${id}/`),
   ratePost: (id, rating) => multipartApi.post(`/api/ratings/rate/`, { post: id, value: rating }),
   // Approve and Disapprove endpoints
+  getUnapprovedPosts: () => api.get('/api/posts/unapproved/'),
   approvePost: (id) => api.post(`/api/posts/${id}/approve/`),
   disapprovePost: (id, reason) => api.post(`/api/posts/${id}/disapprove/`, { reason }),
 };

@@ -1,58 +1,61 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Globe, Users, Edit, ArrowRight } from 'lucide-react';
 import styles from './About.module.css';
 
 const AboutPage = () => {
   return (
     <div className={styles.aboutContainer}>
       <header className={styles.aboutHeader}>
-        <h1 className={styles.aboutTitle}>About The Blog</h1>
+        <h1 className={styles.aboutTitle}>About TheBlogClient</h1>
       </header>
-      
+
       <section className={styles.aboutContent}>
         <div className={styles.aboutText}>
-          <h2>Welcome to The Blog</h2>
+          <h2>Welcome to TheBlogClient</h2>
           <p>
-            At The Blog, we believe in the power of diverse ideas and open discussions. 
-            Our platform is a space where writers and readers come together to explore 
-            a wide range of topics, from the everyday to the extraordinary.
+            TheBlogClient is a modern, React-based blogging platform designed to showcase the power of 
+            React Query and clean, efficient code. Our goal is to provide a seamless experience for both 
+            readers and writers, with a focus on performance and user experience.
           </p>
           <p>
-            Whether you're passionate about technology, fascinated by culture, or curious 
-            about the world around us, you'll find content that speaks to your interests. 
-            Our goal is to foster a community where ideas can be shared, debated, and evolved.
+            Whether you're a developer looking to explore React Query implementations or a content creator 
+            seeking a reliable platform, TheBlogClient offers a robust solution with features like infinite 
+            scrolling, optimistic updates, and real-time content management.
           </p>
         </div>
         <div className={styles.aboutImageContainer}>
-          <img src="src/assets/images/aboutside.png" alt="The Blog Community" className={styles.aboutImage} />
+          <img src="src/assets/images/aboutside.png" alt="TheBlogClient Community" className={styles.aboutImage} />
         </div>
       </section>
-      
+
       <section className={styles.featuresSection}>
-        <h2>What We Offer</h2>
+        <h2>Key Features</h2>
         <div className={styles.featuresList}>
           <div className={styles.featureItem}>
-            <i className={`${styles.icon} ${styles.diversityIcon}`}></i>
-            <h3>Diverse Content</h3>
-            <p>Articles on a wide range of topics to satisfy every curiosity</p>
+            <Globe className={styles.icon} />
+            <h3>React Query Integration</h3>
+            <p>Efficient data fetching and state management for a smooth user experience</p>
           </div>
           <div className={styles.featureItem}>
-            <i className={`${styles.icon} ${styles.communityIcon}`}></i>
-            <h3>Engaged Community</h3>
-            <p>A space for readers and writers to connect and discuss ideas</p>
+            <Users className={styles.icon} />
+            <h3>User Authentication</h3>
+            <p>Secure login and registration system with JWT token management</p>
           </div>
           <div className={styles.featureItem}>
-            <i className={`${styles.icon} ${styles.qualityIcon}`}></i>
-            <h3>Quality Writing</h3>
-            <p>Thoughtful, well-researched articles from passionate writers</p>
+            <Edit className={styles.icon} />
+            <h3>Content Management</h3>
+            <p>Create, edit, and manage blog posts with ease</p>
           </div>
         </div>
       </section>
-      
+
       <section className={styles.ctaSection}>
-        <h2>Join Our Community</h2>
-        <p>Become a part of The Blog and start sharing your thoughts with the world.</p>
-        <Link to="/signup" className={styles.ctaButton}>Start Writing</Link>
+        <h2>Get Started with TheBlogClient</h2>
+        <p>Experience the power of modern web development with our React-based blogging platform.</p>
+        <Link to="/signup" className={styles.ctaButton}>
+          Join Now <ArrowRight size={16} />
+        </Link>
       </section>
     </div>
   );

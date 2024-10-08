@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { User, Calendar, Star, MessageSquare, Tag, Lock } from 'lucide-react';
 import styles from './PostItem.module.css';
-import { useComments } from '../hooks/useComments';
-import { useRatings } from '../hooks/useRatings';
-import { useTags } from '../hooks/useTags';
-import { useAuth } from '../hooks/useAuth';
+import { useComments } from '../Comments/hooks/useComments';
+import { useRatings } from '../Ratings/hooks/useRatings';
+import { useTags } from '../Tags/hooks/useTags';
+import { useAuth } from '../Accounts/hooks/useAuth';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const PostItem = ({ post }) => {

@@ -13,13 +13,13 @@ const InputField = ({ icon: Icon, error, ...props }) => (
   </div>
 );
 
-const PasswordInput = ({ error, ...props }) => {
+const PasswordInput = ({ error, type = 'password', ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className={styles.inputContainer}>
       <Lock className={styles.icon} size={20} />
       <input
-        type={showPassword ? 'text' : 'password'}
+        type={showPassword ? 'text' : type}
         className={`${styles.inputField} ${error ? styles.inputError : ''}`}
         {...props}
       />
@@ -34,6 +34,7 @@ const PasswordInput = ({ error, ...props }) => {
     </div>
   );
 };
+
 
 const calculatePasswordStrength = (password) => {
   if (password.length < 6) return 'Weak';

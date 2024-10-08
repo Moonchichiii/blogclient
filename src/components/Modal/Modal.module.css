@@ -4,32 +4,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-  max-height: 100dvh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  z-index: 300000;
-  
+  z-index: 2000;
 }
 
 .content {
-  margin-top: 3rem;
   background-color: var(--card-background);
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   position: relative;
-  width: 100%;
-  max-width: 30%;
-  max-height: 100vh;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
   overflow-y: auto;
-  overflow-wrap: inherit;
 }
 
 .closeButton {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -38,11 +34,11 @@
 }
 
 .heading {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--heading-color);
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .toggleButton {
@@ -50,7 +46,7 @@
   border: none;
   color: var(--accent-color);
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: var(--spacing-md);
   text-align: center;
   display: block;
   width: 100%;

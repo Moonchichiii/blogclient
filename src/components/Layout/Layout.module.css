@@ -1,32 +1,38 @@
 .layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 2em;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+body.lightMode .main {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+}
+
+
+
+@media (max-width: 1200px) {
   .main {
-    flex-grow: 1;
-    padding: 2em;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color var(--transition-normal), color var(--transition-normal);
+    padding: 1.5em;
   }
-  
-  @media (max-width: 1200px) {
-    .main {
-      padding: 1.5em;
-    }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1em;
   }
-  
-  @media (max-width: 768px) {
-    .main {
-      padding: 1em;
-    }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 0.75em;
   }
-  
-  @media (max-width: 480px) {
-    .main {
-      padding: 0.75em;
-    }
-  }
-  
+}

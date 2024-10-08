@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './NavBar';
 import Footer from './Footer';
 import styles from './Layout.module.css';
 
-const Layout = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('darkMode');
-      document.body.classList.remove('lightMode');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.classList.add('lightMode');
-      document.body.classList.remove('darkMode');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
-
-  const toggleTheme = () => setIsDarkMode(prevMode => !prevMode);
+const Layout = ({ children, isDarkMode, toggleTheme }) => {
+  const location = useLocation();
+  
+  // Only render Navbar and Footer if not on the Landing page
+  const hideLayout = location.pathname === '/';
 
   return (
     <div className={styles.layout}>
-      <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      {!hideLayout && <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
       <main className={styles.main}>
         {children}
         <Outlet />
       </main>
-      <Footer />
+      {!hideLayout && <Footer />}
     </div>
   );
 };

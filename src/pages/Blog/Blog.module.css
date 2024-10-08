@@ -19,9 +19,15 @@
 }
 
 .blogPosts {
+  background-color: var(--blog-background);
+  color: var(--text-color);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+}
+body.lightMode .blogPost {
+  background-color: var(--blog-background-light);
+  color: var(--text-color-light);
 }
 
 .orderingSelect {

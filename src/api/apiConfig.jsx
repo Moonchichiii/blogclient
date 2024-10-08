@@ -1,7 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { store } from '../store/store';
-import { refreshTokenSuccess, logout } from '../features/Accounts/authSlice';
 import showToast from '../utils/Toast';
 
 const baseURL = import.meta.env.VITE_BASE_URL;

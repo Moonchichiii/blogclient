@@ -3,12 +3,15 @@ import PostList from '../../features/Posts/PostList';
 import SearchBar from '../../components/Searchbar/SearchBar';
 import PostModal from '../../features/Posts/PostModal';
 import styles from './Blog.module.css';
+import { useAuth } from '../../features/Accounts/hooks/useAuth';
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [ordering, setOrdering] = useState('-created_at');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-  const [postToEdit, setPostToEdit] = useState(null); 
+  const [postToEdit, setPostToEdit] = useState(null);
+  
+  const { isAuthenticated } = useAuth();
 
   const handleOpenPostModal = (post = null) => {
     setPostToEdit(post);
@@ -30,16 +33,18 @@ const Blog = () => {
       </select>
       <PostList searchQuery={searchQuery} ordering={ordering} />
 
-      <div>
-        <button onClick={() => handleOpenPostModal()}>Create New Post</button>
-        <button onClick={() => handleOpenPostModal(existingPost)}>Edit Post</button>
+      {isAuthenticated && (
+        <div>
+          <button onClick={() => handleOpenPostModal()}>Create New Post</button>
+          <button onClick={() => handleOpenPostModal(existingPost)}>Edit Post</button>
 
-        <PostModal
-          isOpen={isPostModalOpen}
-          onClose={handleClosePostModal}
-          postToEdit={postToEdit}
-        />
-      </div>
+          <PostModal
+            isOpen={isPostModalOpen}
+            onClose={handleClosePostModal}
+            postToEdit={postToEdit}
+          />
+        </div>
+      )}
     </div>
   );
 };

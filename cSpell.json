@@ -17,6 +17,8 @@
       "reduxjs",
       "blogclient",
       "antd",
-      "unfollowing"                ]
+      "unfollowing",
+      "aboutside"
+]
   }
   

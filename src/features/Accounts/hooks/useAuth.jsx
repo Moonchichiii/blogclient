@@ -1,30 +1,38 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { authEndpoints, userEndpoints } from '../../../api/endpoints';
 import showToast from '../../../utils/Toast';
+import queryClient from '../../../api/queryClient'; // Import the queryClient
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('access_token'));
-  const queryClient = useQueryClient();
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const accessToken = Cookies.get('access_token');
+    const refreshToken = Cookies.get('refresh_token');
+    return !!accessToken && !!refreshToken;
+  });
 
-  const { data: user, isLoading: isUserLoading } = useQuery(
-    ['currentUser'],
-    userEndpoints.getCurrentUser,
-    {
-      enabled: isAuthenticated,
-      retry: false,
-      onError: () => {
-        setIsAuthenticated(false);
-        Cookies.remove('access_token');
-        Cookies.remove('refresh_token');
-      },
-    }
-  );
+  const { data: user, isLoading: isUserLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: userEndpoints.getCurrentUser,
+    enabled: isAuthenticated,
+    staleTime: 1000 * 60 * 10,
+    cacheTime: 1000 * 60 * 30,
+    retry: false,
+    onSuccess: (data) => {
+      setIsAuthenticated(true);
+    },
+    onError: (error) => {
+      setIsAuthenticated(false);
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+    },
+  });
 
-  const loginMutation = useMutation(authEndpoints.login, {
+  const loginMutation = useMutation({
+    mutationFn: authEndpoints.login,
     onSuccess: (data) => {
       const { access, refresh } = data;
       Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
@@ -37,24 +45,26 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  const logoutMutation = useMutation(authEndpoints.logout, {
-    onSuccess: () => {
+  const logoutMutation = useMutation({
+    mutationFn: authEndpoints.logout,
+    onSuccess: (data) => {
       Cookies.remove('access_token');
       Cookies.remove('refresh_token');
       setIsAuthenticated(false);
-      queryClient.clear();
+      queryClient.invalidateQueries(['currentUser']);
     },
     onError: (error) => {
       showToast(error.response?.data?.message || 'Logout failed', 'error');
     },
   });
 
-  const refreshTokenMutation = useMutation(authEndpoints.refreshToken, {
+  const refreshTokenMutation = useMutation({
+    mutationFn: authEndpoints.refreshToken,
     onSuccess: (data) => {
       Cookies.set('access_token', data.access, { secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
     },
-    onError: () => {
+    onError: (error) => {
       setIsAuthenticated(false);
       Cookies.remove('access_token');
       Cookies.remove('refresh_token');
@@ -69,17 +79,21 @@ export const AuthProvider = ({ children }) => {
       }
     }, 15 * 60 * 1000);
 
-    return () => clearInterval(refreshTokenPeriodically);
+    return () => {
+      clearInterval(refreshTokenPeriodically);
+    };
   }, [refreshTokenMutation]);
 
-  const value = useMemo(() => ({
-    isAuthenticated,
-    user,
-    isLoading: isUserLoading,
-    login: loginMutation.mutate,
-    logout: logoutMutation.mutate,
-    refreshToken: refreshTokenMutation.mutate,
-  }), [isAuthenticated, user, isUserLoading, loginMutation.mutate, logoutMutation.mutate, refreshTokenMutation.mutate]);
+  const value = useMemo(() => {
+    return {
+      isAuthenticated,
+      user,
+      isLoading: isUserLoading,
+      login: loginMutation.mutate,
+      logout: logoutMutation.mutate,
+      refreshToken: refreshTokenMutation.mutate,
+    };
+  }, [isAuthenticated, user, isUserLoading, loginMutation.mutate, logoutMutation.mutate, refreshTokenMutation.mutate]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

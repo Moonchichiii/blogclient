@@ -1,111 +1,204 @@
 .footer {
-    background-color: var(--footer-background-color);
-    color: var(--text-color);
-    padding: var(--spacing-lg) var(--spacing-md);
-    font-family: var(--body-font);
-    position: relative;
-  }
-  
-  .footerContent {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--spacing-lg);
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-  }
-  
-  .footerSection {
-    flex: 1;
-    min-width: 200px;
-  }
-  
-  .footerSection h3 {
-    font-family: var(--heading-font);
-    font-size: 1.2rem;
-    color: var(--heading-color);
-    font-weight: 600;
-    margin-bottom: var(--spacing-md);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  
-  .footerSection p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-color);
-  }
-  
-  .footerSection ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .footerSection ul li {
-    margin: var(--spacing-sm) 0;
-  }
-  
-  .footerSection ul li a {
-    color: var(--text-color);
-    text-decoration: none;
-    transition: color var(--transition-normal);
-    font-size: 0.9rem;
-  }
-  
-  .footerSection ul li a:hover {
-    color: var(--accent-color);
-  }
-  
-  .contactForm {
-    display: flex;
+  background-color: var(--footer-background-color);
+  color: var(--text-color);
+  padding: 4em 2em;
+  font-family: var(--body-font);
+  position: relative;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footerMain {
+  display: flex;
+  flex: 2;
+  gap: 2em;
+}
+
+.footerContact {
+  flex: 1;
+}
+
+.footerSection h3 {
+  font-family: var(--heading-font);
+  font-size: 1.2em;
+  color: var(--footer-heading-color);
+  margin-bottom: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footerSection p {
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--footer-text-color);
+}
+
+.quickLinks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5em;
+  list-style: none;
+  padding: 0;
+}
+
+.quickLinks li a {
+  color: var(--footer-link-color);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+  font-size: 0.9em;
+}
+
+.quickLinks li a:hover {
+  color: var(--footer-link-hover-color);
+}
+
+.contactForm {
+  margin-top: 1em;
+}
+
+.subjectInput,
+.inputContainer input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-left: 40px; /* Space for the icon */
+  background-color: var(--card-background); /* Match with the search bar */
+  border: 1px solid var(--input-border);
+  border-radius: 20px;
+  font-size: 0.9em;
+  color: var(--footer-text-color); /* Keep text color aligned with footer */
+  transition: border-color 0.3s ease;
+  margin-bottom: 1em; /* Add margin between the inputs */
+}
+
+.subjectInput:focus,
+.inputContainer input:focus {
+  border-color: var(--accent-color); /* Add the focus effect */
+  outline: none;
+}
+
+.inputContainer {
+  position: relative;
+}
+
+.inputContainer svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--footer-text-color);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.inputContainer svg:hover {
+  color: var(--button-hover-color); /* Change color on hover */
+  transform: scale(1.1); /* Scale icon on hover */
+}
+
+.inputContainer button {
+  position: absolute;
+  right: 45px;
+  top: 40%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  color: var(--footer-text-color);
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.inputContainer button:hover {
+  color: var(--button-hover-color); /* Match hover color with the search icon */
+  transform: scale(1.1); /* Scale icon on hover */
+}
+
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid var(--footer-border-color);
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1em;
+  list-style: none;
+}
+
+.socialLinks li a {
+  color: var(--footer-link-color);
+  transition: color 0.3s ease-in-out;
+}
+
+.socialLinks li a:hover {
+  color: var(--footer-link-hover-color);
+}
+
+.scrollToTopContainer {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+  z-index: 1000;
+}
+
+.scrollToTop {
+  background: var(--footer-scroll-button-bg);
+  border: none;
+  cursor: pointer;
+  color: var(--footer-scroll-button-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.scrollToTop:hover {
+  transform: scale(1.1);
+  background-color: var(--footer-scroll-button-hover-bg);
+}
+
+.arrowIcon {
+  transition: transform 0.3s ease;
+}
+
+.scrollToTop:hover .arrowIcon {
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footerContent,
+  .footerMain {
     flex-direction: column;
-    gap: var(--spacing-md);
   }
-  
-  .scrollToTop {
-    background: var(--card-background);
-    border: none;
-    cursor: pointer;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
+
+  .footerContact {
+    width: 100%;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .socialLinks {
+    margin-top: 1em;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transition: transform var(--transition-normal), background-color var(--transition-normal);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .scrollToTopContainer,.footerContent {
+    bottom: 9em; 
   }
   
-  .scrollToTop:hover {
-    transform: scale(1.1);
-    color: var(--accent-color);
-    background-color: var(--color-neutral-200);
-  }
-  
-  @media (max-width: 768px) {
-    .footer {
-      padding: var(--spacing-lg) var(--spacing-sm);
-    }
-  
-    .footerContent {
-      flex-direction: column;
-    }
-  }
-  
-  /* Scroll to Top Animation */
-  .scrollToTopContainer {
-    position: fixed;
-    bottom: var(--spacing-lg);
-    right: var(--spacing-lg);
-    z-index: 1000;
-  }
-  
-  /* Reduced Motion */
-  @media (prefers-reduced-motion: reduce) {
-    .footer *,
-    .scrollToTop,
-    .arrowIcon {
-      transition: none !important;
-    }
-  }
+}
