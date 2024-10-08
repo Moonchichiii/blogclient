@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from './Modal';
+import Modal from '../../components/Modal/Modal';
 import PostForm from '../../features/Posts/PostForm';
 
 const PostModal = React.memo(({ isOpen, onClose, postToEdit }) => {

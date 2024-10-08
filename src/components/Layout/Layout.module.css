@@ -12,7 +12,6 @@
     transition: background-color var(--transition-normal), color var(--transition-normal);
   }
   
-  /* Media Queries for Responsiveness */
   @media (max-width: 1200px) {
     .main {
       padding: 1.5em;
@@ -29,16 +28,5 @@
     .main {
       padding: 0.75em;
     }
-  }
-  
-  /* Dark Mode and Light Mode Toggles */
-  body.darkMode {
-    background-color: var(--background-color);
-    color: var(--text-color);
-  }
-  
-  body.lightMode {
-    background-color: var(--background-color);
-    color: var(--text-color);
   }
   

@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { createPost, updatePost } from './postSlice';
-import { createTag } from '../Tags/tagsSlice';
+import { useState, useEffect } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postEndpoints, tagEndpoints, userEndpoints } from '../../api/endpoints';
 import { Image, X } from 'lucide-react';
-import useToast from '../../hooks/useToast';
-import api from '../../api/apiConfig';
+import showToast from '../../utils/Toast';
 import styles from './PostForm.module.css';
 
 const PostForm = ({ post, onPostSubmit }) => {
-  const dispatch = useDispatch();
-  const { showToast } = useToast();
+  const queryClient = useQueryClient();
   const [tags, setTags] = useState(
     post ? post.tags.map((tag) => tag.tagged_user_name).join(', ') : ''
   );
@@ -20,6 +17,30 @@ const PostForm = ({ post, onPostSubmit }) => {
   });
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState(post ? post.image : null);
+
+  const createPostMutation = useMutation(postEndpoints.createPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+      showToast('Post created successfully!', 'success');
+      if (onPostSubmit) onPostSubmit();
+    },
+    onError: (error) => {
+      showToast(error.message || 'Failed to create post', 'error');
+    },
+  });
+
+  const updatePostMutation = useMutation(postEndpoints.updatePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+      showToast('Post updated successfully!', 'success');
+      if (onPostSubmit) onPostSubmit();
+    },
+    onError: (error) => {
+      showToast(error.message || 'Failed to update post', 'error');
+    },
+  });
+
+  const createTagMutation = useMutation(tagEndpoints.createTag);
 
   useEffect(() => {
     if (post) {
@@ -69,33 +90,8 @@ const PostForm = ({ post, onPostSubmit }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const fetchUserIdByUsername = async (username) => {
-    try {
-      const response = await api.get(`/api/users/?profile_name=${username}`);
-      if (response.data.length > 0) {
-        return response.data[0].id;
-      }
-    } catch (error) {
-      console.error(`Failed to fetch user ID for username: ${username}`, error);
-    }
-    return null;
-  };
-
-  const fetchContentTypeId = async (model) => {
-    try {
-      const response = await api.get(`/api/content-types/?model=${model}`);
-      if (response.data.length > 0) {
-        return response.data[0].id;
-      }
-    } catch (error) {
-      console.error(`Failed to fetch content type ID for model: ${model}`, error);
-    }
-    return null;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (validateForm()) {
       const data = new FormData();
       data.append('title', formData.title);
@@ -107,32 +103,23 @@ const PostForm = ({ post, onPostSubmit }) => {
       try {
         let updatedPost;
         if (post) {
-          updatedPost = await dispatch(
-            updatePost({ id: post.id, postData: data })
-          ).unwrap();
-          showToast('Post updated successfully!', 'success');
+          updatedPost = await updatePostMutation.mutateAsync({ id: post.id, postData: data });
         } else {
-          updatedPost = await dispatch(createPost(data)).unwrap();
-          showToast('Post created successfully!', 'success');
+          updatedPost = await createPostMutation.mutateAsync(data);
         }
 
         // Handle tags
-        const taggedUsernames = tags
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter(Boolean);
+        const taggedUsernames = tags.split(',').map((tag) => tag.trim()).filter(Boolean);
         for (const username of taggedUsernames) {
-          const userId = await fetchUserIdByUsername(username);
+          const userId = await userEndpoints.getUserIdByUsername(username);
           if (userId) {
-            const contentTypeId = await fetchContentTypeId('post');
+            const contentTypeId = await postEndpoints.getContentTypeId('post');
             if (contentTypeId) {
-              await dispatch(
-                createTag({
-                  contentType: contentTypeId,
-                  objectId: updatedPost.id,
-                  taggedUserId: userId,
-                })
-              ).unwrap();
+              await createTagMutation.mutateAsync({
+                contentType: contentTypeId,
+                objectId: updatedPost.id,
+                taggedUserId: userId,
+              });
             } else {
               showToast('Failed to fetch content type ID', 'error');
             }
@@ -140,26 +127,13 @@ const PostForm = ({ post, onPostSubmit }) => {
             showToast(`User ${username} not found`, 'error');
           }
         }
-
-        if (onPostSubmit) {
-          onPostSubmit();
-        }
       } catch (error) {
-        const errorMessage =
-          error.message ||
-          `Failed to ${post ? 'update' : 'create'} post. Please try again.`;
-        showToast(errorMessage, 'error');
+        showToast(error.message || 'An error occurred', 'error');
       }
     } else {
       showToast('Please fix the errors in the form', 'warning');
     }
   };
-
-  const handleError = (error) => {
-    const errorMessage = error?.response?.data?.message || 'An error occurred';
-    showToast(errorMessage, 'error');
-  };
-  
 
 
   return (

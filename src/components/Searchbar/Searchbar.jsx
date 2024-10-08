@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { debounce } from 'lodash';
-import styles from './SearchBar.module.css';
+import styles from './SerchBar.module.css';
 
 const SearchBar = ({ setSearchQuery }) => {
     const [inputValue, setInputValue] = useState('');

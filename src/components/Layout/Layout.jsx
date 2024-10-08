@@ -5,7 +5,6 @@ import Footer from './Footer';
 import styles from './Layout.module.css';
 
 const Layout = ({ children }) => {
-  // Set initial theme from localStorage or default to 'light'
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
   useEffect(() => {
@@ -20,9 +19,7 @@ const Layout = ({ children }) => {
     }
   }, [isDarkMode]);
 
-  const toggleTheme = () => {
-    setIsDarkMode(prevMode => !prevMode);
-  };
+  const toggleTheme = () => setIsDarkMode(prevMode => !prevMode);
 
   return (
     <div className={styles.layout}>

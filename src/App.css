@@ -26,17 +26,6 @@
   --error-color: #e74c3c;
   --warning-color: #f1c40f;
 
-  /* Component Colors */
-  --nav-background-color: #2c3e50;
-  --footer-background-color: #2c3e50;
-  --input-border: #34495e;
-  --button-primary: #5f0f40;
-  --button-primary-hover: #9a031e;
-  --button-secondary: #e36414;
-  --button-secondary-hover: #fb8b24;
-  --button-text-color: #ecf0f1;
-  --nav-link-hover-color: #fb8b24;
-
   /* Typography */
   --heading-font: 'Poppins', sans-serif;
   --body-font: 'Inter', sans-serif;
@@ -48,9 +37,7 @@
   --spacing-lg: 2rem;
 
   /* Border Radius */
-  --border-radius-sm: 4px;
   --border-radius-md: 8px;
-  --border-radius-lg: 12px;
 
   /* Transitions */
   --transition-fast: 0.2s ease;
@@ -61,11 +48,6 @@ body.lightMode {
   --background-color: var(--background-color-light);
   --text-color: var(--text-color-light);
   --heading-color: var(--heading-color-light);
-  --primary-color: var(--primary-color-light);
-  --secondary-color: var(--secondary-color-light);
-  --accent-color: var(--accent-color-light);
-  --nav-background-color: var(--nav-background-color-light);
-  --footer-background-color: var(--footer-background-color-light);
 }
 
 body {
@@ -74,9 +56,9 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   transition: background-color var(--transition-normal), color var(--transition-normal);
-  scroll-behavior: smooth;
   font-size: 16px;
 }
+
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--heading-font);

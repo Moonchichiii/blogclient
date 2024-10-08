@@ -1,60 +1,93 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { authEndpoints } from '../../../api/endpoints';
-import { loginSuccess, logout } from '../authSlice'; // Use `logout`
-import { fetchCurrentUser } from '../../Profile/hooks/profileSlice';
+import { authEndpoints, userEndpoints } from '../../../api/endpoints';
+import showToast from '../../../utils/Toast';
 
-const useAuth = () => {
-  const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const [loading, setLoading] = useState(true);
+const AuthContext = createContext(null);
 
-  const login = useCallback(async (credentials) => {
-    try {
-      const response = await authEndpoints.login(credentials);
-      const { access, refresh } = response.data;
+export const AuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('access_token'));
+  const queryClient = useQueryClient();
+
+  const { data: user, isLoading: isUserLoading } = useQuery(
+    ['currentUser'],
+    userEndpoints.getCurrentUser,
+    {
+      enabled: isAuthenticated,
+      retry: false,
+      onError: () => {
+        setIsAuthenticated(false);
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
+      },
+    }
+  );
+
+  const loginMutation = useMutation(authEndpoints.login, {
+    onSuccess: (data) => {
+      const { access, refresh } = data;
       Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
       Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
-      dispatch(loginSuccess({ accessToken: access, refreshToken: refresh }));
-      await dispatch(fetchCurrentUser());
-      return response.data;
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    }
-  }, [dispatch]);
+      setIsAuthenticated(true);
+      queryClient.invalidateQueries(['currentUser']);
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Login failed', 'error');
+    },
+  });
 
-  const refreshTokenPeriodically = useCallback(() => {
-    const interval = setInterval(async () => {
-      const refreshToken = Cookies.get('refresh_token');
-      if (refreshToken) {
-        try {
-          const { data } = await authEndpoints.refreshToken(refreshToken);
-          Cookies.set('access_token', data.access, { secure: true, sameSite: 'strict' });
-          dispatch(loginSuccess({ accessToken: data.access, refreshToken }));
-        } catch (error) {
-          console.error('Token refresh failed:', error);
-          logout();
-        }
-      }
-    }, 15 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [dispatch]);
+  const logoutMutation = useMutation(authEndpoints.logout, {
+    onSuccess: () => {
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+      setIsAuthenticated(false);
+      queryClient.clear();
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Logout failed', 'error');
+    },
+  });
 
-  const logoutUser = useCallback(() => {
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
-    dispatch(logout());
-  }, [dispatch]);
+  const refreshTokenMutation = useMutation(authEndpoints.refreshToken, {
+    onSuccess: (data) => {
+      Cookies.set('access_token', data.access, { secure: true, sameSite: 'strict' });
+      setIsAuthenticated(true);
+    },
+    onError: () => {
+      setIsAuthenticated(false);
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+    },
+  });
 
   useEffect(() => {
-    if (isAuthenticated) refreshTokenPeriodically();
-  }, [isAuthenticated, refreshTokenPeriodically]);
+    const refreshTokenPeriodically = setInterval(() => {
+      const refreshToken = Cookies.get('refresh_token');
+      if (refreshToken) {
+        refreshTokenMutation.mutate(refreshToken);
+      }
+    }, 15 * 60 * 1000);
 
-  return useMemo(() => ({
-    login, logout: logoutUser, isAuthenticated, loading,
-  }), [login, logoutUser, isAuthenticated, loading]);
+    return () => clearInterval(refreshTokenPeriodically);
+  }, [refreshTokenMutation]);
+
+  const value = useMemo(() => ({
+    isAuthenticated,
+    user,
+    isLoading: isUserLoading,
+    login: loginMutation.mutate,
+    logout: logoutMutation.mutate,
+    refreshToken: refreshTokenMutation.mutate,
+  }), [isAuthenticated, user, isUserLoading, loginMutation.mutate, logoutMutation.mutate, refreshTokenMutation.mutate]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default useAuth;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === null) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

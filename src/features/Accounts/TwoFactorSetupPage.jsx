@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../api/apiConfig';
+import { useMutation } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
 import styles from './TwoFactorSetup.module.css';
+import { authEndpoints } from '../../api/endpoints';
+import showToast from '../../utils/Toast';
 
-const TwoFactorSetup = ({ showToast }) => {
+const TwoFactorSetup = () => {
   const [qrCode, setQrCode] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [isSetup, setIsSetup] = useState(false);
   const navigate = useNavigate();
 
-  const setupTwoFactor = async () => {
-    try {
-      const response = await api.post('/api/accounts/setup-2fa/');
-      setQrCode(response.data.config_url);
-      setSecretKey(response.data.secret_key);
+  const setupTwoFactorMutation = useMutation(authEndpoints.setupTwoFactor, {
+    onSuccess: (data) => {
+      setQrCode(data.config_url);
+      setSecretKey(data.secret_key);
       showToast('Two-factor authentication setup successful', 'success');
-    } catch (error) {
+    },
+    onError: () => {
       showToast('Failed to setup two-factor authentication', 'error');
-    }
+    },
+  });
+
+  const handleSetup = () => {
+    setupTwoFactorMutation.mutate();
   };
 
   const handleContinue = () => navigate('/dashboard');
@@ -27,6 +33,7 @@ const TwoFactorSetup = ({ showToast }) => {
     showToast('You can set up two-factor authentication later in your account settings.', 'info');
     navigate('/dashboard');
   };
+
 
   return (
     <div className={styles.twoFactorSetupContainer}>

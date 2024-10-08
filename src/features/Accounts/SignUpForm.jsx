@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { loginStart, loginSuccess } from './authSlice';
+import { useMutation } from '@tanstack/react-query';
 import { authEndpoints } from '../../api/endpoints';
 import { toast } from 'react-toastify';
 import styles from './AuthForm.module.css';
@@ -51,7 +50,24 @@ const SignUpForm = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [passwordStrength, setPasswordStrength] = useState('');
-  const dispatch = useDispatch();
+
+  const registerMutation = useMutation(authEndpoints.register, {
+    onSuccess: () => {
+      onSuccess('emailConfirmation');
+      toast.success('Registration successful!');
+    },
+    onError: (error) => {
+      if (error.response?.status === 400) {
+        setErrors(error.response.data);
+        const nonFieldErrors = error.response.data.non_field_errors;
+        if (nonFieldErrors) {
+          toast.error(nonFieldErrors.join(' '));
+        }
+      } else {
+        toast.error('An error occurred during registration.');
+      }
+    },
+  });
 
   const validateForm = () => {
     const newErrors = {};
@@ -65,24 +81,7 @@ const SignUpForm = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
-    dispatch(loginStart());
-    try {
-      await authEndpoints.register(formData);
-      dispatch(loginSuccess());
-      onSuccess('emailConfirmation');
-      toast.success('Registration successful!');
-    } catch (error) {
-      if (error.response?.status === 400) {
-        setErrors(error.response.data);
-        const nonFieldErrors = error.response.data.non_field_errors;
-        if (nonFieldErrors) {
-          toast.error(nonFieldErrors.join(' '));
-        }
-      } else {
-        toast.error('An error occurred during registration.');
-      }
-    }
+    registerMutation.mutate(formData);
   };
 
   const handleInputChange = (e) => {

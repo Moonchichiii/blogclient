@@ -1,12 +1,12 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Layout from './components/Layout/Layout';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import useAuth from './features/Accounts/hooks/useAuth';
+import { AuthProvider, useAuth } from './features/Accounts/hooks/useAuth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from 'lucide-react';
+
 
 // Lazy imports
 const Landing = lazy(() => import('./pages/Landing/Landing'));
@@ -21,15 +21,21 @@ const About = lazy(() => import('./pages/About/About'));
 const MyPosts = lazy(() => import('./pages/Blog/MyPosts'));
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+  const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
 const AppContent = () => {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="loading-page"><Loader className="animate-spin" size={48} /></div>;
+  }
+
   return (
     <ErrorBoundary>
       <Layout>
-        <ToastContainer /> 
+        <ToastContainer />
         <Suspense fallback={<div className="loading-spinner"><Loader className="animate-spin" size={32} /></div>}>
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -58,8 +64,10 @@ const App = () => {
 
   return (
     <Router>
-      <AppContent />
-    </Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>    
   );
 };
 

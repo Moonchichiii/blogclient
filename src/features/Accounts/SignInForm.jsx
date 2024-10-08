@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import { loginStart } from './authSlice';
-import useAuth from './hooks/useAuth';  // Default import
+import { useAuth } from './hooks/useAuth';
 import styles from './AuthForm.module.css';
 import { toast } from 'react-toastify';
 
@@ -40,8 +38,7 @@ const PasswordInput = ({ error, ...props }) => {
 
 const SignInForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({ email: '', password: '', otp: '' });
-  const [requireOTP, setRequireOTP] = useState(false);  
-  const dispatch = useDispatch();
+  const [requireOTP, setRequireOTP] = useState(false);
   const { login } = useAuth();
 
   const handleChange = (e) => {
@@ -51,14 +48,13 @@ const SignInForm = ({ onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginStart());
 
     try {
       const response = await login(formData);
       if (response.require_otp) setRequireOTP(true);
       if (response.require_email_verification) setShowResendVerification(true);
       if (onSuccess) onSuccess();
-    } catch (error) {      
+    } catch (error) {
       toast.error(error.response?.data?.message || 'An error occurred');
     }
   };
@@ -89,8 +85,7 @@ const SignInForm = ({ onSuccess }) => {
           onChange={handleChange}
         />
       )}
-      <button type="submit" className={styles.submitButton}>Sign In</button>
-      {showResendVerification && <ResendVerification />}
+      <button type="submit" className={styles.submitButton}>Sign In</button>      
     </form>
   );
 };

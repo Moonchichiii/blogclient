@@ -1,33 +1,113 @@
-import React from 'react';
-import { User, Calendar, Star, MessageSquare, Tag } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Calendar, Star, MessageSquare, Tag, Lock } from 'lucide-react';
 import styles from './PostItem.module.css';
+import { useComments } from '../hooks/useComments';
+import { useRatings } from '../hooks/useRatings';
+import { useTags } from '../hooks/useTags';
+import { useAuth } from '../hooks/useAuth';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-import Skeleton from 'react-loading-skeleton';
+const PostItem = ({ post }) => {
+  const { isAuthenticated } = useAuth();
+  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [newTag, setNewTag] = useState('');
 
+  const { 
+    comments, 
+    fetchNextPage, 
+    hasNextPage, 
+    addComment 
+  } = useComments(post.id);
+  const { rating, ratePost } = useRatings(post.id);
+  const { tags, addTag } = useTags(post.id);
 
-const PostItemSkeleton = () => (
-    <div className={styles.skeletonPost}>
-      <Skeleton height={200} />
-      <Skeleton count={3} />
-    </div>
-  );
-  
-  if (isLoading) return <PostItemSkeleton />;
+  const handleAddComment = () => {
+    if (newComment.trim() && isAuthenticated) {
+      addComment({ content: newComment });
+      setNewComment('');
+    }
+  };
 
-const PostItem = ({ post, isAuthenticated }) => {
+  const handleAddTag = () => {
+    if (newTag.trim() && isAuthenticated) {
+      addTag(newTag);
+      setNewTag('');
+    }
+  };
+
   return (
     <article className={styles.postItem}>
       {post.image && <img src={post.image_url} alt={post.title} className={styles.postImage} />}
       <div className={styles.postContent}>
         <h2 className={styles.postTitle}>{post.title}</h2>
-        <p className={styles.postExcerpt}>{post.content.substring(0, 150)}...</p>
-        <div className={styles.postMeta}>
-          <span><User size={16} /> {post.author}</span>
-          <span><Calendar size={16} /> {new Date(post.created_at).toLocaleDateString()}</span>
-          <span><Star size={16} /> {post.average_rating.toFixed(1)}</span>
-          <span><MessageSquare size={16} /> {post.comment_count}</span>
-          <span><Tag size={16} /> {post.tag_count}</span>
-        </div>
+        {isAuthenticated ? (
+          <>
+            <p className={styles.postExcerpt}>{post.content}</p>
+            <div className={styles.postMeta}>
+              <span><User size={16} /> {post.author}</span>
+              <span><Calendar size={16} /> {new Date(post.created_at).toLocaleDateString()}</span>
+              <span>
+                <Star size={16} /> 
+                {rating ? rating.value.toFixed(1) : 'N/A'}
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="5" 
+                  value={rating?.value || ''} 
+                  onChange={(e) => ratePost(Number(e.target.value))}
+                />
+              </span>
+              <span onClick={() => setShowComments(!showComments)}>
+                <MessageSquare size={16} /> {comments.length}
+              </span>
+              <span><Tag size={16} /> {tags?.length || 0}</span>
+            </div>
+            
+            {showComments && (
+              <div className={styles.commentsSection}>
+                <InfiniteScroll
+                  dataLength={comments.length}
+                  next={fetchNextPage}
+                  hasMore={hasNextPage}
+                  loader={<h4>Loading...</h4>}
+                >
+                  {comments.map((comment) => (
+                    <div key={comment.id} className={styles.comment}>
+                      <p>{comment.content}</p>
+                      <small>{comment.author} - {new Date(comment.created_at).toLocaleString()}</small>
+                    </div>
+                  ))}
+                </InfiniteScroll>
+                <input
+                  type="text"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Add a comment..."
+                />
+                <button onClick={handleAddComment}>Post Comment</button>
+              </div>
+            )}
+            
+            <div className={styles.tagsSection}>
+              {tags && tags.map((tag) => (
+                <span key={tag.id} className={styles.tag}>{tag.name}</span>
+              ))}
+              <input
+                type="text"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Add a tag..."
+              />
+              <button onClick={handleAddTag}>Add Tag</button>
+            </div>
+          </>
+        ) : (
+          <div className={styles.lockedContent}>
+            <Lock size={24} />
+            <p>Sign in to view full content, rate, comment, and add tags.</p>
+          </div>
+        )}
       </div>
     </article>
   );

@@ -17,18 +17,12 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const prefetchPosts = () => {
-    queryClient.prefetchQuery("posts", fetchPosts);
-  };
-
   const handleOpenModal = (view) => {
     setModalView(view);
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleCloseModal = () => setIsModalOpen(false);
 
   const handleLogout = async () => {
     dispatch(logoutUser());
@@ -41,72 +35,58 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
 
   return (
     <div className={styles.navbarContainer}>
-      <nav className={styles.nav} role="navigation" aria-label="Main Navigation">
+      <nav className={styles.nav}>
         <div className={styles.logo}>
-          <Link to="/">
-            TheBlog<span>Client</span>
-          </Link>
+          <Link to="/">TheBlog<span>Client</span></Link>
         </div>
         <div className={styles.navLinks}>
           <Link to="/home">Home</Link>
           <Link to="/about">About</Link>
-          <Link onMouseEnter={prefetchPosts} to="/blog">Blog</Link>
+          <Link 
+  to="/blog" 
+  onMouseEnter={() => queryClient.prefetchQuery(['posts'], fetchPosts)}
+>
+  Blog
+</Link>
+
           {isAuthenticated && <Link to="/dashboard">Dashboard</Link>}
         </div>
         <div className={styles.buttons}>
           {!isAuthenticated ? (
             <>
-              <button onClick={() => handleOpenModal("signin")} className={styles.authButton}>
-                Sign In
-              </button>
-              <button onClick={() => handleOpenModal("signup")} className={styles.authButton}>
-                Sign Up
-              </button>
+              <button onClick={() => handleOpenModal("signin")} className={styles.authButton}>Sign In</button>
+              <button onClick={() => handleOpenModal("signup")} className={styles.authButton}>Sign Up</button>
             </>
           ) : (
-            <button onClick={handleLogout} className={`${styles.authButton} ${styles.logoutButton}`}>
-              Logout
-            </button>
+            <button onClick={handleLogout} className={styles.authButton}>Logout</button>
           )}
-          <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle theme">
+          <button onClick={toggleTheme} className={styles.themeToggle}>
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         </div>
-        <label className={styles.burger} htmlFor="burger">
-          <input type="checkbox" id="burger" checked={isMenuOpen} onChange={toggleMenu} />
+        <label className={styles.burger}>
+          <input type="checkbox" checked={isMenuOpen} onChange={toggleMenu} />
           <span></span>
           <span></span>
           <span></span>
         </label>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`${styles.menuContainer} ${isMenuOpen ? styles.menuOpen : ""}`}>
-        <div className={styles.mobileNavLinks}>
+      {isMenuOpen && (
+        <div className={styles.menuContainer}>
           <Link to="/home" onClick={closeMenu}>Home</Link>
           <Link to="/about" onClick={closeMenu}>About</Link>
-          <Link onMouseEnter={prefetchPosts} onClick={closeMenu} to="/blog">Blog</Link>
+          <Link 
+  to="/blog" 
+  onMouseEnter={() => queryClient.prefetchQuery(['posts'], fetchPosts)}
+>
+  Blog
+</Link>
           {isAuthenticated && <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>}
         </div>
-        <div className={styles.mobileButtons}>
-          {!isAuthenticated ? (
-            <>
-              <button onClick={() => { handleOpenModal("signin"); closeMenu(); }} className={styles.authButton}>
-                Sign In
-              </button>
-              <button onClick={() => { handleOpenModal("signup"); closeMenu(); }} className={styles.authButton}>
-                Sign Up
-              </button>
-            </>
-          ) : (
-            <button onClick={handleLogout} className={`${styles.authButton} ${styles.logoutButton}`}>
-              Logout
-            </button>
-          )}
-        </div>
-      </div>
+      )}
 
-      <AuthModal isOpen={isModalOpen} onClose={handleCloseModal} initialView={modalView} showToast={() => {}} />
+      <AuthModal isOpen={isModalOpen} onClose={handleCloseModal} initialView={modalView} />
     </div>
   );
 };

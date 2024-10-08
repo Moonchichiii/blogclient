@@ -1,64 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from './authSlice';
-import { fetchCurrentUser } from '../Profile/hooks/profileSlice';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import styles from './EmailConfirmation.module.css';
-import { api } from '../../api/apiConfig';
+import { authEndpoints } from '../../api/endpoints';
+import { useAuth } from './hooks/useAuth';
+import showToast from '../../utils/Toast';
 
-const EmailConfirmation = ({ showToast }) => {
+const EmailConfirmation = () => {
   const [status, setStatus] = useState('confirming');
   const [email, setEmail] = useState('');
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const { login } = useAuth();
   const { uidb64, token } = useParams();
   const location = useLocation();
 
-  // Handle email confirmation status based on query parameters
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const confirmationStatus = params.get('status');
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (confirmationStatus === 'success' && accessToken && refreshToken) {
-      setStatus('success');
-      Cookies.set('access_token', accessToken, { secure: true, sameSite: 'strict' });
-      Cookies.set('refresh_token', refreshToken, { secure: true, sameSite: 'strict' });
-      dispatch(loginSuccess({ accessToken, refreshToken }));
-      dispatch(fetchCurrentUser())
-        .then(() => showToast('Email verified successfully!', 'success'))
-        .catch(() => showToast('Email verified, but there was an error fetching your data.', 'warning'));
-    } else if (confirmationStatus === 'error') {
-      setStatus('error');
-      showToast('Email verification failed. Please try again.', 'error');
+  const confirmEmailMutation = useMutation(
+    () => authEndpoints.confirmEmail(uidb64, token),
+    {
+      onSuccess: (data) => {
+        setStatus('success');
+        Cookies.set('access_token', data.access, { secure: true, sameSite: 'strict' });
+        Cookies.set('refresh_token', data.refresh, { secure: true, sameSite: 'strict' });
+        login({ email: data.email, password: '' });
+        queryClient.invalidateQueries(['currentUser']);
+        showToast('Email verified successfully!', 'success');
+      },
+      onError: () => {
+        setStatus('error');
+        showToast('Email verification failed. Please try again.', 'error');
+      },
     }
-  }, [location, dispatch, showToast]);
+  );
 
-  // Resend verification email function
-  const resendVerification = async () => {
+  const resendVerificationMutation = useMutation(
+    (email) => authEndpoints.resendVerification(email),
+    {
+      onSuccess: () => {
+        showToast('Verification email resent successfully.', 'success');
+        setIsResending(false);
+      },
+      onError: (error) => {
+        showToast(error.response?.data?.error || 'An error occurred while resending the verification email.', 'error');
+        setIsResending(false);
+      },
+    }
+  );
+
+  useEffect(() => {
+    confirmEmailMutation.mutate();
+  }, []);
+
+  const handleResendSubmit = (e) => {
+    e.preventDefault();
     if (!email) {
       showToast('Please enter your email before resending.', 'error');
       return;
     }
-
     setIsResending(true);
-    try {
-      await api.post('/api/accounts/resend-verification/', { email });
-      showToast('Verification email resent successfully.', 'success');
-    } catch (error) {
-      showToast(error.response?.data?.error || 'An error occurred while resending the verification email.', 'error');
-    } finally {
-      setIsResending(false);
-    }
-  };
-
-  // Handle the form submission for resending the verification email
-  const handleResendSubmit = (e) => {
-    e.preventDefault();
-    resendVerification();
+    resendVerificationMutation.mutate(email);
   };
 
   return (

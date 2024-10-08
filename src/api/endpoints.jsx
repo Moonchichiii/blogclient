@@ -16,6 +16,7 @@ export const userEndpoints = {
   getCurrentUser: () => api.get('/api/accounts/current-user/'),
   updateProfile: (userData) => multipartApi.put('/api/profiles/update-profile/', userData),
   uploadProfilePicture: (formData) => multipartApi.post('/api/profiles/upload-profile-picture/', formData),
+  getPopularFollowers: (userId) => api.get(`/api/profiles/${userId}/popular-followers/`),
 };
 
 // Post endpoints
@@ -67,4 +68,5 @@ export const tagEndpoints = {
 export const followerEndpoints = {
   followUser: (followedId) => api.post('/api/followers/follow/', { followed: followedId }),
   unfollowUser: (followedId) => api.delete('/api/followers/follow/', { data: { followed: followedId } }),
+  getFollowers: (userId) => api.get(`/api/followers/${userId}/`),
 };
