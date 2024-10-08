@@ -15,8 +15,8 @@
       "noopener",
       "noreferrer",
       "reduxjs",
-      "blogclient"
-
-    ]
+      "blogclient",
+      "antd",
+      "unfollowing"                ]
   }
   
