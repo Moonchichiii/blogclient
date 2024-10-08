@@ -21,9 +21,9 @@ blogclient_frontend/
 │
 ├── src/
 │   ├── components/
-│   ├── features/
+│   ├── features/│
+│   ├   ├────── hooks/
 │   ├── pages/
-│   ├── hooks/
 │   ├── utils/
 │   ├── api/
 │   ├── App.jsx

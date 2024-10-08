@@ -1,47 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
-  }
-
-  handleReload = () => {
-    window.location.reload();
-  };
-
-  handleGoBack = () => {
-    this.props.navigate('/'); // Use navigate function passed via props
-  };
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div>
-          <h1>Something went wrong. Please refresh the page or try again later.</h1>
-          <button onClick={this.handleReload}>Reload Page</button>
-          <button onClick={this.handleGoBack}>Go to Home</button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-// Create a functional wrapper to use `useNavigate` and pass `navigate` as a prop
-const ErrorBoundaryWithRouter = (props) => {
+/**
+ * ErrorBoundary component to catch JavaScript errors in child components.
+ * @param {Object} props - Component props.
+ * @param {React.ReactNode} props.children - Child components.
+ */
+const ErrorBoundary = ({ children }) => {
+  const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
-  return <ErrorBoundary {...props} navigate={navigate} />;
+
+  const handleReload = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  const handleGoBack = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  useEffect(() => {
+    const handleError = (error, errorInfo) => {
+      console.error('Uncaught error:', error, errorInfo);
+      setHasError(true);
+    };
+
+    // Add global error listener
+    window.addEventListener('error', handleError);
+
+    return () => {
+      // Clean up the listener on component unmount
+      window.removeEventListener('error', handleError);
+    };
+  }, []);
+
+  if (hasError) {
+    return (
+      <div>
+        <h1>Something went wrong. Please refresh the page or try again later.</h1>
+        <button onClick={handleReload}>Reload Page</button>
+        <button onClick={handleGoBack}>Go to Home</button>
+      </div>
+    );
+  }
+
+  return children;
 };
 
-export default ErrorBoundaryWithRouter;
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default React.memo(ErrorBoundary);

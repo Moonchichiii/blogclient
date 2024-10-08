@@ -21,11 +21,21 @@ export const multipartApi = axios.create({
 let isRefreshing = false;
 let refreshSubscribers = [];
 
+/**
+ * Processes the queue of refresh subscribers.
+ * @param {Error|null} error - The error, if any.
+ * @param {string|null} token - The new token, if any.
+ */
 const processQueue = (error, token = null) => {
   refreshSubscribers.forEach((cb) => cb(error, token));
   refreshSubscribers = [];
 };
 
+/**
+ * Refreshes the authentication token.
+ * @returns {Promise<string>} The new access token.
+ * @throws Will throw an error if the refresh token request fails.
+ */
 const refreshToken = async () => {
   try {
     const refreshToken = Cookies.get('refresh_token');
@@ -40,6 +50,11 @@ const refreshToken = async () => {
   }
 };
 
+/**
+ * Intercepts requests to add the authorization header.
+ * @param {object} config - The Axios request configuration.
+ * @returns {object} The modified Axios request configuration.
+ */
 const requestInterceptor = (config) => {
   const token = Cookies.get('access_token');
   if (token) {
@@ -48,6 +63,11 @@ const requestInterceptor = (config) => {
   return config;
 };
 
+/**
+ * Intercepts responses to handle token refresh logic.
+ * @param {object} error - The Axios error object.
+ * @returns {Promise} The Axios request promise.
+ */
 const responseInterceptor = async (error) => {
   const originalRequest = error.config;
   if (error.response?.status === 401 && !originalRequest._retry) {
