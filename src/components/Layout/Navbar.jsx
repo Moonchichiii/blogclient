@@ -1,5 +1,3 @@
-// Navbar.jsx
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Home, Info, PenTool, LogIn, LogOut, User, Sun, Moon } from "lucide-react";

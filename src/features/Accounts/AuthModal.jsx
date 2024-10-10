@@ -8,7 +8,6 @@ import styles from './AuthModal.module.css';
 const AuthModal = ({ isOpen, onClose, initialView, showToast }) => {
   const [view, setView] = useState(initialView);
 
-  // Add this useEffect to update the view when initialView changes
   useEffect(() => {
     setView(initialView);
   }, [initialView]);

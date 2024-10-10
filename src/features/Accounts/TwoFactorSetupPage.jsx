@@ -7,7 +7,6 @@ import { authEndpoints } from '../../api/endpoints';
 import { useAuth } from './hooks/useAuth';
 import showToast from '../../utils/Toast';
 
-
 const TwoFactorSetup = () => {
   const [qrCode, setQrCode] = useState('');
   const [secretKey, setSecretKey] = useState('');
@@ -15,7 +14,8 @@ const TwoFactorSetup = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const setupTwoFactorMutation = useMutation(authEndpoints.setupTwoFactor, {
+  const setupTwoFactorMutation = useMutation({
+    mutationFn: authEndpoints.setupTwoFactor,
     onSuccess: (data) => {
       setQrCode(data.config_url);
       setSecretKey(data.secret_key);
@@ -27,19 +27,15 @@ const TwoFactorSetup = () => {
     },
   });
 
-
-  // Trigger the 2FA setup process
   const handleSetup = () => {
-    setupTwoFactorMutation.mutate(); // Mutate to trigger setup
+    setupTwoFactorMutation.mutate();
   };
 
-  // Continue to the dashboard after successful setup
   const handleContinue = () => navigate('/dashboard');
 
-  // Option to skip 2FA setup and continue to dashboard
   const handleSkip = () => {
     showToast('You can set up two-factor authentication later in your account settings.', 'info');
-    navigate('/dashboard'); // Navigate to the dashboard
+    navigate('/dashboard');
   };
 
   return (

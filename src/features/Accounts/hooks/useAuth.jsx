@@ -1,11 +1,13 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { authEndpoints, userEndpoints } from '../../../api/endpoints';
 import { setupRefreshInterceptor } from './authInterceptor';
-import showToast from '../../../utils/Toast';
+import { showToast } from '../../../utils/toast'; 
 
-export const useAuth = () => {
+const AuthContext = createContext(null);
+
+export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('access_token'));
   const queryClient = useQueryClient();
 
@@ -43,7 +45,6 @@ export const useAuth = () => {
       Cookies.remove('refresh_token');
     },
   });
-  
 
   const loginMutation = useMutation({
     mutationFn: authEndpoints.login,
@@ -54,15 +55,13 @@ export const useAuth = () => {
       setIsAuthenticated(true);
       queryClient.invalidateQueries(['currentUser']);
       showToast(response.data.message, response.data.type);
-      return response.data; 
-      
+      return response.data;
     },
     onError: (error) => {
       const message = error.response?.data?.message || 'Login failed';
       showToast(message, 'error');
     },
   });
-  
 
   const logoutMutation = useMutation({
     mutationFn: authEndpoints.logout,
@@ -82,12 +81,12 @@ export const useAuth = () => {
       if (isAuthenticated) {
         refreshToken();
       }
-    }, 15 * 60 * 1000); 
+    }, 15 * 60 * 1000);
 
     return () => clearInterval(refreshTokenPeriodically);
   }, [isAuthenticated]);
 
-  return useMemo(() => ({
+  const value = useMemo(() => ({
     isAuthenticated,
     setIsAuthenticated,
     user,
@@ -96,6 +95,19 @@ export const useAuth = () => {
     login: loginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
     refreshToken,
-  }), [isAuthenticated, user, isLoading, error, loginMutation.mutate, logoutMutation.mutate]);
+  }), [isAuthenticated, user, isLoading, error, loginMutation.mutateAsync, logoutMutation.mutateAsync]);
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

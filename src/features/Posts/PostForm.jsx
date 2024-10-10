@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postEndpoints } from '../../api/endpoints';
 import { Image, X } from 'lucide-react';
-import showToast from '../../utils/Toast';
+import { showToast } from '../../utils/Toast';
 import styles from './PostForm.module.css';
 
 const PostForm = ({ post, onPostSubmit }) => {
@@ -28,7 +28,8 @@ const PostForm = ({ post, onPostSubmit }) => {
     }
   }, [post]);
 
-  const createPostMutation = useMutation(postEndpoints.createPost, {
+  const createPostMutation = useMutation({
+    mutationFn: postEndpoints.createPost,
     onSuccess: () => {
       queryClient.invalidateQueries('posts');
       showToast('Post created successfully!', 'success');
@@ -39,8 +40,9 @@ const PostForm = ({ post, onPostSubmit }) => {
       setErrors(error.response?.data || {});
     },
   });
-
-  const updatePostMutation = useMutation(postEndpoints.updatePost, {
+  
+  const updatePostMutation = useMutation({
+    mutationFn: postEndpoints.updatePost,
     onSuccess: () => {
       queryClient.invalidateQueries('posts');
       showToast('Post updated successfully!', 'success');

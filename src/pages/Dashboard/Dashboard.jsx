@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { User, FileText, MessageSquare, Star, Users, PlusCircle, AlertTriangle } from 'lucide-react';
+import {
+  User,
+  FileText,
+  MessageSquare,
+  Star,
+  Users,
+  PlusCircle,
+  AlertTriangle,
+} from 'lucide-react';
 import Modal from 'react-modal';
 import PostForm from '../../features/Posts/PostForm';
 import styles from './Dashboard.module.css';
 import { useAuth } from '../../features/Accounts/hooks/useAuth';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { postEndpoints } from '../../api/endpoints';
 import { toast } from 'react-toastify';
+import { usePosts } from '../../features/Posts/hooks/usePosts';
 
 Modal.setAppElement('#root');
 
@@ -18,53 +27,6 @@ const Dashboard = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [disapproveReason, setDisapproveReason] = useState('');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  const queryClient = useQueryClient();
-
-  // Handle window resize to update windowWidth state
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Fetch unapproved posts for staff/superusers
-  const { data: unapprovedPosts, isLoading: isUnapprovedLoading } = useQuery({
-    queryKey: ['unapprovedPosts'],
-    queryFn: postEndpoints.getUnapprovedPosts,
-    enabled: currentUser?.is_staff || currentUser?.is_superuser,
-    onError: (error) => {
-      toast.error('Failed to fetch unapproved posts.');
-      console.error('Error fetching unapproved posts:', error);
-    },
-  });
-
-  // Mutation for approving a post
-  const approveMutation = useMutation({
-    mutationFn: postEndpoints.approvePost,
-    onSuccess: () => {
-      toast.success('Post approved successfully!');
-      queryClient.invalidateQueries(['unapprovedPosts']);
-    },
-    onError: (error) => {
-      toast.error('Failed to approve the post.');
-      console.error('Error approving post:', error);
-    },
-  });
-
-  // Mutation for disapproving a post
-  const disapproveMutation = useMutation({
-    mutationFn: postEndpoints.disapprovePost,
-    onSuccess: () => {
-      toast.success('Post disapproved successfully!');
-      queryClient.invalidateQueries(['unapprovedPosts']);
-      closeDisapproveModal();
-    },
-    onError: (error) => {
-      toast.error('Failed to disapprove the post.');
-      console.error('Error disapproving post:', error);
-    },
-  });
 
   // Handlers for opening and closing modals
   const openModal = () => setIsModalOpen(true);
@@ -80,16 +42,51 @@ const Dashboard = () => {
     setIsDisapproveModalOpen(false);
   };
 
+  // Handle window resize to update windowWidth state
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch unapproved posts for staff/superusers
+  const {
+    data: unapprovedPosts,
+    isLoading: isUnapprovedLoading,
+  } = useQuery({
+    queryKey: ['unapprovedPosts'],
+    queryFn: postEndpoints.getUnapprovedPosts,
+    enabled: currentUser?.is_staff || currentUser?.is_superuser,
+    onError: (error) => {
+      toast.error('Failed to fetch unapproved posts.');
+      console.error('Error fetching unapproved posts:', error);
+    },
+  });
+
+  // Get mutations from usePosts
+  const { approvePost, disapprovePost } = usePosts();
+
   // Handlers for approving and disapproving posts
-  const handleApprove = (id) => {
+  const handleApprove = async (id) => {
     if (window.confirm('Are you sure you want to approve this post?')) {
-      approveMutation.mutate(id);
+      try {
+        await approvePost(id);
+        toast.success('Post approved successfully!');
+      } catch (error) {
+        toast.error('Failed to approve the post.');
+      }
     }
   };
 
-  const handleDisapprove = () => {
+  const handleDisapprove = async () => {
     if (selectedPost && disapproveReason.trim() !== '') {
-      disapproveMutation.mutate({ id: selectedPost.id, reason: disapproveReason });
+      try {
+        await disapprovePost({ id: selectedPost.id, reason: disapproveReason });
+        toast.success('Post disapproved successfully!');
+        closeDisapproveModal();
+      } catch (error) {
+        toast.error('Failed to disapprove the post.');
+      }
     } else {
       toast.warning('Please provide a reason for disapproval.');
     }
@@ -97,7 +94,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
-      <div id='top'></div>
+      <div id="top"></div>
 
       {/* Conditionally render profile header on mobile */}
       {windowWidth <= 768 && (
@@ -106,7 +103,9 @@ const Dashboard = () => {
             <p>Loading user data...</p>
           ) : (
             <>
-              <h1 className={styles.title}>Welcome, {currentUser?.profile_name}</h1>
+              <h1 className={styles.title}>
+                Welcome, {currentUser?.profile_name}
+              </h1>
               {currentUser?.profile?.image && (
                 <img
                   src={currentUser.profile.image}
@@ -185,7 +184,9 @@ const Dashboard = () => {
 
         {/* Unapproved Posts Box (Visible to Staff/Superusers) */}
         {(currentUser?.is_staff || currentUser?.is_superuser) && (
-          <div className={`${styles.bentoBox} ${styles.unapprovedPostsBox}`}>
+          <div
+            className={`${styles.bentoBox} ${styles.unapprovedPostsBox}`}
+          >
             <AlertTriangle size={24} />
             <h2>Unapproved Posts</h2>
             {isUnapprovedLoading ? (
@@ -202,9 +203,8 @@ const Dashboard = () => {
                           <button
                             onClick={() => handleApprove(post.id)}
                             className={`${styles.actionButton} ${styles.approveButton}`}
-                            disabled={approveMutation.isLoading}
                           >
-                            {approveMutation.isLoading ? 'Approving...' : 'Approve'}
+                            Approve
                           </button>
                           <button
                             onClick={() => openDisapproveModal(post)}
@@ -271,9 +271,8 @@ const Dashboard = () => {
               <button
                 onClick={handleDisapprove}
                 className={`${styles.actionButton} ${styles.confirmButton}`}
-                disabled={disapproveMutation.isLoading}
               >
-                {disapproveMutation.isLoading ? 'Submitting...' : 'Submit'}
+                Submit
               </button>
               <button
                 onClick={closeDisapproveModal}

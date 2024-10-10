@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import showToast from '../utils/Toast';
+import showToast from '../utils/toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -73,8 +73,8 @@ const SignUpForm = ({ onSuccess }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password1) newErrors.password1 = 'Password is required';
-    if (formData.password1 !== formData.password2) {
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.password !== formData.password2) {
       newErrors.password2 = "Passwords don't match";
     }
     if (!/^[a-zA-Z0-9_]+$/.test(formData.profile_name)) {
@@ -116,15 +116,15 @@ const SignUpForm = ({ onSuccess }) => {
         error={errors.email}
       />
 
-      <PasswordInput
-        autoComplete="new-password"
-        name="password"
-        required
-        placeholder="Password"
-        value={formData.password1}
-        onChange={handleInputChange}
-        error={errors.password1}
-      />
+<PasswordInput
+  autoComplete="new-password"
+  name="password"
+  required
+  placeholder="Password"
+  value={formData.password1}
+  onChange={handleInputChange}
+  error={errors.password1}
+/>
       <div className={styles.passwordStrength}>
         <p>Password Strength: {passwordStrength}</p>
         <div className={styles.strengthMeter}>

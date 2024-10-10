@@ -2,11 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-/**
- * ErrorBoundary component to catch JavaScript errors in child components.
- * @param {Object} props - Component props.
- * @param {React.ReactNode} props.children - Child components.
- */
 const ErrorBoundary = ({ children }) => {
   const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
@@ -25,11 +20,9 @@ const ErrorBoundary = ({ children }) => {
       setHasError(true);
     };
 
-    // Add global error listener
     window.addEventListener('error', handleError);
 
     return () => {
-      // Clean up the listener on component unmount
       window.removeEventListener('error', handleError);
     };
   }, []);

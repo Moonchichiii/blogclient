@@ -10,58 +10,51 @@ import showToast from '../../utils/Toast';
 const EmailConfirmation = () => {
   const { uidb64, token } = useParams();
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth(); // Assuming your useAuth hook has this function
+  const { setIsAuthenticated } = useAuth();
   const [status, setStatus] = useState('confirming');
   const [email, setEmail] = useState('');
   const [isResending, setIsResending] = useState(false);
 
-  const confirmEmailMutation = useMutation(
-    () => authEndpoints.confirmEmail(uidb64, token),
-    {
-      onSuccess: async (response) => {
-        const data = response.data;
-        setStatus('success');
-        const { access, refresh } = data.tokens;
-        Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
-        Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
-        setIsAuthenticated(true); // Update authentication state
-        showToast(data.message, data.type);
-        navigate('/setup-2fa');
-      },
-      onError: (error) => {
-        setStatus('error');
-        showToast(
-          error.response?.data?.message || 'Email verification failed. Please try again.',
-          'error'
-        );
-      },
-    }
-  );
+  const confirmEmailMutation = useMutation({
+    mutationFn: () => authEndpoints.confirmEmail(uidb64, token),
+    onSuccess: async (response) => {
+      const data = response.data;
+      setStatus('success');
+      const { access, refresh } = data.tokens;
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
+      setIsAuthenticated(true);
+      showToast(data.message, data.type);
+      navigate('/setup-2fa');
+    },
+    onError: (error) => {
+      setStatus('error');
+      showToast(
+        error.response?.data?.message || 'Email verification failed. Please try again.',
+        'error'
+      );
+    },
+  });
 
-  // Automatically trigger email confirmation on component mount
   useEffect(() => {
     confirmEmailMutation.mutate();
-  }, []); // Empty array ensures this runs only once when the component is mounted
+  }, []);
 
-  // Mutation for resending the verification email
-  const resendVerificationMutation = useMutation(
-    (email) => authEndpoints.resendVerification(email),
-    {
-      onSuccess: (response) => {
-        showToast(response.data.message, response.data.type);
-        setIsResending(false); // Reset the resending state after success
-      },
-      onError: (error) => {
-        showToast(
-          error.response?.data?.message || 'An error occurred while resending the verification email.',
-          'error'
-        );
-        setIsResending(false); // Reset the resending state even if it fails
-      },
-    }
-  );
+  const resendVerificationMutation = useMutation({
+    mutationFn: (email) => authEndpoints.resendVerification(email),
+    onSuccess: (response) => {
+      showToast(response.data.message, response.data.type);
+      setIsResending(false);
+    },
+    onError: (error) => {
+      showToast(
+        error.response?.data?.message || 'An error occurred while resending the verification email.',
+        'error'
+      );
+      setIsResending(false);
+    },
+  });
 
-  // Handle resend email form submission
   const handleResendSubmit = (e) => {
     e.preventDefault();
 
@@ -70,17 +63,13 @@ const EmailConfirmation = () => {
       return;
     }
 
-    setIsResending(true); // Indicate resending is in progress
-
+    setIsResending(true);
     resendVerificationMutation.mutate(email);
   };
 
   return (
     <div className={styles.container}>
-      {/* Feedback during confirmation */}
       {status === 'confirming' && <p>Confirming your email...</p>}
-
-      {/* Success state */}
       {status === 'success' && (
         <div>
           <h2>Email Confirmed!</h2>
@@ -88,8 +77,6 @@ const EmailConfirmation = () => {
           <button onClick={() => navigate('/setup-2fa')} className={styles.continueButton}>Continue</button>
         </div>
       )}
-
-      {/* Error state with option to resend the verification email */}
       {status === 'error' && (
         <div>
           <h2>Confirmation Failed</h2>
