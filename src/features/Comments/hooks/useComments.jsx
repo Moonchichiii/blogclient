@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { commentEndpoints } from '../../../api/endpoints';
+
 
 export const useComments = (postId) => {
   const queryClient = useQueryClient();
@@ -20,9 +20,8 @@ export const useComments = (postId) => {
     queryKey: ['comments', postId],
     queryFn: fetchComments,
     getNextPageParam: (lastPage) => lastPage.next ? lastPage.page + 1 : undefined,
+    enabled,
   });
-  
-
 
   const addCommentMutation = useMutation(
     (newComment) => commentEndpoints.createComment(postId, newComment),

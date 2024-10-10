@@ -1,0 +1,45 @@
+.commentList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.commentItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.commentAuthorImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.commentItem div {
+    display: flex;
+    flex-direction: column;
+}
+
+.commentItem p {
+    margin: 0;
+}
+
+.commentItem p strong {
+    font-size: 1rem;
+    color: #333;
+}
+
+.commentItem p:last-child {
+    font-size: 0.875rem;
+    color: #666;
+}

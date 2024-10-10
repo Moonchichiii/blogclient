@@ -4,18 +4,22 @@ import { useMutation } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
 import styles from './TwoFactorSetup.module.css';
 import { authEndpoints } from '../../api/endpoints';
+import { useAuth } from './hooks/useAuth';
 import showToast from '../../utils/Toast';
+
 
 const TwoFactorSetup = () => {
   const [qrCode, setQrCode] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [isSetup, setIsSetup] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const setupTwoFactorMutation = useMutation(authEndpoints.setupTwoFactor, {
     onSuccess: (data) => {
       setQrCode(data.config_url);
       setSecretKey(data.secret_key);
+      setIsSetup(true);
       showToast('Two-factor authentication setup successful', 'success');
     },
     onError: () => {
@@ -23,15 +27,19 @@ const TwoFactorSetup = () => {
     },
   });
 
+
+  // Trigger the 2FA setup process
   const handleSetup = () => {
-    setupTwoFactorMutation.mutate();
+    setupTwoFactorMutation.mutate(); // Mutate to trigger setup
   };
 
+  // Continue to the dashboard after successful setup
   const handleContinue = () => navigate('/dashboard');
 
+  // Option to skip 2FA setup and continue to dashboard
   const handleSkip = () => {
     showToast('You can set up two-factor authentication later in your account settings.', 'info');
-    navigate('/dashboard');
+    navigate('/dashboard'); // Navigate to the dashboard
   };
 
   return (
@@ -39,21 +47,30 @@ const TwoFactorSetup = () => {
       <h1 className={styles.heading}>Set Up Two-Factor Authentication</h1>
       {!isSetup ? (
         <>
-          <button onClick={handleSetup} className={styles.setupButton}>Setup 2FA</button>
+          <button onClick={handleSetup} className={styles.setupButton}>
+            Setup 2FA
+          </button>
 
           {qrCode && (
             <div className={styles.qrCodeContainer}>
               <QRCodeSVG value={qrCode} size={256} />
               <p>Scan this QR code with your authenticator app</p>
-              <p>If you can't scan the QR code, use this secret key: {secretKey}</p>
+              <p>If you can't scan the QR code, use this secret key: <strong>{secretKey}</strong></p>
             </div>
           )}
-          <button onClick={handleSkip} className={styles.skipButton}>Skip for now</button>
+
+          <button onClick={handleSkip} className={styles.skipButton}>
+            Skip for now
+          </button>
         </>
       ) : (
         <>
-          <p className={styles.successMessage}>Great! Your account is now protected with two-factor authentication.</p>
-          <button onClick={handleContinue} className={styles.continueButton}>Continue to Dashboard</button>
+          <p className={styles.successMessage}>
+            Great! Your account is now protected with two-factor authentication.
+          </p>
+          <button onClick={handleContinue} className={styles.continueButton}>
+            Continue to Dashboard
+          </button>
         </>
       )}
     </div>

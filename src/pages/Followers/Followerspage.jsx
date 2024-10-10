@@ -8,19 +8,20 @@ import styles from './FollowersPage.module.css';
 
 const FollowersPage = () => {
   const { user } = useAuth();
-  const { 
-    followers, 
-    isLoadingFollowers, 
-    followersError, 
-    popularFollowers, 
-    isLoadingPopularFollowers, 
+  const {
+    followers,
+    isLoadingFollowers,
+    followersError,
+    popularFollowers,
+    isLoadingPopularFollowers,
     popularFollowersError,
     follow,
     unfollow
   } = useFollowers(user?.id);
 
   if (isLoadingFollowers || isLoadingPopularFollowers) return <div>Loading...</div>;
-  if (followersError || popularFollowersError) return <div>Error: {followersError?.message || popularFollowersError?.message}</div>;
+  if (followersError || popularFollowersError)
+    return <div>Error: {followersError?.message || popularFollowersError?.message}</div>;
 
   const followerData = followers.reduce((acc, follower) => {
     const month = new Date(follower.created_at).toLocaleString('default', { month: 'short' });
@@ -46,7 +47,7 @@ const FollowersPage = () => {
         </ResponsiveContainer>
       </div>
       <PopularFollowers popularFollowers={popularFollowers} />
-      <FollowersList followers={followers} onFollow={follow} onUnfollow={unfollow} />
+      <FollowersList />
     </div>
   );
 };

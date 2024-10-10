@@ -7,17 +7,12 @@ export const useTags = (postId) => {
   const { data: tags, isLoading, isError, error } = useQuery({
     queryKey: ['tags', postId],
     queryFn: () => tagEndpoints.getTags(postId),
-    enabled: !!postId,
   });
 
   const addTagMutation = useMutation({
-    mutationFn: (newTag) => tagEndpoints.createTag(postId, newTag),
+    mutationFn: (taggedUserName) => tagEndpoints.createTag('post', postId, taggedUserName),
     onSuccess: () => {
       queryClient.invalidateQueries(['tags', postId]);
-      showToast('Tag added successfully!', 'success');
-    },
-    onError: () => {
-      showToast('Failed to add tag. Please try again.', 'error');
     },
   });
 
@@ -29,3 +24,4 @@ export const useTags = (postId) => {
     addTag: addTagMutation.mutate,
   };
 };
+

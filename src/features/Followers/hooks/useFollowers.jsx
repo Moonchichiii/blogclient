@@ -1,8 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { followerEndpoints, profileEndpoints } from '../api/endpoints';
-
 export const useFollowers = (userId) => {
-  
   const queryClient = useQueryClient();
 
   const followersQuery = useQuery(
@@ -38,15 +34,14 @@ export const useFollowers = (userId) => {
   );
 
   return {
-    followers: followersQuery.data,
+    followers: followersQuery.data?.data,
     isLoadingFollowers: followersQuery.isLoading,
     followersError: followersQuery.error,
-    popularFollowers: popularFollowersQuery.data,
+    popularFollowers: popularFollowersQuery.data?.data,
     isLoadingPopularFollowers: popularFollowersQuery.isLoading,
     popularFollowersError: popularFollowersQuery.error,
     follow: followMutation.mutate,
     unfollow: unfollowMutation.mutate,
-    isFollowing: followMutation.isLoading,
-    isUnfollowing: unfollowMutation.isLoading,
   };
 };
+

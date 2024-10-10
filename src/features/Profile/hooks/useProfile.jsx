@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { userEndpoints } from '../../../api/endpoints';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../Accounts/hooks/useAuth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { userEndpoints } from '../../../api/endpoints';
 import showToast from '../../../utils/Toast';
 
 export const useProfile = () => {
-  const { user: authUser, isAuthenticated } = useAuth();
+  const { user: currentUser } = useAuth();
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -13,33 +13,29 @@ export const useProfile = () => {
     bio: '',
     email: '',
   });
-  
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const { data: profileData, isLoading, error } = useQuery({
-    queryKey: ['profile', authUser?.id],
-    queryFn: () => userEndpoints.getCurrentUser(),
-    enabled: isAuthenticated,
-    onSuccess: (data) => {
+  useEffect(() => {
+    if (currentUser) {
       setFormData({
-        profile_name: data.profile_name || '',
-        bio: data.profile?.bio || '',
-        email: data.email || '',
+        profile_name: currentUser.profile_name || '',
+        bio: currentUser.profile?.bio || '',
+        email: currentUser.email || '',
       });
-      setImagePreview(data.profile?.image || null);
-    },
-  });
-  
+      setImagePreview(currentUser.profile?.image || null);
+    }
+  }, [currentUser]);
 
   const updateProfileMutation = useMutation({
     mutationFn: userEndpoints.updateProfile,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['profile', authUser?.id]);
-      showToast('Profile updated successfully!', 'success');
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(['currentUser']);
+      showToast(response.data.message, response.data.type);
     },
-    onError: () => {
-      showToast('Failed to update profile. Please try again.', 'error');
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to update profile';
+      showToast(message, 'error');
     },
   });
 
@@ -68,11 +64,8 @@ export const useProfile = () => {
   };
 
   return {
-    profileData,
     formData,
     imagePreview,
-    isLoading,
-    error,
     handleChange,
     handleImageChange,
     handleSubmit,

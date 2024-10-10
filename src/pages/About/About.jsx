@@ -6,8 +6,10 @@ import styles from './About.module.css';
 const AboutPage = () => {
   return (
     <div className={styles.aboutContainer}>
+      <div id='top'></div>
       <header className={styles.aboutHeader}>
         <h1 className={styles.aboutTitle}>About TheBlogClient</h1>
+        
       </header>
 
       <section className={styles.aboutContent}>

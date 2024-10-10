@@ -1,57 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  User,
-  FileText,
-  MessageSquare,
-  Star,
-  Users,
-  PlusCircle,
-  AlertTriangle,
-} from 'lucide-react';
+import { User, FileText, MessageSquare, Star, Users, PlusCircle, AlertTriangle } from 'lucide-react';
 import Modal from 'react-modal';
 import PostForm from '../../features/Posts/PostForm';
 import styles from './Dashboard.module.css';
 import { useAuth } from '../../features/Accounts/hooks/useAuth';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { postEndpoints, userEndpoints } from '../../api/endpoints';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { postEndpoints } from '../../api/endpoints';
 import { toast } from 'react-toastify';
 
 Modal.setAppElement('#root');
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user: currentUser, isLoading: isUserLoading } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDisapproveModalOpen, setIsDisapproveModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [disapproveReason, setDisapproveReason] = useState('');
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const queryClient = useQueryClient();
 
-  // Fetch current user data
-  const { data: currentUser, isLoading: isUserLoading } = useQuery(
-    ['currentUser'],
-    userEndpoints.getCurrentUser,
-    {
-      enabled: !!user,
-      onError: (error) => {
-        toast.error('Failed to fetch user data.');
-        console.error('Error fetching current user:', error);
-      },
-    }
-  );
+  // Handle window resize to update windowWidth state
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Fetch unapproved posts for staff/superusers
-  const {
-    data: unapprovedPosts,
-    isLoading: isUnapprovedLoading,
-    refetch: refetchUnapprovedPosts,
-  } = useQuery(['unapprovedPosts'], postEndpoints.getUnapprovedPosts, {
-    enabled: user?.is_staff || user?.is_superuser,
+  const { data: unapprovedPosts, isLoading: isUnapprovedLoading } = useQuery({
+    queryKey: ['unapprovedPosts'],
+    queryFn: postEndpoints.getUnapprovedPosts,
+    enabled: currentUser?.is_staff || currentUser?.is_superuser,
     onError: (error) => {
       toast.error('Failed to fetch unapproved posts.');
       console.error('Error fetching unapproved posts:', error);
@@ -59,7 +40,8 @@ const Dashboard = () => {
   });
 
   // Mutation for approving a post
-  const approveMutation = useMutation(postEndpoints.approvePost, {
+  const approveMutation = useMutation({
+    mutationFn: postEndpoints.approvePost,
     onSuccess: () => {
       toast.success('Post approved successfully!');
       queryClient.invalidateQueries(['unapprovedPosts']);
@@ -71,7 +53,8 @@ const Dashboard = () => {
   });
 
   // Mutation for disapproving a post
-  const disapproveMutation = useMutation(postEndpoints.disapprovePost, {
+  const disapproveMutation = useMutation({
+    mutationFn: postEndpoints.disapprovePost,
     onSuccess: () => {
       toast.success('Post disapproved successfully!');
       queryClient.invalidateQueries(['unapprovedPosts']);
@@ -114,34 +97,41 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
-      <div className={styles.profileHeader}>
-        {isUserLoading ? (
-          <p>Loading user data...</p>
-        ) : (
-          <>
-            <h1 className={styles.title}>Welcome, {currentUser?.profile_name}</h1>
-            {currentUser?.profile?.image && (
-              <img
-                src={currentUser.profile.image}
-                alt={`${currentUser.profile_name}'s profile`}
-                className={styles.profileImage}
-              />
-            )}
-          </>
-        )}
-      </div>
+      <div id='top'></div>
+
+      {/* Conditionally render profile header on mobile */}
+      {windowWidth <= 768 && (
+        <div className={styles.profileHeader}>
+          {isUserLoading ? (
+            <p>Loading user data...</p>
+          ) : (
+            <>
+              <h1 className={styles.title}>Welcome, {currentUser?.profile_name}</h1>
+              {currentUser?.profile?.image && (
+                <img
+                  src={currentUser.profile.image}
+                  alt={`${currentUser.profile_name}'s profile`}
+                  className={styles.profileImage}
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       <div className={styles.bentoGrid}>
-        {/* Profile Box */}
-        <div className={styles.bentoBox}>
-          <User size={24} />
-          <h2>Profile</h2>
-          <p>Email: {currentUser?.email}</p>
-          <p>Bio: {currentUser?.profile?.bio}</p>
-          <Link to="/profile-settings" className={styles.actionButton}>
-            Settings
-          </Link>
-        </div>
+        {/* Profile Box - Display only on mobile */}
+        {windowWidth <= 768 && (
+          <div className={styles.bentoBox}>
+            <User size={24} />
+            <h2>Profile</h2>
+            <p>Email: {currentUser?.email}</p>
+            <p>Bio: {currentUser?.profile?.bio}</p>
+            <Link to="/profile-settings" className={styles.actionButton}>
+              Settings
+            </Link>
+          </div>
+        )}
 
         {/* My Posts Box */}
         <div className={styles.bentoBox}>
@@ -194,7 +184,7 @@ const Dashboard = () => {
         </div>
 
         {/* Unapproved Posts Box (Visible to Staff/Superusers) */}
-        {(user?.is_staff || user?.is_superuser) && (
+        {(currentUser?.is_staff || currentUser?.is_superuser) && (
           <div className={`${styles.bentoBox} ${styles.unapprovedPostsBox}`}>
             <AlertTriangle size={24} />
             <h2>Unapproved Posts</h2>

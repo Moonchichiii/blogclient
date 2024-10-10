@@ -12,14 +12,8 @@ const PostItem = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [newTag, setNewTag] = useState('');
-
-  const { 
-    comments, 
-    fetchNextPage, 
-    hasNextPage, 
-    addComment 
-  } = useComments(post.id);
   const { rating, ratePost } = useRatings(post.id);
+  const { comments, fetchNextPage, hasNextPage, addComment } = useComments(post.id, showComments);
   const { tags, addTag } = useTags(post.id);
 
   const handleAddComment = () => {
@@ -36,9 +30,26 @@ const PostItem = ({ post }) => {
     }
   };
 
+  const handleRatingChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (value >= 1 && value <= 5) {
+      ratePost(value);
+    }
+  };
+
+  const handleToggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
   return (
     <article className={styles.postItem}>
-      {post.image && <img src={post.image_url} alt={post.title} className={styles.postImage} />}
+      {post.image && (
+        <img
+          src={post.image}
+          alt={post.title}
+          className={styles.postImage}
+        />
+      )}
       <div className={styles.postContent}>
         <h2 className={styles.postTitle}>{post.title}</h2>
         {isAuthenticated ? (
@@ -58,8 +69,8 @@ const PostItem = ({ post }) => {
                   onChange={(e) => ratePost(Number(e.target.value))}
                 />
               </span>
-              <span onClick={() => setShowComments(!showComments)}>
-                <MessageSquare size={16} /> {comments.length}
+              <span onClick={handleToggleComments}>
+                <MessageSquare size={16} /> {post.comments_count}
               </span>
               <span><Tag size={16} /> {tags?.length || 0}</span>
             </div>

@@ -14,7 +14,7 @@ export const authEndpoints = {
 // Profiles endpoints
 export const userEndpoints = {
   getCurrentUser: () => api.get('/api/accounts/current-user/'),
-  updateProfile: (userData) => multipartApi.put('/api/profiles/update-profile/', userData),
+  updateProfile: (userData) => multipartApi.put('/api/profiles/profile/', userData),
   uploadProfilePicture: (formData) => multipartApi.post('/api/profiles/upload-profile-picture/', formData),
   getPopularFollowers: (userId) => api.get(`/api/profiles/${userId}/popular-followers/`),
 };
@@ -22,20 +22,20 @@ export const userEndpoints = {
 // Post endpoints
 export const postEndpoints = {
   getPostPreviews: (params) => api.get('/api/posts/previews/', { params }),
-  fetchPost: (id) => multipartApi.get(`/api/posts/${id}/`),
-  getPosts: (params) => multipartApi.get('/api/posts/', { params }),
-  getPost: (id) => multipartApi.get(`/api/posts/${id}/`),
+  fetchPost: (id) => api.get(`/api/posts/${id}/`), 
+  getPosts: (params) => api.get('/api/posts/', { params }), 
+  getPost: (id) => api.get(`/api/posts/${id}/`), 
   getUserPosts: (params) =>
-    multipartApi.get('/api/posts/', {
+    api.get('/api/posts/', {
       params: {
         ...params,
         author: 'current',
       },
-    }),
+    }), 
   createPost: (postData) => multipartApi.post('/api/posts/', postData),
   updatePost: (id, postData) => multipartApi.put(`/api/posts/${id}/`, postData),
-  deletePost: (id) => multipartApi.delete(`/api/posts/${id}/`),
-  ratePost: (id, rating) => multipartApi.post(`/api/ratings/rate/`, { post: id, value: rating }),
+  deletePost: (id) => api.delete(`/api/posts/${id}/`), 
+  ratePost: (id, rating) => api.post(`/api/ratings/rate/`, { post: id, value: rating }),
   // Approve and Disapprove endpoints
   getUnapprovedPosts: () => api.get('/api/posts/unapproved/'),
   approvePost: (id) => api.post(`/api/posts/${id}/approve/`),

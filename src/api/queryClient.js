@@ -1,35 +1,21 @@
 import { QueryClient } from '@tanstack/react-query';
 import showToast from '../utils/Toast';
 
-const createQueryClient = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        onError: (error) => {
-          console.error('Query Error:', error);
-          showToast(error.message, 'error');
-        },
-        onSuccess: (data) => {
-          // Handle success
-        },
-        retry: 1, 
-        staleTime: 1000 * 60 * 5, 
-      },
-      mutations: {
-        onError: (error) => {
-          console.error('Mutation Error:', error);
-          showToast(error.message, 'error');
-        },
-        onSuccess: (data) => {
-          // Handle success
-        },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 30,
+    },
+    mutations: {
+      onError: (error) => {
+        const message = error.response?.data?.message || 'An error occurred';
+        const type = error.response?.data?.type || 'error';
+        showToast(message, type);
       },
     },
-  });
-
-  return queryClient;
-};
-
-const queryClient = createQueryClient();
+  },
+});
 
 export default queryClient;

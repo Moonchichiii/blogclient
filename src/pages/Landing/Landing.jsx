@@ -12,7 +12,7 @@ const Landing = () => {
 
   return (
     <div className={`${styles.landing} ${isVisible ? styles.visible : ''}`}>
-      <div className={styles.overlay}></div> 
+      <div className={styles.overlay}></div>
       <div className={styles.content}>
         <h1 className={styles.title}>
           <span className={styles.titleWord}>The</span>

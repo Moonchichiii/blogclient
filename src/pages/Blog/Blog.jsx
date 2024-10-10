@@ -10,7 +10,7 @@ const Blog = () => {
   const [ordering, setOrdering] = useState('-created_at');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postToEdit, setPostToEdit] = useState(null);
-  
+ 
   const { isAuthenticated } = useAuth();
 
   const handleOpenPostModal = (post = null) => {
@@ -19,12 +19,14 @@ const Blog = () => {
   };
 
   const handleClosePostModal = () => {
+    setPostToEdit(null);
     setIsPostModalOpen(false);
   };
 
   return (
     <div className={styles.blogContainer}>
       <h2 className={styles.title}>Blog Posts</h2>
+      <div id='top'></div>
       <SearchBar setSearchQuery={setSearchQuery} />
       <select onChange={(e) => setOrdering(e.target.value)} value={ordering} className={styles.orderingSelect}>
         <option value="-created_at">Newest First</option>
@@ -35,16 +37,15 @@ const Blog = () => {
 
       {isAuthenticated && (
         <div>
-          <button onClick={() => handleOpenPostModal()}>Create New Post</button>
-          <button onClick={() => handleOpenPostModal(existingPost)}>Edit Post</button>
-
-          <PostModal
-            isOpen={isPostModalOpen}
-            onClose={handleClosePostModal}
-            postToEdit={postToEdit}
-          />
+          <button onClick={() => handleOpenPostModal()} className={styles.createPostButton}>Create New Post</button>
         </div>
       )}
+
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={handleClosePostModal}
+        postToEdit={postToEdit}
+      />
     </div>
   );
 };
