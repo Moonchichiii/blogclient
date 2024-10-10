@@ -63,7 +63,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/profile-settings" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/activate/:uidb64/:token" element={<EmailConfirmation />} />
+            <Route path="/activate/:uidb64/:token/" element={<EmailConfirmation />} />
             <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage /></ProtectedRoute>} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/my-posts" element={<ProtectedRoute><MyPosts /></ProtectedRoute>} />

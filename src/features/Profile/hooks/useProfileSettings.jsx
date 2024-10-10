@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../Accounts/hooks/useAuth';
+import { useProfile } from '../context/ProfileContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userEndpoints } from '../../../api/endpoints';
 import showToast from '../../../utils/toast';
 
-export const useProfile = () => {
-  const { user: currentUser } = useAuth();
+export const useProfileSettings = () => {
+  const { profile, isLoading, error } = useProfile();
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -17,25 +17,23 @@ export const useProfile = () => {
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    if (currentUser) {
+    if (profile) {
       setFormData({
-        profile_name: currentUser.profile_name || '',
-        bio: currentUser.profile?.bio || '',
-        email: currentUser.email || '',
+        profile_name: profile.profile_name || '',
+        bio: profile.bio || '',
+        email: profile.email || '',
       });
-      setImagePreview(currentUser.profile?.image || null);
+      setImagePreview(profile.image || null);
     }
-  }, [currentUser]);
+  }, [profile]);
 
-  const updateProfileMutation = useMutation({
-    mutationFn: userEndpoints.updateProfile,
-    onSuccess: (response) => {
+  const updateProfileMutation = useMutation(userEndpoints.updateProfile, {
+    onSuccess: () => {
       queryClient.invalidateQueries(['currentUser']);
-      showToast(response.data.message, response.data.type);
+      showToast('Profile updated successfully!', 'success');
     },
-    onError: (error) => {
-      const message = error.response?.data?.message || 'Failed to update profile';
-      showToast(message, 'error');
+    onError: () => {
+      showToast('Failed to update profile. Please try again.', 'error');
     },
   });
 
@@ -66,6 +64,8 @@ export const useProfile = () => {
   return {
     formData,
     imagePreview,
+    isLoading,
+    error,
     handleChange,
     handleImageChange,
     handleSubmit,

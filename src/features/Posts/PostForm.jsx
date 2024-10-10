@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postEndpoints } from '../../api/endpoints';
 import { Image, X } from 'lucide-react';
-import { showToast } from '../../utils/Toast';
+import showToast from '../../utils/toast';
 import styles from './PostForm.module.css';
 
 const PostForm = ({ post, onPostSubmit }) => {

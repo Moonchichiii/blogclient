@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
-import styles from './TwoFactorSetup.module.css';
+
 import { authEndpoints } from '../../api/endpoints';
 import { useAuth } from './hooks/useAuth';
-import showToast from '../../utils/Toast';
+import showToast from '../../utils/toast';
+import styles from './TwoFactorSetupPage.module.css';
 
-const TwoFactorSetup = () => {
+const TwoFactorSetup = ({ onSuccess, onSkip }) => {
   const [qrCode, setQrCode] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [isSetup, setIsSetup] = useState(false);
@@ -16,11 +17,12 @@ const TwoFactorSetup = () => {
 
   const setupTwoFactorMutation = useMutation({
     mutationFn: authEndpoints.setupTwoFactor,
-    onSuccess: (data) => {
+    onSuccess: (response) => {
+      const data = response.data;
       setQrCode(data.config_url);
       setSecretKey(data.secret_key);
       setIsSetup(true);
-      showToast('Two-factor authentication setup successful', 'success');
+      showToast(data.message, data.type);
     },
     onError: () => {
       showToast('Failed to setup two-factor authentication', 'error');
@@ -31,11 +33,21 @@ const TwoFactorSetup = () => {
     setupTwoFactorMutation.mutate();
   };
 
-  const handleContinue = () => navigate('/dashboard');
+  const handleContinue = () => {
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   const handleSkip = () => {
     showToast('You can set up two-factor authentication later in your account settings.', 'info');
-    navigate('/dashboard');
+    if (onSkip) {
+      onSkip();
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (

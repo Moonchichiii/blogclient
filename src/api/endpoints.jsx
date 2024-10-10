@@ -1,15 +1,18 @@
 import { api, multipartApi } from './apiConfig';
 
 // Accounts endpoints
+
 export const authEndpoints = {
   login: (credentials) => api.post('/api/accounts/login/', credentials),
   register: (userData) => api.post('/api/accounts/register/', userData),
-  logout: () => api.post('/api/accounts/logout/'),
   confirmEmail: (uidb64, token) => api.get(`/api/accounts/activate/${uidb64}/${token}/`),
+  logout: () => api.post('/api/accounts/logout/'),  
   resendVerification: (email) => api.post('/api/accounts/resend-verification/', { email }),
   setupTwoFactor: () => api.post('/api/accounts/setup-2fa/'),
   refreshToken: (refreshToken) => api.post('/api/accounts/token/refresh/', { refresh: refreshToken }),
+
 };
+
 
 // Profiles endpoints
 export const userEndpoints = {

@@ -3,7 +3,7 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { authEndpoints } from '../../api/endpoints';
 import { useAuth } from './hooks/useAuth';
-import showToast from '../../utils/Toast';
+import showToast from '../../utils/toast';
 import styles from './AuthForm.module.css';
 
 const InputField = ({ icon: Icon, error, ...props }) => (
@@ -54,12 +54,11 @@ const SignUpForm = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [passwordStrength, setPasswordStrength] = useState('');
-  const { login } = useAuth();
 
   const registerMutation = useMutation({
     mutationFn: (data) => authEndpoints.register(data),
-    onSuccess: async (data) => {
-      showToast(data.message, data.type);
+    onSuccess: (response) => {
+      showToast(response.data.message, response.data.type);
       if (onSuccess) onSuccess('emailConfirmation');
     },
     onError: (error) => {
@@ -115,16 +114,15 @@ const SignUpForm = ({ onSuccess }) => {
         autoComplete="username"
         error={errors.email}
       />
-
-<PasswordInput
-  autoComplete="new-password"
-  name="password"
-  required
-  placeholder="Password"
-  value={formData.password1}
-  onChange={handleInputChange}
-  error={errors.password1}
-/>
+      <PasswordInput
+        autoComplete="new-password"
+        name="password"
+        required
+        placeholder="Password"
+        value={formData.password} 
+        onChange={handleInputChange}
+        error={errors.password}
+      />
       <div className={styles.passwordStrength}>
         <p>Password Strength: {passwordStrength}</p>
         <div className={styles.strengthMeter}>

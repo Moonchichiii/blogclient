@@ -1,10 +1,10 @@
+// SignInForm.jsx
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import showToast from '../../utils/Toast';
+import showToast from '../../utils/toast';
 import styles from './AuthForm.module.css';
-
 
 const InputField = ({ icon: Icon, error, ...props }) => (
   <div className={styles.inputContainer}>
@@ -37,9 +37,8 @@ const PasswordInput = ({ error, ...props }) => {
 };
 
 const SignInForm = ({ onSuccess }) => {
-  const [formData, setFormData] = useState({ email: '', password: '', otp: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const [requireOTP, setRequireOTP] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -47,7 +46,6 @@ const SignInForm = ({ onSuccess }) => {
     const newErrors = {};
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
-    if (requireOTP && !formData.otp) newErrors.otp = 'OTP is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -61,18 +59,12 @@ const SignInForm = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-        try {
-            const response = await login(formData);
-            if (response.requireOTP) {
-                setRequireOTP(true);
-                showToast('Please enter your OTP', 'info');
-            } else {
-                showToast(response.message, response.type);
-                if (onSuccess) {
-                    onSuccess();
-                }                
-                navigate('/dashboard');
-                }
+      try {
+        await login(formData);
+        if (onSuccess) {
+          onSuccess();
+        }
+        navigate('/dashboard');
       } catch (error) {
         showToast(error.response?.data?.message || 'An error occurred during login', 'error');
         if (error.response?.data?.errors) {
@@ -102,17 +94,6 @@ const SignInForm = ({ onSuccess }) => {
         autoComplete="current-password"
         error={errors.password}
       />
-      {requireOTP && (
-        <InputField
-          icon={Lock}
-          name="otp"
-          type="text"
-          placeholder="One-Time Password"
-          value={formData.otp}
-          onChange={handleChange}
-          error={errors.otp}
-        />
-      )}
       <button type="submit" className={styles.submitButton}>Sign In</button>
     </form>
   );

@@ -3,9 +3,10 @@ import Modal from '../../components/Modal/Modal';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import EmailConfirmation from './EmailConfirmation';
+import TwoFactorSetup from './TwoFactorSetupPage';
 import styles from './AuthModal.module.css';
 
-const AuthModal = ({ isOpen, onClose, initialView, showToast }) => {
+const AuthModal = ({ isOpen, onClose, initialView }) => {
   const [view, setView] = useState(initialView);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const AuthModal = ({ isOpen, onClose, initialView, showToast }) => {
         {view === 'signin' && (
           <>
             <h2 className={styles.heading}>Sign in to your account</h2>
-            <SignInForm onSuccess={onClose} showToast={showToast} />
+            <SignInForm onSuccess={onClose} />
             <button onClick={() => setView('signup')} className={styles.toggleButton}>
               Need an account? Sign up
             </button>
@@ -27,19 +28,24 @@ const AuthModal = ({ isOpen, onClose, initialView, showToast }) => {
         {view === 'signup' && (
           <>
             <h2 className={styles.heading}>Create a new account</h2>
-            <SignUpForm onSuccess={() => setView('emailConfirmation')} showToast={showToast} />
+            <SignUpForm onSuccess={() => setView('emailConfirmation')} />
             <button onClick={() => setView('signin')} className={styles.toggleButton}>
               Already have an account? Sign in
             </button>
           </>
         )}
-        {view === 'emailConfirmation' && (
-          <EmailConfirmation
-            isInModal={true}
-            onSuccess={() => setView('signin')}
-            showToast={showToast}
-          />
-        )}
+       {view === 'emailConfirmation' && (
+  <EmailConfirmation
+    isInModal={true}
+    onSuccess={() => setView('twoFactorSetup')}
+  />
+)}
+{view === 'twoFactorSetup' && (
+  <TwoFactorSetup
+    onSuccess={onClose}
+    onSkip={onClose}
+  />
+)}
       </div>
     </Modal>
   );

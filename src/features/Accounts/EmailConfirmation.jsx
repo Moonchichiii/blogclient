@@ -1,31 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
-import styles from './EmailConfirmation.module.css';
 import { authEndpoints } from '../../api/endpoints';
 import { useAuth } from './hooks/useAuth';
-import showToast from '../../utils/Toast';
+import showToast from '../../utils/toast';
+import styles from './EmailConfirmation.module.css';
 
-const EmailConfirmation = () => {
+const EmailConfirmation = ({ isInModal, onSuccess }) => {
   const { uidb64, token } = useParams();
   const navigate = useNavigate();
   const { setIsAuthenticated } = useAuth();
   const [status, setStatus] = useState('confirming');
   const [email, setEmail] = useState('');
+
+  const [disableResend, setDisableResend] = useState(true);
   const [isResending, setIsResending] = useState(false);
+
+  useEffect(() => {    
+    const timer = setTimeout(() => setDisableResend(false), 60000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const confirmEmailMutation = useMutation({
     mutationFn: () => authEndpoints.confirmEmail(uidb64, token),
-    onSuccess: async (response) => {
-      const data = response.data;
+    onSuccess: (response) => {
       setStatus('success');
-      const { access, refresh } = data.tokens;
-      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
-      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
-      showToast(data.message, data.type);
-      navigate('/setup-2fa');
+      showToast(response.data.message, response.data.type);
+
+      if (isInModal && onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/setup-2fa');
+      }
     },
     onError: (error) => {
       setStatus('error');
@@ -37,8 +44,18 @@ const EmailConfirmation = () => {
   });
 
   useEffect(() => {
-    confirmEmailMutation.mutate();
-  }, []);
+    if (uidb64 && token) {
+      confirmEmailMutation.mutate();
+    }
+  }, [uidb64, token]);
+  
+  const handleContinue = () => {
+    if (isInModal && onSuccess) {
+      onSuccess();
+    } else {
+      navigate('/setup-2fa');
+    }
+  };
 
   const resendVerificationMutation = useMutation({
     mutationFn: (email) => authEndpoints.resendVerification(email),
@@ -69,18 +86,25 @@ const EmailConfirmation = () => {
 
   return (
     <div className={styles.container}>
-      {status === 'confirming' && <p>Confirming your email...</p>}
+      {status === 'confirming' && (
+        <div className={styles.loaderContainer}>
+          <p>Confirming your email...</p>
+          <div className={styles.spinner}></div>
+        </div>
+      )}
       {status === 'success' && (
         <div>
-          <h2>Email Confirmed!</h2>
-          <p>Your email has been successfully confirmed. You can now set up two-factor authentication or proceed to your account.</p>
-          <button onClick={() => navigate('/setup-2fa')} className={styles.continueButton}>Continue</button>
+          <p>Your email has been successfully confirmed!</p>
+          <button onClick={handleContinue} className={styles.loginButton}>Sign In</button>
         </div>
       )}
       {status === 'error' && (
         <div>
           <h2>Confirmation Failed</h2>
-          <p>We couldn't confirm your email. The link may have expired or is invalid.</p>
+          <p>
+            We couldn't confirm your email. The link may have expired or is invalid.
+            Please try resending the verification email.
+          </p>
           <form onSubmit={handleResendSubmit} className={styles.form}>
             <input
               type="email"
@@ -90,11 +114,17 @@ const EmailConfirmation = () => {
               required
               className={styles.input}
             />
-            <button type="submit" disabled={isResending} className={styles.button}>
+            <button
+              type="submit"
+              disabled={isResending || disableResend}
+              className={styles.button}
+            >
               {isResending ? 'Sending...' : 'Resend Verification Email'}
             </button>
           </form>
-          <button onClick={() => navigate('/')} className={styles.loginButton}>Back to Login</button>
+          <button onClick={() => navigate('/')} className={styles.loginButton}>
+            Back to Login
+          </button>
         </div>
       )}
     </div>
