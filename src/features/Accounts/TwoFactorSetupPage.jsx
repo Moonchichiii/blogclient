@@ -24,10 +24,11 @@ const TwoFactorSetup = ({ onSuccess, onSkip }) => {
       setIsSetup(true);
       showToast(data.message, data.type);
     },
-    onError: () => {
-      showToast('Failed to setup two-factor authentication', 'error');
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Failed to setup two-factor authentication', 'error');
     },
   });
+
 
   const handleSetup = () => {
     setupTwoFactorMutation.mutate();

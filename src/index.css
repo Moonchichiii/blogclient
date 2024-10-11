@@ -1,0 +1,93 @@
+:root {
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --border-radius-md: 8px;
+    --transition-normal: 0.3s ease;
+    --transition-fast: 0.2s ease;
+    --heading-font: 'Poppins', sans-serif;
+    --body-font: 'Inter', sans-serif;
+  
+    /* Light Theme */
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --card-background: #ffffff;
+    --heading-color: #000000;
+    --primary-color: #ff9a8b;
+    --secondary-color: #98ddca;
+    --accent-color: #d4a5a5;
+    --accent-color-hover: #ffb7b2;
+    --nav-background-color: #ffffff;
+    --footer-background-color: #f0f0f0;
+    --input-border-color: #d1d1d1;
+    --error-color: #ff6b6b;
+    --warning-color: #feca57;
+    --success-color: #5ed2a0;
+    --button-primary: #ff9a8b;
+    --button-primary-hover: #ff7f7f;
+    --button-secondary: #98ddca;
+    --button-secondary-hover: #7fd7b5;
+  
+    /* Dark Theme */
+    --dark-background-color: #121212;
+    --dark-text-color: #f0f0f0;
+    --dark-card-background: #1e1e1e;
+    --dark-heading-color: #a0d2eb;
+    --dark-primary-color: #d4a5a5;
+    --dark-secondary-color: #a0c1b8;
+    --dark-accent-color: #f0e6bc;
+    --dark-accent-color-hover: #e2ceff;
+    --dark-nav-background-color: #0a0a0a;
+    --dark-footer-background-color: #0a0a0a;
+    --dark-input-border-color: #2c2c2c;
+    --dark-error-color: #ff9a9a;
+    --dark-warning-color: #ffe5b4;
+    --dark-success-color: #b5e8c3;
+    --dark-button-primary: #d4a5a5;
+    --dark-button-primary-hover: #c49090;
+    --dark-button-secondary: #a0c1b8;
+    --dark-button-secondary-hover: #8fb3a9;
+  }
+
+/* Dark Mode Overrides */
+body.darkMode {
+    --background-color: var(--dark-background-color);
+    --text-color: var(--dark-text-color);
+    --card-background: var(--dark-card-background);
+    --heading-color: var(--dark-heading-color);
+    --primary-color: var(--dark-primary-color);
+    --secondary-color: var(--dark-secondary-color);
+    --accent-color: var(--dark-accent-color);
+    --accent-color-hover: var(--dark-accent-color-hover);
+    --nav-background-color: var(--dark-nav-background-color);
+    --footer-background-color: var(--dark-footer-background-color);
+    --input-border-color: var(--dark-input-border-color);
+    --error-color: var(--dark-error-color);
+    --warning-color: var(--dark-warning-color);
+    --success-color: var(--dark-success-color);
+    --button-primary: var(--dark-button-primary);
+    --button-primary-hover: var(--dark-button-primary-hover);
+    --button-secondary: var(--dark-button-secondary);
+    --button-secondary-hover: var(--dark-button-secondary-hover);
+  }
+/* Base Styles and Resets */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--body-font);
+  line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+

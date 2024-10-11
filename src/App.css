@@ -1,83 +1,13 @@
-:root {
-  /* Dark theme variables */
-  --background-color: #121212;
-  --card-background: #1e1e1e;
-  --text-color: #f0f0f0; /* Cream white for better readability */
-  --heading-color: #a0d2eb; /* Soft sky blue */
-  --primary-color: #d4a5a5; /* Soft pink */
-  --secondary-color: #a0c1b8; /* Soft sage */
-  --accent-color: #f0e6bc; /* Soft yellow */
-  --accent-color-hover: #e2ceff; /* Soft lavender */
-  --blog-background: #1a1a1a;
-  --nav-background-color: #0a0a0a;
-  --footer-background-color: #0a0a0a;
-  --button-primary: #d4a5a5; /* Soft pink */
-  --button-primary-hover: #c49090;
-  --button-secondary: #a0c1b8; /* Soft sage */
-  --button-secondary-hover: #8fb3a9;
-  --button-text-color: #121212; /* Dark text on light buttons */
-  --link-color: #a0d2eb; /* Soft sky blue */
-  --link-hover-color: #f0e6bc; /* Soft yellow */
-  --input-border: #2c2c2c;
-  --error-color: #ff9a9a; /* Soft red */
-  --warning-color: #ffe5b4; /* Soft orange */
-  --success-color: #b5e8c3; /* Soft green */
-
-  /* Light theme variables */
-  --background-color-light: #ffffff;
-  --card-background-light: #f8f8f8;
-  --text-color-light: #000000;
-  --heading-color-light: #000000;
-  --primary-color-light: #ff9a8b; /* Strong pastel coral */
-  --secondary-color-light: #98ddca; /* Strong pastel mint */
-  --accent-color-light: #d4a5a5; /* Strong pastel pink */
-  --accent-color-light-hover: #ffb7b2; /* Strong pastel light pink */
-  --blog-background-light: #ffffff;
-  --nav-background-color-light: #ffffff;
-  --footer-background-color-light: #f0f0f0;
-  --button-primary-light: #ff9a8b; /* Strong pastel coral */
-  --button-primary-hover-light: #ff8677;
-  --button-secondary-light: #98ddca; /* Strong pastel mint */
-  --button-secondary-hover-light: #7fcfb6;
-  --button-text-color-light: #000000; /* Black text on pastel buttons */
-  --link-color-light: #000000;
-  --link-hover-color-light: #ff9a8b; /* Strong pastel coral */
-  --input-border-light: #d1d1d1;
-  --error-color-light: #ff6b6b;
-  --warning-color-light: #feca57;
-  --success-color-light: #5ed2a0;
-
-  /* Common variables - unchanged */
-  --heading-font: 'Poppins', sans-serif;
-  --body-font: 'Inter', sans-serif;
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 2rem;
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 16px;
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
-}
-
-/* Additional styles to enhance the modern look */
-
-body {
+/* Layout-specific and component-specific styles in App.css */
+html, body, .main, .appContent {
   font-family: var(--body-font);
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
-  font-size: 16px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-body.lightMode {
-  background-color: var(--background-color-light);
-  color: var(--text-color-light);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -87,76 +17,16 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--heading-color);
 }
 
-body.lightMode h1, 
-body.lightMode h2, 
-body.lightMode h3, 
-body.lightMode h4, 
-body.lightMode h5, 
-body.lightMode h6 {
-  color: var(--heading-color-light);
+button {
+  background-color: var(--button-primary);
+  color: var(--button-text-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-normal);
 }
 
-.btn-primary, .btn-secondary {
-  padding: 0.75em 1.5em;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all var(--transition-normal);
-}
-
-.btn-primary:hover, .btn-secondary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-body.lightMode .btn-primary,
-body.lightMode .btn-secondary {
-  color: var(--button-text-color-light);
-}
-
-.input-field {
-  background-color: transparent;
-  border: 2px solid var(--input-border);
-  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.input-field:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(160, 210, 235, 0.3);
-}
-
-body.lightMode .input-field {
-  border-color: var(--input-border-light);
-}
-
-body.lightMode .input-field:focus {
-  border-color: var(--accent-color-light);
-  box-shadow: 0 0 0 3px rgba(255, 154, 139, 0.3);
-}
-
-/* Error Messages */
-.error-message {
-  color: var(--error-color);
-  font-size: 0.875rem;
-  margin-top: var(--spacing-xs);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .main {
-    padding: var(--spacing-md);
-  }
-}
-
-@media (max-width: 480px) {
-  .main {
-    padding: var(--spacing-sm);
-  }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-  }
+button:hover {
+  background-color: var(--button-primary-hover);
+  transform: translateY(-2px);
 }

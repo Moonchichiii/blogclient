@@ -2,13 +2,20 @@
   background-color: var(--footer-background-color);
   color: var(--text-color);
   padding: 4em 2em;
+  padding-bottom: 6em;
   font-family: var(--body-font);
   position: relative;
+}
+
+body.lightMode .footer {
+  background-color: var(--footer-background-color-light);
+  color: var(--text-color-light);
 }
 
 .footerContent {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 2em;
   max-width: 1200px;
   margin: 0 auto;
@@ -16,8 +23,9 @@
 
 .footerMain {
   display: flex;
-  flex: 2;
+  flex-wrap: wrap;
   gap: 2em;
+  flex: 2;
 }
 
 .footerContact {
@@ -27,16 +35,24 @@
 .footerSection h3 {
   font-family: var(--heading-font);
   font-size: 1.2em;
-  color: var(--footer-heading-color);
+  color: var(--heading-color);
   margin-bottom: 1em;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+body.lightMode .footerSection h3 {
+  color: var(--heading-color-light);
+}
+
 .footerSection p {
   font-size: 0.9em;
   line-height: 1.6;
-  color: var(--footer-text-color);
+  color: var(--text-color);
+}
+
+body.lightMode .footerSection p {
+  color: var(--text-color-light);
 }
 
 .quickLinks {
@@ -48,38 +64,40 @@
 }
 
 .quickLinks li a {
-  color: var(--footer-link-color);
+  color: var(--link-color);
   text-decoration: none;
-  transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out, transform 0.3s ease;
   font-size: 0.9em;
 }
 
 .quickLinks li a:hover {
-  color: var(--footer-link-hover-color);
+  color: var(--link-hover-color);
+  transform: translateY(-2px);
 }
 
 .contactForm {
   margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .subjectInput,
 .inputContainer input {
   width: 100%;
   padding: 0.75rem 1rem;
-  padding-left: 40px; /* Space for the icon */
-  background-color: var(--card-background); /* Match with the search bar */
+  padding-left: 40px;
+  background-color: var(--card-background);
   border: 1px solid var(--input-border);
   border-radius: 20px;
   font-size: 0.9em;
-  color: var(--footer-text-color); /* Keep text color aligned with footer */
+  color: var(--text-color);
   transition: border-color 0.3s ease;
-  margin-bottom: 1em; /* Add margin between the inputs */
 }
 
 .subjectInput:focus,
 .inputContainer input:focus {
-  border-color: var(--accent-color); /* Add the focus effect */
-  outline: none;
+  border-color: var(--accent-color);
 }
 
 .inputContainer {
@@ -91,32 +109,25 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--footer-text-color);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.inputContainer svg:hover {
-  color: var(--button-hover-color); /* Change color on hover */
-  transform: scale(1.1); /* Scale icon on hover */
+  color: var(--text-color);
 }
 
 .inputContainer button {
   position: absolute;
-  right: 45px;
-  top: 40%;
+  right: 12px;
+  top: 50%;
   transform: translateY(-50%);
   background-color: transparent;
   border: none;
-  color: var(--footer-text-color);
+  color: var(--text-color);
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.inputContainer button:hover {
-  color: var(--button-hover-color); /* Match hover color with the search icon */
-  transform: scale(1.1); /* Scale icon on hover */
+.inputContainer button:hover,
+.inputContainer svg:hover {
+  color: var(--button-primary-hover);
+  transform: scale(1.1);
 }
-
 
 .footerBottom {
   display: flex;
@@ -124,7 +135,7 @@
   align-items: center;
   margin-top: 2em;
   padding-top: 1em;
-  border-top: 1px solid var(--footer-border-color);
+  border-top: 1px solid var(--input-border);
 }
 
 .socialLinks {
@@ -134,38 +145,36 @@
 }
 
 .socialLinks li a {
-  color: var(--footer-link-color);
+  color: var(--link-color);
   transition: color 0.3s ease-in-out;
 }
 
 .socialLinks li a:hover {
-  color: var(--footer-link-hover-color);
+  color: var(--link-hover-color);
 }
 
 .scrollToTopContainer {
   position: fixed;
-  bottom: 2em;
+  bottom: 12em;
   right: 2em;
   z-index: 1000;
 }
 
 .scrollToTop {
-  background: var(--footer-scroll-button-bg);
-  border: none;
-  cursor: pointer;
-  color: var(--footer-scroll-button-color);
+  background: var(--button-secondary);
+  color: var(--text-color);
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   transition: transform 0.3s, background-color 0.3s;
 }
 
 .scrollToTop:hover {
+  background-color: var(--button-secondary-hover);
   transform: scale(1.1);
-  background-color: var(--footer-scroll-button-hover-bg);
 }
 
 .arrowIcon {
@@ -176,11 +185,12 @@
   transform: translateY(-2px);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .footerContent,
   .footerMain {
     flex-direction: column;
+    align-items: center;
+    margin-bottom: auto;
   }
 
   .footerContact {
@@ -190,6 +200,8 @@
   .footerBottom {
     flex-direction: column;
     text-align: center;
+    justify-content: center;
+    padding-bottom: 1em;
   }
 
   .socialLinks {
@@ -197,8 +209,7 @@
     justify-content: center;
   }
 
-  .scrollToTopContainer,.footerContent {
-    bottom: 9em; 
+  .scrollToTopContainer {
+    bottom: 9em;
   }
-  
 }

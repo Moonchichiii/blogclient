@@ -4,11 +4,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
+  padding: 1rem;
+  overflow: hidden;
 }
 
 .content {
@@ -16,29 +18,39 @@
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   position: relative;
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: 450px;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .closeButton {
   position: absolute;
   top: var(--spacing-sm);
   right: var(--spacing-sm);
-  background: none;
+  background: transparent;
   border: none;
   font-size: 1.5rem;
-  cursor: pointer;
   color: var(--text-color);
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.heading {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--heading-color);
-  text-align: center;
-  margin-bottom: var(--spacing-md);
+.closeButton:hover {
+  transform: rotate(90deg) scale(1.2);
+  color: #C23B22;
+  background-color: transparent;
 }
 
 .toggleButton {
@@ -47,23 +59,51 @@
   color: var(--accent-color);
   cursor: pointer;
   margin-top: var(--spacing-md);
-  text-align: center;
-  display: block;
-  width: 100%;
   font-size: 0.875rem;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .toggleButton:hover {
-  text-decoration: underline;
+  color: var(--accent-color-hover);
+  transform: translateY(-2px);
+}
+
+@media (min-width: 769px) {
+  .closeButton:hover {
+    transform: rotate(90deg) scale(1.2);
+    color: #C23B22;
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 768px) {
+  .closeButton:hover {
+    transform: rotate(90deg);
+    color: #C23B22;
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: var(--spacing-md);
+    max-width: 90%;
+    max-height: 80vh;
+  }
+
+  .closeButton {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .overlay {
-    padding-top: 5rem; 
+  .content {
+    padding: var(--spacing-sm);
+    max-width: 95%;
+    max-height: 85vh;
   }
 
-  .content {
-    padding: 1rem;
-    max-width: 85%; 
+  .closeButton {
+    font-size: 2.5rem;
   }
 }

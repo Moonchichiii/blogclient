@@ -3,7 +3,8 @@
   flex-direction: column;
   gap: var(--spacing-md);
   width: 100%;
-  max-width: 400px;
+  max-width: 400px; /* Limiting width to maintain a centered form */
+  margin: 0 auto;
 }
 
 .inputContainer {
@@ -19,22 +20,23 @@
   color: var(--text-color);
   width: 1.25rem;
   height: 1.25rem;
+  pointer-events: none;
 }
 
 .inputField {
   width: 100%;
   background-color: var(--card-background);
   color: var(--text-color);
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--input-border-color);
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.5rem;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.5rem; /* Padding for icon */
   transition: border-color var(--transition-normal);
   font-size: 0.875rem;
 }
 
 .inputField:focus {
   outline: none;
-  border-color: var(--accent-color);
+  border-color: var(--accent-color); /* Highlight on focus */
 }
 
 .inputError {
@@ -95,18 +97,46 @@
   transition: width var(--transition-normal), background-color var(--transition-normal);
 }
 
-.strengthBar[data-strength="0"] { width: 25%; background-color: var(--error-color); }
-.strengthBar[data-strength="1"] { width: 50%; background-color: var(--warning-color); }
-.strengthBar[data-strength="2"] { width: 75%; background-color: var(--success-color); }
-.strengthBar[data-strength="3"] { width: 100%; background-color: var(--accent-color); }
+.strengthBar[data-strength="0"] {
+  width: 25%;
+  background-color: var(--error-color);
+}
 
+.strengthBar[data-strength="1"] {
+  width: 50%;
+  background-color: var(--warning-color);
+}
+
+.strengthBar[data-strength="2"] {
+  width: 75%;
+  background-color: var(--success-color);
+}
+
+.strengthBar[data-strength="3"] {
+  width: 100%;
+  background-color: var(--accent-color);
+}
+
+/* Mobile adjustments */
 @media (max-width: 480px) {
   .inputField {
     font-size: 1rem;
-    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.75rem;
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.75rem; /* Adjust padding for mobile */
   }
 
   .submitButton {
     padding: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 320px) {
+  .inputField {
+    font-size: 0.875rem;
+    padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 2.5rem; /* Adjust padding for smaller screens */
+  }
+
+  .submitButton {
+    font-size: 0.875rem;
+    padding: var(--spacing-xs);
   }
 }

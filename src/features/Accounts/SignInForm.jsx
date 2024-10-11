@@ -1,4 +1,3 @@
-// SignInForm.jsx
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';

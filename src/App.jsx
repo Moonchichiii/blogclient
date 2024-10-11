@@ -29,31 +29,25 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('darkMode');
-      document.body.classList.remove('lightMode');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.classList.add('lightMode');
-      document.body.classList.remove('darkMode');
-      localStorage.setItem('theme', 'light');
-    }
+    const themeClass = isDarkMode ? 'darkMode' : 'lightMode';
+    document.body.classList.add(themeClass);
+    document.body.classList.remove(isDarkMode ? 'lightMode' : 'darkMode');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode((prevMode) => !prevMode);
 
   return (
     <ErrorBoundary>
-      <ToastContainer 
+      <ToastContainer
         position='top-right'
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick={true}
-        rtl={false}
-        pauseOnFocusLoss={true}
+        closeOnClick
+        pauseOnFocusLoss
         draggable={false}
-        pauseOnHover={true}      
+        pauseOnHover
       />
       <Suspense fallback={<div className="loading-spinner"><Loader className="animate-spin" size={32} /></div>}>
         <Routes>

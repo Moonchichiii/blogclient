@@ -2,37 +2,41 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.main {
-  flex-grow: 1;
-  padding: 2em;
-  background-color: var(--background-color);
+  background-color: var(--background-color); /* Applies background */
   color: var(--text-color);
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-body.lightMode .main {
-  background-color: var(--background-color-light);
+/* The main container for the routed components (Outlet) */
+.outletContainer {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: var(--background-color); /* Ensure Outlet has background */
+  color: var(--text-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+body.lightMode .layout,
+body.lightMode .outletContainer {
+  background-color: var(--background-color-light); /* Light mode background */
   color: var(--text-color-light);
 }
 
-
-
+/* Responsive adjustments for smaller screens */
 @media (max-width: 1200px) {
-  .main {
-    padding: 1.5em;
+  .outletContainer {
+    padding: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
-  .main {
-    padding: 1em;
+  .outletContainer {
+    padding: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .main {
-    padding: 0.75em;
+  .outletContainer {
+    padding: 0.75rem;
   }
 }

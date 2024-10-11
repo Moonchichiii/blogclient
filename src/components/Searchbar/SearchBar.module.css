@@ -1,42 +1,42 @@
 .searchBar {
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
-}
-
-.searchInputWrapper {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .searchInputWrapper {
     position: relative;
     width: 70%;
     max-width: 500px;
-}
-
-.searchIcon {
+  }
+  
+  .searchIcon {
     position: absolute;
-    left: 12px;    
+    left: var(--spacing-sm);
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-color);
     pointer-events: none;
-}
-
-.searchInput {
+  }
+  
+  .searchInput {
     width: 100%;
-    padding: 0.75rem 1rem;
-    padding-left: 40px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-left: 40px; /* space for the icon */
     background-color: var(--card-background);
-    border: 1px solid var(--input-border);
-    border-radius: 20px;
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--border-radius-md);
     font-size: 0.9em;
     color: var(--text-color);
-    transition: border-color 0.3s ease;
-}
-
-.searchInput:focus {
+    transition: border-color var(--transition-normal);
+  }
+  
+  .searchInput:focus {
     border-color: var(--accent-color);
     outline: none;
-}
-
-.searchInput::placeholder {
-    color: var(--paragraph-texts-light);
-}
-
+  }
+  
+  .searchInput::placeholder {
+    color: var(--text-color);
+  }
+  

@@ -6,7 +6,7 @@ import { AuthProvider } from './features/Accounts/hooks/useAuth';
 import App from './App.jsx';
 import Modal from 'react-modal';
 import queryClient from './api/queryClient';
-
+import './index.css';
 Modal.setAppElement('#root');
 
 createRoot(document.getElementById('root')).render(
