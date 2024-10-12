@@ -8,7 +8,8 @@ export const authEndpoints = {
   confirmEmail: (uidb64, token) => api.get(`/api/accounts/activate/${uidb64}/${token}/`),
   logout: () => api.post('/api/accounts/logout/'),  
   resendVerification: (email) => api.post('/api/accounts/resend-verification/', { email }),
-  setupTwoFactor: () => api.post('/api/accounts/setup-2fa/'),
+  setupTwoFactor: () => api.post('api/accounts/setup-2fa/'),
+  getTwoFactorStatus: () => api.get('api/accounts/two-factor/status/'),
   refreshToken: (refreshToken) => api.post('/api/accounts/token/refresh/', { refresh: refreshToken }),
 
 };

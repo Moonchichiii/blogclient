@@ -34,3 +34,12 @@ export const usePosts = (params = {}) => {
     disapprovePost: disapprovePostMutation.mutateAsync,
   };
 };
+
+
+export const usePosts = (params = {}) => {
+  return useInfiniteQuery({
+    queryKey: ['posts', params],
+    queryFn: ({ pageParam = 1 }) => fetchPosts({ ...params, page: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
+};

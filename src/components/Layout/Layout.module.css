@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--background-color); /* Applies background */
+  background-color: var(--background-color);
   color: var(--text-color);
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
@@ -10,28 +10,28 @@
 /* The main container for the routed components (Outlet) */
 .outletContainer {
   flex-grow: 1;
-  padding: 2rem;
-  background-color: var(--background-color); /* Ensure Outlet has background */
+  padding: clamp(0.75rem, 5vw, 2rem);
+  background-color: var(--background-color);
   color: var(--text-color);
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 body.lightMode .layout,
 body.lightMode .outletContainer {
-  background-color: var(--background-color-light); /* Light mode background */
+  background-color: var(--background-color-light);
   color: var(--text-color-light);
 }
 
-/* Responsive adjustments for smaller screens */
+/* Responsive adjustments using a more flexible approach */
 @media (max-width: 1200px) {
   .outletContainer {
-    padding: 1.5rem;
+    padding: clamp(0.75rem, 3vw, 1.5rem);
   }
 }
 
 @media (max-width: 768px) {
   .outletContainer {
-    padding: 1rem;
+    padding: clamp(0.75rem, 2vw, 1rem);
   }
 }
 

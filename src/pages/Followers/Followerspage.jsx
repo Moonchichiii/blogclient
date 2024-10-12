@@ -34,6 +34,17 @@ const FollowersPage = () => {
   return (
     <div className={styles.followersPage}>
       <h1>Followers Page</h1>
+
+
+      const FollowersChart = ({ data }) => (
+  <LineChart data={data}>
+    <Line type="monotone" dataKey="followers" stroke="#8884d8" />
+    {/* ...other chart components */}
+  </LineChart>
+); ?????????????????????
+
+
+
       <div className={styles.chartContainer}>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>

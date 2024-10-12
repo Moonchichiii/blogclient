@@ -15,7 +15,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 const EmailConfirmation = lazy(() => import('./features/Accounts/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
-const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetupPage'));
+const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetup'));
 const Blog = lazy(() => import('./pages/Blog/Blog'));
 const About = lazy(() => import('./pages/About/About'));
 const MyPosts = lazy(() => import('./pages/Blog/MyPosts'));

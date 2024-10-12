@@ -7,7 +7,7 @@ import { useTags } from '../Tags/hooks/useTags';
 import { useAuth } from '../Accounts/hooks/useAuth';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const PostItem = ({ post }) => {
+const PostItem = React.memo(({ post }) => {
   const { isAuthenticated } = useAuth();
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
@@ -122,6 +122,6 @@ const PostItem = ({ post }) => {
       </div>
     </article>
   );
-};
+});
 
 export default PostItem;

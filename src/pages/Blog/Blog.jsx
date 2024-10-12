@@ -41,6 +41,8 @@ const Blog = () => {
         </div>
       )}
 
+{isAuthenticated ? <PostList /> : <PostPreviewList />}
+
       <PostModal
         isOpen={isPostModalOpen}
         onClose={handleClosePostModal}

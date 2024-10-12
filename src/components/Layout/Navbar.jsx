@@ -56,8 +56,10 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   };
 
   return (
+    
     <div className={styles.navbarContainer}>
-      <nav className={styles.nav}>
+      <div id="top"></div>
+            <nav className={styles.nav}>
         <div className={styles.logo}>
           <Link to="/">
             TheBlog<span>Client</span>

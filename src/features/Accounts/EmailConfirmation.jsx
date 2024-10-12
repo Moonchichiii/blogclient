@@ -6,6 +6,7 @@ import { useAuth } from './hooks/useAuth';
 import showToast from '../../utils/toast';
 import styles from './EmailConfirmation.module.css';
 
+
 const EmailConfirmation = ({ isInModal, onSuccess }) => {
   const { uidb64, token } = useParams();
   const navigate = useNavigate();
@@ -13,13 +14,16 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
   const [status, setStatus] = useState('confirming');
   const [email, setEmail] = useState('');
 
+
   const [disableResend, setDisableResend] = useState(true);
   const [isResending, setIsResending] = useState(false);
+
 
   useEffect(() => {    
     const timer = setTimeout(() => setDisableResend(false), 60000);
     return () => clearTimeout(timer);
   }, []);
+
 
   const confirmEmailMutation = useMutation({
     mutationFn: () => authEndpoints.confirmEmail(uidb64, token),
@@ -27,6 +31,7 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
       setStatus('success');
       setIsAuthenticated(true);
       showToast(response.data.message, response.data.type);
+
 
       if (isInModal && onSuccess) {
         onSuccess();
@@ -43,12 +48,13 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
     },
   });
 
+
   useEffect(() => {
     if (uidb64 && token) {
       confirmEmailMutation.mutate();
     }
   }, [uidb64, token]);
-  
+ 
   const handleContinue = () => {
     if (isInModal && onSuccess) {
       onSuccess();
@@ -56,6 +62,7 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
       navigate('/setup-2fa');
     }
   };
+
 
   const resendVerificationMutation = useMutation({
     mutationFn: (email) => authEndpoints.resendVerification(email),
@@ -72,17 +79,21 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
     },
   });
 
+
   const handleResendSubmit = (e) => {
     e.preventDefault();
+
 
     if (!email) {
       showToast('Please enter your email before resending.', 'error');
       return;
     }
 
+
     setIsResending(true);
     resendVerificationMutation.mutate(email);
   };
+
 
   return (
     <div className={styles.container}>
@@ -130,5 +141,6 @@ const EmailConfirmation = ({ isInModal, onSuccess }) => {
     </div>
   );
 };
+
 
 export default EmailConfirmation;

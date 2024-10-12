@@ -3,7 +3,6 @@ import Modal from '../../components/Modal/Modal';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import EmailConfirmation from './EmailConfirmation';
-import TwoFactorSetup from './TwoFactorSetupPage';
 import styles from './AuthModal.module.css';
 
 const AuthModal = ({ isOpen, onClose, initialView }) => {
@@ -12,6 +11,10 @@ const AuthModal = ({ isOpen, onClose, initialView }) => {
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
+
+  const handleEmailConfirmationSuccess = () => {
+    onClose();
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -34,18 +37,12 @@ const AuthModal = ({ isOpen, onClose, initialView }) => {
             </button>
           </>
         )}
-       {view === 'emailConfirmation' && (
-  <EmailConfirmation
-    isInModal={true}
-    onSuccess={() => setView('twoFactorSetup')}
-  />
-)}
-{view === 'twoFactorSetup' && (
-  <TwoFactorSetup
-    onSuccess={onClose}
-    onSkip={onClose}
-  />
-)}
+        {view === 'emailConfirmation' && (
+          <EmailConfirmation
+            isInModal={true}
+            onSuccess={handleEmailConfirmationSuccess}
+          />
+        )}
       </div>
     </Modal>
   );

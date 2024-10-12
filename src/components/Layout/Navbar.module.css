@@ -106,8 +106,7 @@
 
 .logoutButton .sign svg {
   width: 17px;
-  fill: white;
-}
+  }
 
 /* Text Inside the Button (Initially Hidden) */
 .logoutButton .text {
@@ -115,11 +114,16 @@
   right: 0;
   width: 0;
   opacity: 0;
-  color: white;
+  color:black;
   font-size: 1.2em;
   font-weight: 600;
   transition: width 0.3s, opacity 0.3s, padding-right 0.3s;
+  
 }
+
+.logoutButton .sign svg:hover {
+  width: 17px;
+  }
 
 /* Hover Effect: Expand Button on Desktop */
 @media (min-width: 769px) {
