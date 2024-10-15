@@ -9,161 +9,27 @@
   transition: background-color var(--transition-fast);
 }
 
-.nav {
+/* Top Navbar for mobile */
+.topNav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1em;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 10px;
+  background-color: var(--nav-background-color);
 }
 
-.logo {
-  font-family: var(--heading-font);
-  font-size: 2em;
-  font-weight: 700;
-  margin-right: auto;
+.hamburgerMenu {
+  background: none;
+  border: none;
+  color: var(--text-color);
 }
 
-.menu {
-  display: flex;
-  justify-content: center;
-  flex-grow: 1;
-  gap: 2em;
-}
-
-.menu a {
-  text-align: center;
-  font-family: var(--heading-font);
-  font-size: 0.85em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25em;
-  text-decoration: none;
-  padding-bottom: 10px;
-}
-
-.buttons {
+.rightButtons {
   display: flex;
   align-items: center;
   gap: 0.5em;
-  margin-left: auto;
 }
 
-/* General Button Style */
-.authButton, .logoutButton {
-  border-radius: var(--border-radius-md);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 0.85em;
-  border: 1px solid transparent;
-  font-weight: 600;
-  transition: background-color var(--transition-fast), transform 0.2s ease, box-shadow 0.3s;
-  text-transform: uppercase;
-}
-
-/* Sign In and Sign Up Buttons */
-.authButton {
-  background-color: var(--button-primary);
-  color: var(--button-text-color);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.authButton:hover {
-  background-color: var(--button-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Logout Button */
-.logoutButton {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 45px;
-  height: 45px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: width 0.3s, border-radius 0.3s, transform 0.2s;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-  background-color: var(--error-color);
-}
-
-.logoutButton .sign {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.3s;
-}
-
-.logoutButton .sign svg {
-  width: 17px;
-  }
-
-/* Text Inside the Button (Initially Hidden) */
-.logoutButton .text {
-  position: absolute;
-  right: 0;
-  width: 0;
-  opacity: 0;
-  color:black;
-  font-size: 1.2em;
-  font-weight: 600;
-  transition: width 0.3s, opacity 0.3s, padding-right 0.3s;
-  
-}
-
-.logoutButton .sign svg:hover {
-  width: 17px;
-  }
-
-/* Hover Effect: Expand Button on Desktop */
-@media (min-width: 769px) {
-  .logoutButton:hover {
-    width: 125px;
-    border-radius: 40px;
-  }
-
-  .logoutButton:hover .sign {
-    width: 30%;
-    padding-left: 20px;
-  }
-
-  .logoutButton:hover .text {
-    opacity: 1;
-    width: 70%;
-    padding-right: 10px;
-  }
-}
-
-/* Button Click Effect */
-.logoutButton:active {
-  transform: translate(2px, 2px);
-}
-
-/* Mobile/Tablet Views (No Hover Animation) */
-@media (max-width: 768px) {
-  .logoutButton {
-    font-size: 0.7em;
-    padding: 0.4em;
-    background-color: var(--error-color);
-    width: 45px; /* Keep it a fixed size for mobile */
-  }
-
-  .logoutButton .text {
-    display: none; /* Hide the text in mobile */
-  }
-}
-
-/* Theme Toggle */
 .themeToggle {
   border-radius: 50%;
   padding: 0.55em;
@@ -175,54 +41,77 @@
   transition: background-color var(--transition-fast);
 }
 
-/* Mobile Bottom Navbar */
-@media (max-width: 768px) and (orientation: portrait), (max-width: 768px) {
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: var(--error-color);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Bottom Navbar for non-authenticated users */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--nav-background-color);
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navItems {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  color: var(--text-color);
+}
+
+.navItem span {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Mobile/Tablet Views */
+@media (max-width: 768px) {
   .navbarContainer {
     position: fixed;
-    bottom: 0;
-    top: unset;
+    top: 0;
     width: 100%;
-    padding: 0.5em;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .logo, .logo span {
-    display: none;
+  .topNav {
+    padding: 8px;
   }
 
-  .buttons {
+  .hamburgerMenu {
+    margin-left: 10px;
+  }
+
+  .rightButtons {
     gap: 0.3em;
   }
 
-  .authButton {
-    font-size: 0.7em;
-    padding: 0.4em 0.6em;
-    margin-left: 2em;
-  }
-
-  .authButton span {
-    font-size: 0.8em;
-  }
-
   .themeToggle {
-    display: none;
+    padding: 0.4em;
   }
 
   .logoutButton {
-    font-size: 0.7em;
-    padding: 0.4em;
-    background-color: var(--error-color);
-  }
-
-  .menu {
-    justify-content: space-evenly;
-  }
-
-  .menu a {
-    font-size: 0.8em;
-  }
-
-  .profileInfo {
-    display: none;
+    width: 40px;
+    height: 40px;
   }
 }

@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Home,
-  Info,
-  PenTool,
   LogIn,
   LogOut,
   User,
   Sun,
-  Moon
+  Moon,
+  Menu,
 } from "lucide-react";
 import styles from "./Navbar.module.css";
 import AuthModal from "../../features/Accounts/AuthModal";
@@ -47,7 +46,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
         await queryClient.prefetchQuery({
           queryKey: ["posts"],
           queryFn: postEndpoints.getPosts,
-          staleTime: 5 * 60 * 1000
+          staleTime: 5 * 60 * 1000,
         });
       }
     } catch (error) {
@@ -56,81 +55,52 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   };
 
   return (
-    
     <div className={styles.navbarContainer}>
       <div id="top"></div>
-            <nav className={styles.nav}>
-        <div className={styles.logo}>
-          <Link to="/">
-            TheBlog<span>Client</span>
-          </Link>
-        </div>
+      
+      {/* Top Navbar */}
+      <nav className={styles.topNav}>
+        {/* Hamburger Menu on the left */}
+        <button className={styles.hamburgerMenu}>
+          <Menu size={24} />
+        </button>
 
-        <div className={styles.menu}>
-          <Link to="/home">
-            <Home size={24} />
-            <span>Home</span>
-          </Link>
-          <Link to="/about">
-            <Info size={24} />
-            <span>About</span>
-          </Link>
-          <Link to="/blog" onMouseEnter={prefetchPosts}>
-            <PenTool size={24} />
-            <span>Blog</span>
-          </Link>
-          {isAuthenticated && (
-            <Link to="/dashboard">
-              <User size={24} />
-              <span>Dashboard</span>
-            </Link>
-          )}
-        </div>
-
-        <div className={styles.buttons}>
+        <div className={styles.rightButtons}>
           <button onClick={toggleTheme} className={styles.themeToggle}>
             {isDarkMode ? <Sun size={19} /> : <Moon size={19} />}
           </button>
 
-          {!isAuthenticated ? (
-            <>
-              <button
-                onClick={() => handleOpenModal("signin")}
-                className={styles.authButton}
-              >
-                <LogIn size={24} />
-                <span>Sign In</span>
-              </button>
-              <button
-                onClick={() => handleOpenModal("signup")}
-                className={styles.authButton}
-              >
-                <LogIn size={24} />
-                <span>Sign Up</span>
-              </button>
-            </>
-          ) : (
-            <>
-              {windowWidth > 768 && user && (
-                <div className={styles.profileInfo}>
-                  <img
-                    src={user?.profile?.image || "/default-profile.png"}
-                    alt={`${user.profile_name}'s profile`}
-                    className={styles.profileImage}
-                  />
-                  <span>{user.profile_name}</span>
-                </div>
-              )}
-              <button onClick={handleLogout} className={styles.logoutButton}>
-                <div className={styles.sign}>
-                  <LogOut size={24} />
-                </div>
-                <span className={styles.text}>Logout</span>
-              </button>
-            </>
+          {isAuthenticated && (
+            <button onClick={handleLogout} className={styles.logoutButton}>
+              <div className={styles.sign}>
+                <LogOut size={24} />
+              </div>
+            </button>
           )}
         </div>
       </nav>
+
+      {/* Bottom Navbar for non-authenticated users */}
+      {!isAuthenticated && windowWidth <= 768 && (
+        <nav className={styles.bottomNav}>
+          <div className={styles.navItems}>
+            <button
+              className={styles.navItem}
+              onClick={() => handleOpenModal("signin")}
+            >
+              <LogIn size={20} />
+              <span>Sign In</span>
+            </button>
+            <button
+              className={styles.navItem}
+              onClick={() => handleOpenModal("signup")}
+            >
+              <LogIn size={20} />
+              <span>Sign Up</span>
+            </button>
+          </div>
+        </nav>
+      )}
 
       <AuthModal
         isOpen={isModalOpen}
