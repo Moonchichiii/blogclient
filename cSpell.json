@@ -18,7 +18,9 @@
       "blogclient",
       "antd",
       "unfollowing",
-      "aboutside"
+      "aboutside",
+      "weakpass",
+      "testuser"
 ]
   }
   

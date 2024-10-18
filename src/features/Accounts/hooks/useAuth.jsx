@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }) => {
       }
       const response = await authEndpoints.refreshToken(refreshTokenValue);
       const { access, refresh } = response.data;
-      Cookies.set('access_token', access, { secure: false, sameSite: 'strict' });
-      Cookies.set('refresh_token', refresh, { secure: false, sameSite: 'strict' });
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
       return access;
     } catch (error) {
@@ -53,9 +53,9 @@ export const AuthProvider = ({ children }) => {
   const loginMutation = useMutation({
     mutationFn: authEndpoints.login,
     onSuccess: (response) => {
-      const { access, refresh } = response.data; 
-      Cookies.set('access_token', access, { secure: false, sameSite: 'strict' });
-      Cookies.set('refresh_token', refresh, { secure: false, sameSite: 'strict' });
+      const { access, refresh } = response.data;
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
       queryClient.invalidateQueries(['currentUser']);
       showToast(response.data.message, response.data.type);
@@ -80,15 +80,15 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  useEffect(() => {
-    const refreshTokenPeriodically = setInterval(() => {
-      if (isAuthenticated) {
-        refreshToken();
-      }
-    }, 15 * 60 * 1000); // Refresh every 15 minutes
-
-    return () => clearInterval(refreshTokenPeriodically);
-  }, [isAuthenticated]);
+  const registerMutation = useMutation({
+    mutationFn: authEndpoints.register,
+    onSuccess: (response) => {
+      showToast(response.data.message, response.data.type);
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Registration failed', 'error');
+    },
+  });
 
   const value = useMemo(() => ({
     isAuthenticated,
@@ -98,8 +98,9 @@ export const AuthProvider = ({ children }) => {
     error,
     login: loginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
+    register: registerMutation.mutateAsync,
     refreshToken,
-  }), [isAuthenticated, user, isLoading, error, loginMutation.mutateAsync, logoutMutation.mutateAsync]);
+  }), [isAuthenticated, user, isLoading, error, loginMutation.mutateAsync, logoutMutation.mutateAsync, registerMutation.mutateAsync]);
 
   return (
     <AuthContext.Provider value={value}>

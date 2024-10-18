@@ -1,0 +1,266 @@
+/* Auth Button Styles */
+.authButton {
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    border-radius: 0;
+    box-sizing: border-box;
+    color: var(--text-color);
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    margin: 0 5px;
+    outline: none;
+    overflow: visible;
+    padding: 0.05em 0.1em; /* Further reduced padding */
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 0.25rem; /* Further reduced font size */
+}
+
+.authButton::before {
+    content: " ";
+    width: 0.8rem; /* Further reduced width */
+    height: 2px;
+    background: black;
+    top: 50%;
+    left: 0.8em; /* Adjusted position */
+    position: absolute;
+    transform: translateY(-50%);
+    transform-origin: center;
+    transition: background 0.3s linear, width 0.3s linear;
+}
+
+.authButton .text {
+    font-size: 0.7em; /* Further reduced font size */
+    line-height: 1em; /* Adjusted line height */
+    padding-left: 0.8em; /* Adjusted padding */
+    display: block;
+    text-align: left;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.authButton .topKey {
+    height: 2px;
+    width: 0.8rem; /* Further reduced width */
+    top: -2px;
+    left: 0.3rem; /* Adjusted position */
+    position: absolute;    
+    background: white;
+    transition: width 0.5s ease-out, left 0.3s ease-out;
+}
+
+.authButton .bottomKey1 {
+    height: 2px;
+    width: 0.8rem; /* Further reduced width */
+    right: 1rem; /* Adjusted position */
+    bottom: -2px;
+    position: absolute;
+    background: white;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.authButton .bottomKey2 {
+    height: 2px;
+    width: 0.3rem; /* Further reduced width */
+    right: 0.3rem; /* Adjusted position */
+    bottom: -2px;
+    position: absolute;
+    background: white;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.authButton:hover {
+    color: var(--background-color);
+    background: var(--text-color);
+}
+
+.authButton:hover::before {
+    width: 0.4rem; /* Further reduced width */
+    background: var(--background-color);
+}
+
+.authButton:hover .text {
+    color: var(--background-color);
+    padding-left: 0.6em; /* Adjusted padding */
+}
+
+.authButton:hover .topKey {
+    left: -2px;
+    width: 0;
+}
+
+.authButton:hover .bottomKey1,
+.authButton:hover .bottomKey2 {
+    right: 0;
+    width: 0;
+}
+/* Auth Button Responsive Styles */
+@media (min-width: 1024px) {
+    .authButton {
+        padding: 0.5em 0.9em; /* Further reduced padding */
+        font-size: 7px; /* Further reduced font size */
+    }
+
+    .authButton::before {
+        left: 0.7em; /* Adjusted position */
+        width: 0.7rem; /* Further reduced width */
+    }
+
+    .authButton .text {
+        padding-left: 0.9em; /* Adjusted padding */
+    }
+}
+
+@media (max-width: 768px) {
+    .authButton {
+        padding: 0.4em 0.7em; /* Slightly increased padding */
+        font-size: 9.1px; /* Very slightly increased font size */
+    }
+
+    .authButton::before {
+        left: 0.6em; /* Adjusted position */
+        width: 0.6rem; /* Slightly increased width */
+    }
+
+    .authButton .text {
+        padding-left: 0.8em; /* Adjusted padding */
+        font-size: 1.21em; /* Very slightly increased font size */
+        font-weight: bold; /* Thicker text */
+    }
+}
+
+@media (max-width: 480px) {
+    .authButton {
+        padding: 0.3em 0.5em; /* Slightly increased padding */
+        font-size: 10.1px; /* Very slightly increased font size */
+    }
+
+    .authButton::before {
+        left: 0.4em; /* Adjusted position */
+        width: 0.4rem; /* Slightly increased width */
+    }
+
+    .authButton .text {
+        padding-left: 0.6em; /* Adjusted padding */
+        font-size: 1.41em; /* Very slightly increased font size */
+        font-weight: bold; /* Thicker text */
+    }
+}
+
+/* Auth Button Dark Mode Styles */
+:global(.darkMode) .authButton {
+    border-color: var(--dark-text-color);
+    color: var(--dark-text-color);
+}
+
+:global(.darkMode) .authButton:hover {
+    color: var(--dark-background-color);
+    background: var(--dark-text-color);
+}
+
+:global(.darkMode) .authButton::before {
+    background: var(--dark-text-color);
+}
+
+:global(.darkMode) .authButton:hover::before {
+    background: var(--dark-background-color);
+}
+
+:global(.darkMode) .authButton .topKey,
+:global(.darkMode) .authButton .bottomKey1,
+:global(.darkMode) .authButton .bottomKey2 {
+    background: black;
+}
+
+:global(.darkMode) .authButton:hover .text {
+    color: var(--dark-background-color);
+}
+
+
+/* Logout Button Styles */
+.logoutButton {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: var(--button-primary);
+    color: var(--background-color);
+}
+
+.logoutButton .sign {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.logoutButton:hover {
+    width: 100px;
+}
+
+.logoutText {
+    position: absolute;
+    right: 0;
+    width: 0;
+    opacity: 0;
+    color: var(--background-color);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.logoutButton:hover .sign {
+    width: 30%;
+}
+
+.logoutButton:hover .logoutText {
+    opacity: 1;
+    width: 70%;
+    padding-right: 10px;
+}
+
+/* Logout Button Responsive Styles */
+@media (max-width: 768px) {
+    .logoutButton {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logoutButton:hover {
+        width: 90px;
+    }
+
+    .logoutText {
+        font-size: 12px;
+    }
+}
+
+/* Logout Button Dark Mode Styles */
+:global(.darkMode) .logoutButton {
+    background-color: var(--dark-button-primary);
+    color: var(--dark-background-color);
+}
+
+:global(.darkMode) .logoutButton:hover {
+    background-color: var(--dark-button-primary-hover);
+}
+
+:global(.darkMode) .logoutText {
+    color: var(--dark-background-color);
+}

@@ -54,6 +54,7 @@ const SignUpForm = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [passwordStrength, setPasswordStrength] = useState('');
+  const { register } = useAuth();
 
   const registerMutation = useMutation({
     mutationFn: (data) => authEndpoints.register(data),
@@ -76,18 +77,24 @@ const SignUpForm = ({ onSuccess }) => {
     if (formData.password !== formData.password2) {
       newErrors.password2 = "Passwords don't match";
     }
-    if (!/^[a-zA-Z0-9_]+$/.test(formData.profile_name)) {
-      newErrors.profile_name = 'Profile name can only contain letters, numbers, and underscores.';
-    }
     if (!formData.profile_name) newErrors.profile_name = 'Profile name is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      registerMutation.mutate(formData);
+      try {
+        await register(formData);
+        showToast('Registration successful', 'success');
+        if (onSuccess) onSuccess('emailConfirmation');
+      } catch (error) {
+        if (error.response?.data?.errors) {
+          setErrors(error.response.data.errors);
+        }
+        showToast(error.response?.data?.message || 'An error occurred during registration.', 'error');
+      }
     }
   };
 
@@ -96,10 +103,16 @@ const SignUpForm = ({ onSuccess }) => {
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
     if (name === 'password') {
-        setPasswordStrength(calculatePasswordStrength(value));
+      setPasswordStrength(calculatePasswordStrength(value));
     }
-};
-
+    if (name === 'password2') {
+      if (value !== formData.password) {
+        setErrors({ ...errors, password2: "Passwords don't match" });
+      } else {
+        setErrors({ ...errors, password2: '' });
+      }
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -115,11 +128,10 @@ const SignUpForm = ({ onSuccess }) => {
         error={errors.email}
       />
       <PasswordInput
-        autoComplete="new-password"
         name="password"
         required
         placeholder="Password"
-        value={formData.password} 
+        value={formData.password}
         onChange={handleInputChange}
         error={errors.password}
       />
@@ -132,9 +144,7 @@ const SignUpForm = ({ onSuccess }) => {
           />
         </div>
       </div>
-
       <PasswordInput
-        autoComplete="new-password"
         name="password2"
         required
         placeholder="Confirm Password"

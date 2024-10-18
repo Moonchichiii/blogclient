@@ -1,0 +1,65 @@
+/* Bottom Navbar */
+.bottomNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--nav-background-color);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none; /* Hide by default */
+  }
+  
+  .navItems {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .navItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.3s, transform 0.3s ease;
+  }
+  
+  .navItem:hover {
+    color: var(--primary-color);
+    transform: translateY(-5px); /* Gives a hovering effect */
+  }
+  
+  .navItem svg {
+    transition: color 0.3s ease;
+  }
+  
+  .navItem:hover svg {
+    color: var(--primary-color);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .desktopNav {
+      display: none;
+    }
+  
+    .navbarContainer {
+      padding-bottom: 60px; /* To account for the bottom navigation */
+    }
+  
+    .bottomNav {
+      display: block; /* Show bottom nav on smaller screens */
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .topNav,
+    .sidebar,
+    .bottomNav {
+      display: none;
+    }
+  }

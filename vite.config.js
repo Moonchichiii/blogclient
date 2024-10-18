@@ -1,30 +1,28 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import { resolve } from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'), // This allows you to use '@' as an alias for 'src' directory
+      '@': resolve(__dirname, 'src'),
     },
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // Your Django backend URL
+        target: process.env.VITE_BASE_URL || 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
       },
     },
   },
   build: {
-    sourcemap: true, // Generates source maps for better debugging
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          // This splits your vendor code into a separate chunk
           vendor: ['react', 'react-dom', 'react-router-dom'],
         },
       },
@@ -32,7 +30,14 @@ export default defineConfig({
   },
   css: {
     modules: {
-      localsConvention: 'camelCaseOnly', // This makes CSS module class names camelCase in JS
+      localsConvention: 'camelCaseOnly',
     },
   },
-})
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/tests/setupTests.js'],
+    include: ['src/tests/**/*.{test,spec}.{js,jsx}'],
+    exclude: ['src/tests/e2e/**/*.js'],
+  },
+});

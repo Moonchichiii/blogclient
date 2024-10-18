@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './NavBar';
 import Footer from './Footer';
+import BottomNav from './BottomNav'; // Import the new BottomNav component
 import styles from './Layout.module.css';
 
 const Layout = ({ isDarkMode, toggleTheme }) => {
@@ -13,11 +14,11 @@ const Layout = ({ isDarkMode, toggleTheme }) => {
   return (
     <div className={styles.layout}>
       {!hideLayout && <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
-      {/* Wrapping the Outlet */}
       <main className={styles.outletContainer}>
         <Outlet />
       </main>
       {!hideLayout && <Footer />}
+      <BottomNav /> {/* Add the BottomNav here to appear consistently */}
     </div>
   );
 };

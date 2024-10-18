@@ -1,75 +1,169 @@
 .navbarContainer {
-  position: sticky;
+  position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  background-color: var(--nav-background-color);
-  color: var(--text-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: background-color var(--transition-fast);
 }
 
-/* Top Navbar for mobile */
+/* Full Desktop Navbar */
+.desktopNav {
+  background-color: var(--nav-background-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  align-items: center;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.desktopNav ul {
+  display: flex;
+  gap: 2rem;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.desktopNav li a,
+.desktopNav button {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* Theme Toggle */
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.themeToggle .sun,
+.themeToggle .moon {
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.themeToggle:hover .sun,
+.themeToggle:hover .moon {
+  color: var(--primary-color);
+}
+
+/* Logo */
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.logo span {
+  color: var(--primary-color);
+}
+
+
+/* Mobile Navbar */
 .topNav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   background-color: var(--nav-background-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobileLogo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-left: 10px; /* Add this line to move the logo closer to the hamburger menu */
 }
 
 .hamburgerMenu {
   background: none;
   border: none;
   color: var(--text-color);
+  cursor: pointer;
 }
 
 .rightButtons {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  gap: 10px;
 }
 
-.themeToggle {
-  border-radius: 50%;
-  padding: 0.55em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: var(--nav-background-color);
+  padding: 1rem;
+  z-index: 1500;
+  transition: left 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
-.logoutButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
+.sidebarOpen {
+  left: 0;
+}
+
+.closeButton {
+  background: none;
   border: none;
-  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
-  background-color: var(--error-color);
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  color: var(--text-color);
 }
 
-/* Bottom Navbar for non-authenticated users */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 40px;
+}
+
+.sidebar ul li {
+  margin: 1rem 0;
+}
+
+.sidebar ul li a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: block;
+  padding: 10px 0;
+  transition: color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  color: var(--primary-color);
+}
+
+/* Bottom Navigation */
 .bottomNav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
   background-color: var(--nav-background-color);
-  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
 .navItems {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 100%;
+  height: 60px;
 }
 
 .navItem {
@@ -77,41 +171,72 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50%;
   color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.3s ease;
 }
 
-.navItem span {
-  font-size: 12px;
-  margin-top: 4px;
+.navItem:hover {
+  color: var(--primary-color);
 }
 
-/* Mobile/Tablet Views */
+.navItem svg {
+  margin-bottom: 4px;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
+  .desktopNav {
+    display: none;
+  }
+
   .navbarContainer {
-    position: fixed;
-    top: 0;
-    width: 100%;
+    padding-bottom: 60px; /* To account for the bottom navigation */
   }
+}
 
-  .topNav {
-    padding: 8px;
+@media (min-width: 769px) {
+  .topNav,
+  .sidebar,
+  .bottomNav {
+    display: none;
   }
+}
 
-  .hamburgerMenu {
-    margin-left: 10px;
-  }
+/* Dark mode styles */
+:global(.darkMode) .desktopNav,
+:global(.darkMode) .topNav,
+:global(.darkMode) .sidebar,
+:global(.darkMode) .bottomNav {
+  background-color: var(--dark-nav-background-color);
+  color: var(--dark-text-color);
+}
 
-  .rightButtons {
-    gap: 0.3em;
-  }
+:global(.darkMode) .desktopNav li a,
+:global(.darkMode) .desktopNav button,
+:global(.darkMode) .sidebar ul li a,
+:global(.darkMode) .navItem {
+  color: var(--dark-text-color);
+}
 
-  .themeToggle {
-    padding: 0.4em;
-  }
+:global(.darkMode) .themeToggle .sun,
+:global(.darkMode) .themeToggle .moon {
+  color: var(--dark-text-color);
+}
 
-  .logoutButton {
-    width: 40px;
-    height: 40px;
-  }
+:global(.darkMode) .themeToggle:hover .sun,
+:global(.darkMode) .themeToggle:hover .moon,
+:global(.darkMode) .sidebar ul li a:hover,
+:global(.darkMode) .navItem:hover {
+  color: var(--dark-primary-color);
+}
+
+:global(.darkMode) .logo,
+:global(.darkMode) .mobileLogo {
+  color: var(--dark-text-color);
+}
+
+:global(.darkMode) .logo span {
+  color: var(--dark-primary-color);
 }
