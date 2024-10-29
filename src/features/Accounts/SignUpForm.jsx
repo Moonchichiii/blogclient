@@ -87,8 +87,8 @@ const SignUpForm = ({ onSuccess }) => {
     if (validateForm()) {
       try {
         await register(formData);
-        showToast('Registration successful', 'success');
-        if (onSuccess) onSuccess('emailConfirmation');
+        showToast('Please check your email to confirm your account.', 'info');
+        if (onSuccess) onSuccess(formData.email);
       } catch (error) {
         if (error.response?.data?.errors) {
           setErrors(error.response.data.errors);

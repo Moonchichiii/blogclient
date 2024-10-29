@@ -1,15 +1,27 @@
 import React from 'react';
-import { Home, BookOpen, Bell, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Home, BookOpen, Info, FileText, Layout, Users, Settings, User } from 'lucide-react';
+import { useAuth } from '../../features/Accounts/hooks/useAuth'; // Adjust the import path as needed
 import styles from './BottomNav.module.css';
 
 const BottomNav = () => {
-  const navItems = [
-    { name: 'Home', icon: Home, link: '/' },
+  const { isAuthenticated } = useAuth();
+
+  const nonAuthItems = [
+    { name: 'Home', icon: Home, link: '/home' },
+    { name: 'About', icon: Info, link: '/about' },
     { name: 'Categories', icon: BookOpen, link: '/categories' },
-    { name: 'Notifications', icon: Bell, link: '/notifications' },
-    { name: 'Profile', icon: User, link: '/profile' },
+    { name: 'Blog', icon: FileText, link: '/blog' },
   ];
+
+  const authItems = [
+    { name: 'My Posts', icon: FileText, link: '/my-posts' },
+    { name: 'Dashboard', icon: Layout, link: '/dashboard' },
+    { name: 'Followers', icon: Users, link: '/followers' },
+    { name: 'Settings', icon: Settings, link: '/settings' },
+  ];
+
+  const navItems = isAuthenticated ? authItems : nonAuthItems;
 
   return (
     <nav className={styles.bottomNav}>

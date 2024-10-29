@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/LayOut';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -8,12 +8,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from 'lucide-react';
 import './App.css';
 
-// Lazy imports
+// Lazy imports - removed VerificationHandler
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const Home = lazy(() => import('./pages/Home/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const Profile = lazy(() => import('./pages/Profile/Profile'));
-const EmailConfirmation = lazy(() => import('./features/Accounts/EmailConfirmation'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetup'));
 const Blog = lazy(() => import('./pages/Blog/Blog'));
@@ -25,17 +24,20 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+};
+
 const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    localStorage.getItem('theme') === 'dark'
+  );
 
-  useEffect(() => {
-    const themeClass = isDarkMode ? 'darkMode' : 'lightMode';
-    document.body.classList.add(themeClass);
-    document.body.classList.remove(isDarkMode ? 'lightMode' : 'darkMode');
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  const toggleTheme = () => setIsDarkMode((prevMode) => !prevMode);
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev);
+    localStorage.setItem('theme', !isDarkMode ? 'dark' : 'light');
+  };
 
   return (
     <ErrorBoundary>
@@ -48,19 +50,51 @@ const App = () => {
         pauseOnFocusLoss
         draggable={false}
         pauseOnHover
+        limit={1}
       />
-      <Suspense fallback={<div className="loading-spinner"><Loader className="animate-spin" size={32} /></div>}>
+      <Suspense fallback={
+        <div className="loading-spinner">
+          <Loader className="animate-spin" size={32} />
+        </div>
+      }>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          {/* Public Only Routes */}
+          <Route path="/" element={
+            <PublicRoute>
+              <Landing />
+            </PublicRoute>
+          } />
+
+          {/* Layout Wrapper for Main Content */}
           <Route element={<Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}>
+            {/* Mixed Access Routes */}
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/profile-settings" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/activate/:uidb64/:token/" element={<EmailConfirmation />} />
-            <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage /></ProtectedRoute>} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/my-posts" element={<ProtectedRoute><MyPosts /></ProtectedRoute>} />
+
+            {/* Protected Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile-settings" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/setup-2fa" element={
+              <ProtectedRoute>
+                <TwoFactorSetupPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/my-posts" element={
+              <ProtectedRoute>
+                <MyPosts />
+              </ProtectedRoute>
+            } />
+
+            {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

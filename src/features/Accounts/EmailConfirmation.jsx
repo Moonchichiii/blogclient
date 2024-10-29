@@ -1,146 +1,111 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Mail, AlertCircle, Loader } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { authEndpoints } from '../../api/endpoints';
-import { useAuth } from './hooks/useAuth';
 import showToast from '../../utils/toast';
 import styles from './EmailConfirmation.module.css';
 
+const EmailConfirmation = ({ email: initialEmail, onClose, onSuccess }) => {
+  const [email] = useState(initialEmail || '');
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [emailSent, setEmailSent] = useState(true);
 
-const EmailConfirmation = ({ isInModal, onSuccess }) => {
-  const { uidb64, token } = useParams();
-  const navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth();
-  const [status, setStatus] = useState('confirming');
-  const [email, setEmail] = useState('');
-
-
-  const [disableResend, setDisableResend] = useState(true);
-  const [isResending, setIsResending] = useState(false);
-
-
-  useEffect(() => {    
-    const timer = setTimeout(() => setDisableResend(false), 60000);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-  const confirmEmailMutation = useMutation({
-    mutationFn: () => authEndpoints.confirmEmail(uidb64, token),
+  const resendMutation = useMutation({
+    mutationFn: () => authEndpoints.resendVerification(email),
     onSuccess: (response) => {
-      setStatus('success');
-      setIsAuthenticated(true);
-      showToast(response.data.message, response.data.type);
-
-
-      if (isInModal && onSuccess) {
-        onSuccess();
-      } else {
-        navigate('/setup-2fa');
-      }
+      setTimeLeft(60);
+      setEmailSent(true);
+      showToast('Verification email resent successfully', 'success');
     },
     onError: (error) => {
-      setStatus('error');
+      setEmailSent(false);
       showToast(
-        error.response?.data?.message || 'Email verification failed. Please try again.',
+        error.response?.data?.message || 'Failed to resend verification email',
         'error'
       );
     },
   });
-
 
   useEffect(() => {
-    if (uidb64 && token) {
-      confirmEmailMutation.mutate();
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
     }
-  }, [uidb64, token]);
- 
-  const handleContinue = () => {
-    if (isInModal && onSuccess) {
-      onSuccess();
-    } else {
-      navigate('/setup-2fa');
-    }
+  }, [timeLeft]);
+
+  const handleResendEmail = () => {
+    resendMutation.mutate();
   };
-
-
-  const resendVerificationMutation = useMutation({
-    mutationFn: (email) => authEndpoints.resendVerification(email),
-    onSuccess: (response) => {
-      showToast(response.data.message, response.data.type);
-      setIsResending(false);
-    },
-    onError: (error) => {
-      showToast(
-        error.response?.data?.message || 'An error occurred while resending the verification email.',
-        'error'
-      );
-      setIsResending(false);
-    },
-  });
-
-
-  const handleResendSubmit = (e) => {
-    e.preventDefault();
-
-
-    if (!email) {
-      showToast('Please enter your email before resending.', 'error');
-      return;
-    }
-
-
-    setIsResending(true);
-    resendVerificationMutation.mutate(email);
-  };
-
 
   return (
     <div className={styles.container}>
-      {status === 'confirming' && (
-        <div className={styles.loaderContainer}>
-          <p>Confirming your email...</p>
-          <div className={styles.spinner}></div>
-        </div>
-      )}
-      {status === 'success' && (
-        <div>
-          <p>Your email has been successfully confirmed!</p>
-          <button onClick={handleContinue} className={styles.loginButton}>Sign In</button>
-        </div>
-      )}
-      {status === 'error' && (
-        <div>
-          <h2>Confirmation Failed</h2>
-          <p>
-            We couldn't confirm your email. The link may have expired or is invalid.
-            Please try resending the verification email.
+      <div className={styles.iconWrapper}>
+        <Mail 
+          className={`${styles.icon} ${!emailSent ? styles.iconError : ''}`} 
+          size={48} 
+        />
+      </div>
+      
+      <h2 className={styles.title}>
+        {emailSent ? 'Check Your Email' : 'Email Delivery Issue'}
+      </h2>
+
+      {emailSent ? (
+        <>
+          <p className={styles.description}>
+            We've sent a verification link to <strong>{email}</strong>
           </p>
-          <form onSubmit={handleResendSubmit} className={styles.form}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className={styles.input}
-            />
-            <button
-              type="submit"
-              disabled={isResending || disableResend}
-              className={styles.button}
-            >
-              {isResending ? 'Sending...' : 'Resend Verification Email'}
-            </button>
-          </form>
-          <button onClick={() => navigate('/')} className={styles.loginButton}>
-            Back to Login
-          </button>
+          <div className={styles.instructions}>
+            <p>Please check your email and click the verification link to continue.</p>
+            <p className={styles.note}>
+              The verification link will open in a new window. You can close this window.
+            </p>
+          </div>
+        </>
+      ) : (
+        <div className={styles.errorMessage}>
+          <AlertCircle className={styles.errorIcon} size={20} />
+          <p>We're having trouble delivering your verification email. Please try resending.</p>
         </div>
       )}
+
+      {resendMutation.isLoading ? (
+        <div className={styles.loadingState}>
+          <Loader className={`${styles.loadingIcon} animate-spin`} size={20} />
+          <span>Sending verification email...</span>
+        </div>
+      ) : timeLeft > 0 ? (
+        <p className={styles.resendTimer}>
+          Resend available in {timeLeft} seconds
+        </p>
+      ) : (
+        <button 
+          onClick={handleResendEmail}
+          className={styles.resendButton}
+          disabled={resendMutation.isLoading}
+        >
+          Resend Verification Email
+        </button>
+      )}
+
+      <div className={styles.helpText}>
+        <p>Can't find the email? Check your spam folder or try these steps:</p>
+        <ul>
+          <li>Make sure {email} is correct</li>
+          <li>Check your spam or junk folder</li>
+          <li>Add noreply@theblog.com to your contacts</li>
+          <li>Try resending the verification email</li>
+        </ul>
+      </div>
+
+      <button 
+        onClick={onClose} 
+        className={styles.closeButton}
+      >
+        Close
+      </button>
     </div>
   );
 };
-
 
 export default EmailConfirmation;

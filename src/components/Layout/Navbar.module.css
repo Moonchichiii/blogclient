@@ -81,7 +81,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: var(--text-color);
-  margin-left: 10px; /* Add this line to move the logo closer to the hamburger menu */
+  margin-left: -15px;
 }
 
 .hamburgerMenu {
@@ -123,6 +123,13 @@
   right: 10px;
   cursor: pointer;
   color: var(--text-color);
+  font-size: 0.875rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.closeButton:hover {
+  color: var(--accent-color-hover);
+  text-decoration: underline;
+  transform: translateY(-2px);
 }
 
 .sidebar ul {

@@ -7,7 +7,7 @@ const AuthButtons = ({ isAuthenticated, onSignIn, onSignUp, onLogout }) => {
     return (
       <button onClick={onLogout} className={styles.logoutButton}>
         <div className={styles.sign}>
-          <LogOut size={20} />
+          <LogOut size={30} />
         </div>
         <div className={styles.logoutText}>Logout</div>
       </button>

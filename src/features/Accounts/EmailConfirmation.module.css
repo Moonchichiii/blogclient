@@ -1,118 +1,152 @@
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 500px;
-  background-color: white;
-  padding: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  z-index: 1000;
-}
-
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 2rem;
-  text-align: center;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.continueButton, .loginButton {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  color: white;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.continueButton:hover, .loginButton:hover {
-  background-color: #45a049;
-}
-
-.loginButton {
-  background-color: #2196F3;
-}
-
-.loginButton:hover {
-  background-color: #1e87db;
-}
-
-.form {
+.iconWrapper {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--background-alt);
+  margin-bottom: 1.5rem;
 }
 
-.input {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #1f2937;
-  color: white;
-  border: 1px solid #374151;
-  border-radius: 0.375rem;
+.icon {
+  color: var(--primary-color);
 }
 
-.input:focus {
-  outline: none;
-  border-color: #3b82f6;
+.iconError {
+  color: var(--error-color);
 }
 
-.button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #3b82f6;
+.iconSuccess {
+  color: var(--success-color);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.description {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.note {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--error-light);
+  border-radius: 0.5rem;
+  color: var(--error-color);
+  margin-bottom: 1.5rem;
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.resendTimer {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.resendButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-bottom: 1.5rem;
 }
 
-.button:hover {
-  background-color: #2563eb;
+.resendButton:hover:not(:disabled) {
+  background-color: var(--primary-dark);
 }
 
-.button:disabled {
-  background-color: #6b7280;
+.resendButton:disabled {
+  background-color: var(--disabled-color);
   cursor: not-allowed;
 }
 
-.loaderContainer {
+.helpText {
+  width: 100%;
+  background-color: var(--background-alt);
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.helpText p {
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.helpText ul {
+  list-style: none;
+  padding: 0;
+}
+
+.helpText li {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
 }
 
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border-left-color: #09f;
-  animation: spin 1s linear infinite;
-  margin-top: 1rem;
+.verificationStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.closeButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: var(--secondary-dark);
 }

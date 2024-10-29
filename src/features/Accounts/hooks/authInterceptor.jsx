@@ -3,12 +3,15 @@ import { api, multipartApi } from '../../../api/apiConfig';
 
 export const setupRefreshInterceptor = (refreshTokenFunction) => {
   const refreshInterceptor = async (error) => {
-    if (error.response?.status === 401 && Cookies.get('refresh_token')) {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       try {
-        await refreshTokenFunction();
-        return api(error.config);
+        const newToken = await refreshTokenFunction();
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        return api(originalRequest);
       } catch (refreshError) {
-        // Handle refresh failure (e.g., logout user)
+        
         return Promise.reject(refreshError);
       }
     }

@@ -12,23 +12,23 @@
     margin: 0 5px;
     outline: none;
     overflow: visible;
-    padding: 0.05em 0.1em; /* Further reduced padding */
+    padding: 0.05em 0.1em; 
     position: relative;
     text-align: center;
     text-decoration: none;
     text-transform: none;
     transition: all 0.3s ease-in-out;
     user-select: none;
-    font-size: 0.25rem; /* Further reduced font size */
+    font-size: 0.25rem; 
 }
 
 .authButton::before {
     content: " ";
-    width: 0.8rem; /* Further reduced width */
+    width: 0.8rem; 
     height: 2px;
     background: black;
     top: 50%;
-    left: 0.8em; /* Adjusted position */
+    left: 0.8em; 
     position: absolute;
     transform: translateY(-50%);
     transform-origin: center;
@@ -36,9 +36,9 @@
 }
 
 .authButton .text {
-    font-size: 0.7em; /* Further reduced font size */
-    line-height: 1em; /* Adjusted line height */
-    padding-left: 0.8em; /* Adjusted padding */
+    font-size: 0.7em; 
+    line-height: 1em; 
+    padding-left: 0.8em; 
     display: block;
     text-align: left;
     transition: all 0.3s ease-in-out;
@@ -49,9 +49,9 @@
 
 .authButton .topKey {
     height: 2px;
-    width: 0.8rem; /* Further reduced width */
+    width: 0.8rem; 
     top: -2px;
-    left: 0.3rem; /* Adjusted position */
+    left: 0.3rem; 
     position: absolute;    
     background: white;
     transition: width 0.5s ease-out, left 0.3s ease-out;
@@ -59,8 +59,8 @@
 
 .authButton .bottomKey1 {
     height: 2px;
-    width: 0.8rem; /* Further reduced width */
-    right: 1rem; /* Adjusted position */
+    width: 0.8rem;
+    right: 1rem; 
     bottom: -2px;
     position: absolute;
     background: white;
@@ -69,8 +69,8 @@
 
 .authButton .bottomKey2 {
     height: 2px;
-    width: 0.3rem; /* Further reduced width */
-    right: 0.3rem; /* Adjusted position */
+    width: 0.3rem;
+    right: 0.3rem; 
     bottom: -2px;
     position: absolute;
     background: white;
@@ -83,13 +83,13 @@
 }
 
 .authButton:hover::before {
-    width: 0.4rem; /* Further reduced width */
+    width: 0.4rem; 
     background: var(--background-color);
 }
 
 .authButton:hover .text {
     color: var(--background-color);
-    padding-left: 0.6em; /* Adjusted padding */
+    padding-left: 0.6em; 
 }
 
 .authButton:hover .topKey {
@@ -105,53 +105,89 @@
 /* Auth Button Responsive Styles */
 @media (min-width: 1024px) {
     .authButton {
-        padding: 0.5em 0.9em; /* Further reduced padding */
-        font-size: 7px; /* Further reduced font size */
+        padding: 0.5em 0.9em; 
+        font-size: 7px; 
     }
 
     .authButton::before {
-        left: 0.7em; /* Adjusted position */
-        width: 0.7rem; /* Further reduced width */
+        left: 0.7em; 
+        width: 0.7rem; 
     }
 
     .authButton .text {
-        padding-left: 0.9em; /* Adjusted padding */
+        padding-left: 0.9em;
     }
 }
 
 @media (max-width: 768px) {
     .authButton {
-        padding: 0.4em 0.7em; /* Slightly increased padding */
-        font-size: 9.1px; /* Very slightly increased font size */
+        padding: 0.4em 0.7em; 
+        font-size: 9.1px; 
     }
 
     .authButton::before {
-        left: 0.6em; /* Adjusted position */
-        width: 0.6rem; /* Slightly increased width */
+        left: 0.6em; 
+        width: 0.6rem; 
     }
 
     .authButton .text {
-        padding-left: 0.8em; /* Adjusted padding */
-        font-size: 1.21em; /* Very slightly increased font size */
-        font-weight: bold; /* Thicker text */
+        padding-left: 0.8em; 
+        font-size: 1.21em; 
+        font-weight: bold; 
+    }
+}
+@media (min-width: 769px) and (max-width: 1023px) {
+    .authButton {
+        padding: 0.45em 0.8em;
+        font-size: 8px;
+    }
+
+    .authButton::before {
+        left: 0.65em;
+        width: 0.65rem;
+    }
+
+    .authButton .text {
+        padding-left: 0.85em;
+        font-size: 1em;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .authButton {
-        padding: 0.3em 0.5em; /* Slightly increased padding */
-        font-size: 10.1px; /* Very slightly increased font size */
+        padding: 0.4em 0.7em; 
+        font-size: 9.1px; 
     }
 
     .authButton::before {
-        left: 0.4em; /* Adjusted position */
-        width: 0.4rem; /* Slightly increased width */
+        left: 0.6em; 
+        width: 0.6rem; 
     }
 
     .authButton .text {
-        padding-left: 0.6em; /* Adjusted padding */
-        font-size: 1.41em; /* Very slightly increased font size */
-        font-weight: bold; /* Thicker text */
+        padding-left: 0.8em; 
+        font-size: 1.21em; 
+        font-weight: bold; 
+    }
+}
+
+
+
+@media (max-width: 480px) {
+    .authButton {
+        padding: 0.3em 0.5em; 
+        font-size: 10.1px; 
+    }
+
+    .authButton::before {
+        left: 0.4em; 
+        width: 0.4rem; 
+    }
+
+    .authButton .text {
+        padding-left: 0.6em; 
+        font-size: 1.41em; 
+        font-weight: bold; 
     }
 }
 
@@ -184,16 +220,15 @@
     color: var(--dark-background-color);
 }
 
-
 /* Logout Button Styles */
 .logoutButton {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    width: 40px;
-    height: 40px;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
     border: none;
-    border-radius: 20px;
+    border-radius: 25px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -205,13 +240,31 @@
 
 .logoutButton .sign {
     width: 100%;
+    height: 100%;
     display: flex;
+    align-items: center;
     justify-content: center;
     transition: all 0.3s ease-in-out;
 }
 
+.logoutButton .sign svg {
+    width: 30px; /* Increased icon size before hover */
+    height: 30px;
+    transition: all 0.3s ease-in-out;
+}
+
 .logoutButton:hover {
-    width: 100px;
+    width: 120px;
+    justify-content: flex-start;
+}
+
+.logoutButton:hover .sign {
+    width: 30%;
+}
+
+.logoutButton:hover .sign svg {
+    width: 20px; 
+    height: 20px;
 }
 
 .logoutText {
@@ -225,10 +278,6 @@
     transition: all 0.3s ease-in-out;
 }
 
-.logoutButton:hover .sign {
-    width: 30%;
-}
-
 .logoutButton:hover .logoutText {
     opacity: 1;
     width: 70%;
@@ -238,12 +287,22 @@
 /* Logout Button Responsive Styles */
 @media (max-width: 768px) {
     .logoutButton {
-        width: 36px;
-        height: 36px;
+        width: 45px;
+        height: 45px;
     }
 
     .logoutButton:hover {
-        width: 90px;
+        width: 110px;
+    }
+
+    .logoutButton .sign svg {
+        width: 25px; /* Increased icon size before hover on mobile */
+        height: 25px;
+    }
+
+    .logoutButton:hover .sign svg {
+        width: 18px;
+        height: 18px;
     }
 
     .logoutText {

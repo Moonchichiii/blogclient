@@ -1,11 +1,17 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { commentEndpoints } from '../../../api/endpoints';
 
-
-export const useComments = (postId) => {
+export const useComments = (postId, enabled) => {
   const queryClient = useQueryClient();
 
   const fetchComments = async ({ pageParam = 1 }) => {
-    const response = await commentEndpoints.getComments(postId, { page: pageParam });
+    const response = await commentEndpoints.getComments(postId, {
+      page: pageParam,
+    });
     return response.data;
   };
 
@@ -19,21 +25,24 @@ export const useComments = (postId) => {
   } = useInfiniteQuery({
     queryKey: ['comments', postId],
     queryFn: fetchComments,
-    getNextPageParam: (lastPage) => lastPage.next ? lastPage.page + 1 : undefined,
-    enabled,
+    getNextPageParam: (lastPage) =>
+      lastPage.next ? lastPage.page + 1 : undefined,
+    enabled: !!postId && enabled,
   });
 
-  const addCommentMutation = useMutation(
-    (newComment) => commentEndpoints.createComment(postId, newComment),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['comments', postId]);
-      },
-    }
-  );
+  const addCommentMutation = useMutation({
+    mutationFn: (newComment) =>
+      commentEndpoints.createComment(postId, newComment),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', postId]);
+    },
+    onError: (error) => {
+      // Handle error if needed
+    },
+  });
 
   return {
-    comments: data?.pages.flatMap(page => page.results) || [],
+    comments: data?.pages.flatMap((page) => page.results) || [],
     fetchNextPage,
     hasNextPage,
     isLoading,

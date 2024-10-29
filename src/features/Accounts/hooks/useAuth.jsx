@@ -9,44 +9,54 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('access_token'));
+  const [isActivating, setIsActivating] = useState(false);
   const queryClient = useQueryClient();
 
-  const refreshToken = async () => {
-    try {
-      const refreshTokenValue = Cookies.get('refresh_token');
-      if (!refreshTokenValue) {
-        throw new Error('No refresh token available');
-      }
-      const response = await authEndpoints.refreshToken(refreshTokenValue);
-      const { access, refresh } = response.data;
-      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
-      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
+  const tokenManager = {
+    set: (access, refresh) => {
+      Cookies.set('access_token', access, { secure: true, sameSite: 'strict', expires: 1 });
+      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict', expires: 7 });
       setIsAuthenticated(true);
-      return access;
-    } catch (error) {
-      setIsAuthenticated(false);
+    },
+    clear: () => {
       Cookies.remove('access_token');
       Cookies.remove('refresh_token');
-      throw error;
+      setIsAuthenticated(false);
+      queryClient.removeQueries(['currentUser']);
+    },
+    refresh: async () => {
+      try {
+        const refreshTokenValue = Cookies.get('refresh_token');
+        if (!refreshTokenValue) throw new Error('No refresh token available');
+        
+        const response = await authEndpoints.refreshToken(refreshTokenValue);
+        const { access, refresh } = response.data;
+        tokenManager.set(access, refresh);
+        return access;
+      } catch (error) {
+        tokenManager.clear();
+        throw error;
+      }
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      setupRefreshInterceptor(refreshToken);
+      setupRefreshInterceptor(tokenManager.refresh);
     }
   }, [isAuthenticated]);
 
-  const { data: user, isLoading, error } = useQuery({
+  const userQuery = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => userEndpoints.getCurrentUser().then(res => res.data),
     enabled: isAuthenticated,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 30,
-    onError: () => {
-      setIsAuthenticated(false);
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
+    retry: 1,
+    onError: (error) => {
+      if (error.response?.status === 401) {
+        tokenManager.clear();
+      }
     },
   });
 
@@ -54,26 +64,20 @@ export const AuthProvider = ({ children }) => {
     mutationFn: authEndpoints.login,
     onSuccess: (response) => {
       const { access, refresh } = response.data;
-      Cookies.set('access_token', access, { secure: true, sameSite: 'strict' });
-      Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' });
-      setIsAuthenticated(true);
+      tokenManager.set(access, refresh);
       queryClient.invalidateQueries(['currentUser']);
       showToast(response.data.message, response.data.type);
       return response.data;
     },
     onError: (error) => {
-      const message = error.response?.data?.message || 'Login failed';
-      showToast(message, 'error');
+      showToast(error.response?.data?.message || 'Login failed', 'error');
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: authEndpoints.logout,
     onSuccess: () => {
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
-      setIsAuthenticated(false);
-      queryClient.invalidateQueries(['currentUser']);
+      tokenManager.clear();
     },
     onError: (error) => {
       showToast(error.response?.data?.message || 'Logout failed', 'error');
@@ -90,17 +94,52 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
+  // Define activation mutation
+  const activationMutation = useMutation({
+    mutationFn: (token) => authEndpoints.activateAccount(token),
+    onMutate: () => {
+      setIsActivating(true);
+    },
+    onSuccess: (response) => {
+      if (response.data.verified) {
+        const { access, refresh } = response.data;
+        tokenManager.set(access, refresh);
+        queryClient.invalidateQueries(['currentUser']);
+        showToast('Email verified successfully!', 'success');
+      }
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Verification failed', 'error');
+      tokenManager.clear();
+    },
+    onSettled: () => {
+      setIsActivating(false);
+    },
+  });
+
   const value = useMemo(() => ({
     isAuthenticated,
-    setIsAuthenticated,
-    user,
-    isLoading,
-    error,
+    isActivating,
+    activateAccount: activationMutation.mutateAsync,
+    user: userQuery.data,
+    roles: userQuery.data?.roles || [], 
+    isLoading: userQuery.isLoading,
+    error: userQuery.error,
     login: loginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
     register: registerMutation.mutateAsync,
-    refreshToken,
-  }), [isAuthenticated, user, isLoading, error, loginMutation.mutateAsync, logoutMutation.mutateAsync, registerMutation.mutateAsync]);
+    refreshToken: tokenManager.refresh,
+  }), [
+    isAuthenticated,
+    isActivating,
+    activationMutation.mutateAsync,
+    userQuery.data,
+    userQuery.isLoading,
+    userQuery.error,
+    loginMutation.mutateAsync,
+    logoutMutation.mutateAsync,
+    registerMutation.mutateAsync,
+  ]);
 
   return (
     <AuthContext.Provider value={value}>

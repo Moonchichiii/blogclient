@@ -1,20 +1,32 @@
+// PostItem.jsx
 import React, { useState } from 'react';
 import { User, Calendar, Star, MessageSquare, Tag, Lock } from 'lucide-react';
 import styles from './PostItem.module.css';
 import { useComments } from '../Comments/hooks/useComments';
 import { useRatings } from '../Ratings/hooks/useRatings';
 import { useTags } from '../Tags/hooks/useTags';
-import { useAuth } from '../Accounts/hooks/useAuth';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useAuth } from '../../features/Accounts/hooks/useAuth';
 
-const PostItem = React.memo(({ post }) => {
-  const { isAuthenticated } = useAuth();
+const PostItem = React.memo(({ post, isAuthenticated }) => {
+  const { user, roles } = useAuth();
+  const isStaffOrAdmin = roles.includes('admin') || roles.includes('staff');
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [newTag, setNewTag] = useState('');
-  const { rating, ratePost } = useRatings(post.id);
-  const { comments, fetchNextPage, hasNextPage, addComment } = useComments(post.id, showComments);
-  const { tags, addTag } = useTags(post.id);
+
+  const { rating, ratePost } = useRatings(isAuthenticated ? post.id : null);
+  const {
+    comments,
+    fetchNextPage,
+    hasNextPage,
+    addComment,
+  } = useComments(
+    isAuthenticated && showComments ? post.id : null,
+    isAuthenticated && showComments
+  );
+  
+  const { tags, addTag } = useTags(isAuthenticated ? post.id : null);
 
   const handleAddComment = () => {
     if (newComment.trim() && isAuthenticated) {
@@ -32,7 +44,7 @@ const PostItem = React.memo(({ post }) => {
 
   const handleRatingChange = (e) => {
     const value = parseInt(e.target.value, 10);
-    if (value >= 1 && value <= 5) {
+    if (value >= 1 && value <= 5 && isAuthenticated) {
       ratePost(value);
     }
   };
@@ -56,25 +68,32 @@ const PostItem = React.memo(({ post }) => {
           <>
             <p className={styles.postExcerpt}>{post.content}</p>
             <div className={styles.postMeta}>
-              <span><User size={16} /> {post.author}</span>
-              <span><Calendar size={16} /> {new Date(post.created_at).toLocaleDateString()}</span>
               <span>
-                <Star size={16} /> 
+                <User size={16} /> {post.author}
+              </span>
+              <span>
+                <Calendar size={16} />{' '}
+                {new Date(post.created_at).toLocaleDateString()}
+              </span>
+              <span>
+                <Star size={16} />
                 {rating ? rating.value.toFixed(1) : 'N/A'}
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="5" 
-                  value={rating?.value || ''} 
-                  onChange={(e) => ratePost(Number(e.target.value))}
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  value={rating?.value || ''}
+                  onChange={handleRatingChange}
                 />
               </span>
               <span onClick={handleToggleComments}>
-                <MessageSquare size={16} /> {post.comments_count}
+                <MessageSquare size={16} /> {comments?.length || 0}
               </span>
-              <span><Tag size={16} /> {tags?.length || 0}</span>
+              <span>
+                <Tag size={16} /> {tags?.length || 0}
+              </span>
             </div>
-            
+
             {showComments && (
               <div className={styles.commentsSection}>
                 <InfiniteScroll
@@ -86,7 +105,10 @@ const PostItem = React.memo(({ post }) => {
                   {comments.map((comment) => (
                     <div key={comment.id} className={styles.comment}>
                       <p>{comment.content}</p>
-                      <small>{comment.author} - {new Date(comment.created_at).toLocaleString()}</small>
+                      <small>
+                        {comment.author} -{' '}
+                        {new Date(comment.created_at).toLocaleString()}
+                      </small>
                     </div>
                   ))}
                 </InfiniteScroll>
@@ -99,11 +121,14 @@ const PostItem = React.memo(({ post }) => {
                 <button onClick={handleAddComment}>Post Comment</button>
               </div>
             )}
-            
+
             <div className={styles.tagsSection}>
-              {tags && tags.map((tag) => (
-                <span key={tag.id} className={styles.tag}>{tag.name}</span>
-              ))}
+              {tags &&
+                tags.map((tag) => (
+                  <span key={tag.id} className={styles.tag}>
+                    {tag.name}
+                  </span>
+                ))}
               <input
                 type="text"
                 value={newTag}
@@ -112,6 +137,14 @@ const PostItem = React.memo(({ post }) => {
               />
               <button onClick={handleAddTag}>Add Tag</button>
             </div>
+
+            {/* Conditional rendering for staff/admin actions */}
+            {isStaffOrAdmin && (
+              <div className={styles.adminActions}>
+                <button onClick={() => approvePost(post.id)}>Approve</button>
+                <button onClick={() => openDisapproveModal(post)}>Disapprove</button>
+              </div>
+            )}
           </>
         ) : (
           <div className={styles.lockedContent}>

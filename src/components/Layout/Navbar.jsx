@@ -38,7 +38,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   };
 
   const navItems = [
-    { name: 'Home', icon: Home, link: '/' },
+    { name: 'Home', icon: Home, link: '/home' },
     { name: 'Blog', icon: BookOpen, link: '/blog' },
     { name: 'Dashboard', icon: Bell, link: '/dashboard', authRequired: true },
     { name: 'Settings', icon: User, link: '/settings', authRequired: true },
