@@ -1,3 +1,5 @@
+// TwoFactorSetup.jsx
+
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
@@ -35,6 +37,16 @@ const TwoFactorSetup = ({ onSuccess, onSkip }) => {
     },
   });
 
+  const cancelTwoFactorSetupMutation = useMutation({
+    mutationFn: authEndpoints.cancelTwoFactorSetup,
+    onSuccess: (response) => {
+      showToast(response.data.message, response.data.type);
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Failed to cancel two-factor authentication setup', 'error');
+    },
+  });
+
   const handleSetup = () => {
     setupTwoFactorMutation.mutate();
   };
@@ -54,7 +66,7 @@ const TwoFactorSetup = ({ onSuccess, onSkip }) => {
   };
 
   const handleSkip = () => {
-    showToast('You can set up two-factor authentication later in your account settings.', 'info');
+    cancelTwoFactorSetupMutation.mutate();
     if (onSkip) {
       onSkip();
     }

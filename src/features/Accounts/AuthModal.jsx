@@ -1,3 +1,5 @@
+// AuthModal.jsx
+
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal/Modal';
 import SignInForm from './SignInForm';
@@ -6,12 +8,12 @@ import EmailConfirmation from './EmailConfirmation';
 import TwoFactorSetup from './TwoFactorSetup';
 import styles from './AuthModal.module.css';
 
-const AuthModal = ({ 
-  isOpen, 
-  onClose, 
-  initialView, 
+const AuthModal = ({
+  isOpen,
+  onClose,
+  initialView,
   onSuccess,
-  disableClose = false 
+  disableClose = false,
 }) => {
   const [view, setView] = useState(initialView);
   const [email, setEmail] = useState('');
@@ -26,7 +28,12 @@ const AuthModal = ({
   };
 
   const handleEmailConfirmationSuccess = () => {
-    setView('twoFactorSetup');
+    // Proceed without 2FA setup
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      setView('signin');
+    }
   };
 
   const handleTwoFactorSetupSuccess = () => {
@@ -34,7 +41,12 @@ const AuthModal = ({
   };
 
   const handleTwoFactorSetupSkip = () => {
-    onSuccess?.();
+    // Close the modal and proceed without 2FA setup
+    if (disableClose) {
+      onClose();
+    } else {
+      setView('signin'); // Or navigate to the dashboard if appropriate
+    }
   };
 
   const handleModalClose = () => {
@@ -44,8 +56,8 @@ const AuthModal = ({
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onClose={handleModalClose}
       closeOnOverlayClick={!disableClose}
     >
@@ -53,9 +65,14 @@ const AuthModal = ({
         {view === 'signin' && (
           <>
             <h2 className={styles.heading}>Sign in to your account</h2>
-            <SignInForm onSuccess={onSuccess} />
-            <button 
-              onClick={() => setView('signup')} 
+            <SignInForm
+              onSuccess={() => {
+                onSuccess?.(); // Call onSuccess if provided
+                onClose(); // Close the modal
+              }}
+            />
+            <button
+              onClick={() => setView('signup')}
               className={styles.toggleButton}
             >
               Need an account? Sign up
@@ -66,8 +83,8 @@ const AuthModal = ({
           <>
             <h2 className={styles.heading}>Create a new account</h2>
             <SignUpForm onSuccess={handleSignUpSuccess} />
-            <button 
-              onClick={() => setView('signin')} 
+            <button
+              onClick={() => setView('signin')}
               className={styles.toggleButton}
             >
               Already have an account? Sign in

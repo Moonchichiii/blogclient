@@ -8,7 +8,9 @@ export const authEndpoints = {
   activateAccount: (token) => api.get('/api/accounts/activate/', { params: { token } }),
   resendVerification: (email) => api.post('/api/accounts/resend-verification/', { email }),
   setupTwoFactor: () => api.post('/api/accounts/setup-2fa/'),
-  confirmTwoFactor: (token) => api.post('/api/accounts/verify-2fa/', { token }),    
+  confirmTwoFactor: (token) => api.put('/api/accounts/setup-2fa/', { token }),
+  cancelTwoFactorSetup: () => api.delete('/api/accounts/setup-2fa/'),
+  verifyTwoFactor: (data) => api.post('/api/accounts/verify-2fa/', data),
   refreshToken: (refreshToken) => api.post('/api/accounts/token/refresh/', { refresh: refreshToken }),
   logout: () => api.post('/api/accounts/logout/'),
 };

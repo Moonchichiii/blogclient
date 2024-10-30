@@ -9,6 +9,7 @@
 
 /* The main container for the routed components (Outlet) */
 .outletContainer {
+  margin-top: 2rem;
   flex-grow: 1;
   padding: clamp(0.75rem, 5vw, 2rem);
   background-color: var(--background-color);
