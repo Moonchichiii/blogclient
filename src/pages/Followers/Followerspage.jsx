@@ -1,10 +1,32 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 import FollowersList from '../../components/FollowersList';
 import PopularFollowers from '../../components/PopularFollowers';
 import { useFollowers } from '../../hooks/useFollowers';
 import { useAuth } from '../../hooks/useAuth';
 import styles from './FollowersPage.module.css';
+
+const FollowersChart = ({ data }) => (
+  <ResponsiveContainer width="100%" height={400}>
+    <LineChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Line type="monotone" dataKey="followers" stroke="#8884d8" activeDot={{ r: 8 }} />
+    </LineChart>
+  </ResponsiveContainer>
+);
 
 const FollowersPage = () => {
   const { user } = useAuth();
@@ -16,7 +38,7 @@ const FollowersPage = () => {
     isLoadingPopularFollowers,
     popularFollowersError,
     follow,
-    unfollow
+    unfollow,
   } = useFollowers(user?.id);
 
   if (isLoadingFollowers || isLoadingPopularFollowers) return <div>Loading...</div>;
@@ -34,28 +56,8 @@ const FollowersPage = () => {
   return (
     <div className={styles.followersPage}>
       <h1>Followers Page</h1>
-
-
-      const FollowersChart = ({ data }) => (
-  <LineChart data={data}>
-    <Line type="monotone" dataKey="followers" stroke="#8884d8" />
-    {/* ...other chart components */}
-  </LineChart>
-); ?????????????????????
-
-
-
       <div className={styles.chartContainer}>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="followers" stroke="#8884d8" activeDot={{ r: 8 }} />
-          </LineChart>
-        </ResponsiveContainer>
+        <FollowersChart data={chartData} />
       </div>
       <PopularFollowers popularFollowers={popularFollowers} />
       <FollowersList />

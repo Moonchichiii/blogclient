@@ -1,0 +1,150 @@
+.notificationContainer {
+    position: relative;
+    z-index: 1000;
+  }
+  
+  .notificationButton {
+    position: relative;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    transition: transform var(--transition-normal);
+  }
+  
+  .notificationButton:hover {
+    transform: scale(1.1);
+  }
+  
+  .notificationBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--error-color);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    min-width: 18px;
+    text-align: center;
+  }
+  
+  .notificationDropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: -10px;
+    width: 320px;
+    max-height: 480px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+  }
+  
+  .notificationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--background-color);
+  }
+  
+  .notificationHeader h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .markAllRead {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    transition: background-color var(--transition-normal);
+  }
+  
+  .markAllRead:hover {
+    background-color: var(--background-color);
+  }
+  
+  .notificationList {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .notificationItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-normal);
+  }
+  
+  .notificationItem.unread {
+    background-color: var(--background-color);
+  }
+  
+  .notificationContent {
+    flex: 1;
+    margin-right: var(--spacing-md);
+  }
+  
+  .notificationContent p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  
+  .notificationTime {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: var(--spacing-xs);
+  }
+  
+  .notificationActions {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+  
+  .actionButton {
+    background: none;
+    border: none;
+    padding: var(--spacing-xs);
+    cursor: pointer;
+    color: var(--text-color);
+    border-radius: 50%;
+    transition: all var(--transition-normal);
+  }
+  
+  .actionButton:hover {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+  }
+  
+  .loadingState,
+  .emptyState {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  @media (max-width: 768px) {
+    .notificationDropdown {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-height: calc(100vh - 60px);
+      border-radius: 0;
+    }
+  }

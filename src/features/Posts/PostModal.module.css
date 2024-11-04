@@ -1,0 +1,33 @@
+.modalHeader {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+  }
+  
+  .modalHeader h2 {
+    font-family: var(--heading-font);
+    color: var(--heading-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .modalContent {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    .modalHeader {
+      margin-bottom: var(--spacing-md);
+    }
+  
+    .modalHeader h2 {
+      font-size: 1.25rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .modalContent {
+      max-width: 100%;
+    }
+  }

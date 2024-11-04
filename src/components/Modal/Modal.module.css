@@ -19,8 +19,8 @@
   border-radius: var(--border-radius-lg);
   position: relative;
   width: 100%;
-  max-width: 450px;
-  max-height: 90vh;
+  max-width: 600px; /* Increased max-width */
+  max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -69,16 +69,16 @@
 }
 
 @media (min-width: 769px) {
+  .content {
+    padding: var(--spacing-xl); /* Added padding for larger screens */
+  }
+
+  .closeButton {
+    font-size: 1.75rem; /* Adjusted font size for larger screens */
+  }
+
   .closeButton:hover {
     transform: rotate(90deg) scale(1.2);
-    color: #C23B22;
-    background-color: transparent;
-  }
-}
-
-@media (max-width: 768px) {
-  .closeButton:hover {
-    transform: rotate(90deg);
     color: #C23B22;
     background-color: transparent;
   }
@@ -93,6 +93,12 @@
 
   .closeButton {
     font-size: 2rem;
+  }
+
+  .closeButton:hover {
+    transform: rotate(90deg);
+    color: #C23B22;
+    background-color: transparent;
   }
 }
 

@@ -153,6 +153,28 @@ body.lightMode .footerSection p {
   color: var(--link-hover-color);
 }
 
+/* New legal links section */
+.legalLinks {
+  display: flex;
+  gap: 1.5em;
+}
+
+.legalLinks a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: color 0.3s ease-in-out;
+}
+
+.legalLinks a:hover {
+  color: var(--link-hover-color);
+}
+
+/* Desktop-only content */
+.desktopOnly {
+  display: block;
+}
+
 .scrollToTopContainer {
   position: fixed;
   bottom: 12em;
@@ -193,6 +215,10 @@ body.lightMode .footerSection p {
     margin-bottom: auto;
   }
 
+  .desktopOnly {
+    display: none;
+  }
+
   .footerContact {
     width: 100%;
   }
@@ -202,6 +228,12 @@ body.lightMode .footerSection p {
     text-align: center;
     justify-content: center;
     padding-bottom: 1em;
+    gap: 1em;
+  }
+
+  .legalLinks {
+    justify-content: center;
+    margin-bottom: 0.5em;
   }
 
   .socialLinks {

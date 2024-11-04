@@ -1,4 +1,3 @@
-// apiConfig.jsx
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -19,7 +18,7 @@ const responseInterceptor = async (error) => {
   if (
     error.response &&
     error.response.status === 401 &&
-    accessToken && 
+    accessToken &&
     !originalRequest._retry &&
     Cookies.get('refresh_token')
   ) {

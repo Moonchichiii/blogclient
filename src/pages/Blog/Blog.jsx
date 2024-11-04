@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PostList from '../../features/Posts/PostList';
-import SearchBar from '../../components/Searchbar/SearchBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import PostModal from '../../features/Posts/PostModal';
 import styles from './Blog.module.css';
 import { useAuth } from '../../features/Accounts/hooks/useAuth';
@@ -25,7 +25,6 @@ const Blog = () => {
   return (
     <div className={styles.blogContainer}>
       <h2 className={styles.title}>Blog Posts</h2>
-      <div id="top"></div>
       <SearchBar setSearchQuery={setSearchQuery} />
       <select
         onChange={(e) => setOrdering(e.target.value)}
@@ -37,7 +36,6 @@ const Blog = () => {
         <option value="-average_rating">Highest Rated</option>
       </select>
 
-      
       <PostList
         searchQuery={searchQuery}
         ordering={ordering}
@@ -55,7 +53,6 @@ const Blog = () => {
         </div>
       )}
 
-      
       <PostModal
         isOpen={isPostModalOpen}
         onClose={handleClosePostModal}

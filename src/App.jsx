@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react'; 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/LayOut';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -8,17 +8,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from 'lucide-react';
 import './App.css';
 
-// Lazy imports - removed VerificationHandler
+// Lazy imports
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const Home = lazy(() => import('./pages/Home/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
-const Profile = lazy(() => import('./pages/Profile/Profile'));
+const Settings = lazy(() => import('./pages/Settings/Settings'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetup'));
 const Blog = lazy(() => import('./pages/Blog/Blog'));
 const About = lazy(() => import('./pages/About/About'));
 const MyPosts = lazy(() => import('./pages/Blog/MyPosts'));
 
+// Route protection components
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/" replace />;
@@ -30,13 +31,21 @@ const PublicRoute = ({ children }) => {
 };
 
 const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    localStorage.getItem('theme') === 'dark'
-  );
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    document.body.classList.toggle('darkMode', isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev);
-    localStorage.setItem('theme', !isDarkMode ? 'dark' : 'light');
   };
 
   return (
@@ -78,9 +87,9 @@ const App = () => {
                 <Dashboard />
               </ProtectedRoute>
             } />
-            <Route path="/profile-settings" element={
+            <Route path="/settings" element={
               <ProtectedRoute>
-                <Profile />
+                <Settings />
               </ProtectedRoute>
             } />
             <Route path="/setup-2fa" element={

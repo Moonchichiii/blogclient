@@ -1,5 +1,3 @@
-// AuthModal.jsx
-
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal/Modal';
 import SignInForm from './SignInForm';
@@ -28,7 +26,6 @@ const AuthModal = ({
   };
 
   const handleEmailConfirmationSuccess = () => {
-    // Proceed without 2FA setup
     if (onSuccess) {
       onSuccess();
     } else {
@@ -41,11 +38,10 @@ const AuthModal = ({
   };
 
   const handleTwoFactorSetupSkip = () => {
-    // Close the modal and proceed without 2FA setup
     if (disableClose) {
       onClose();
     } else {
-      setView('signin'); // Or navigate to the dashboard if appropriate
+      setView('signin');
     }
   };
 
@@ -67,8 +63,8 @@ const AuthModal = ({
             <h2 className={styles.heading}>Sign in to your account</h2>
             <SignInForm
               onSuccess={() => {
-                onSuccess?.(); // Call onSuccess if provided
-                onClose(); // Close the modal
+                onSuccess?.();
+                onClose();
               }}
             />
             <button

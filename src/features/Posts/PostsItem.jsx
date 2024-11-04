@@ -1,19 +1,17 @@
-// PostItem.jsx
 import React, { useState } from 'react';
 import { User, Calendar, Star, MessageSquare, Tag, Lock } from 'lucide-react';
 import styles from './PostItem.module.css';
 import { useComments } from '../Comments/hooks/useComments';
 import { useRatings } from '../Ratings/hooks/useRatings';
-import { useTags } from '../Tags/hooks/useTags';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useAuth } from '../../features/Accounts/hooks/useAuth';
+import { useAuth } from '../Accounts/hooks/useAuth';
 
-const PostItem = React.memo(({ post, isAuthenticated }) => {
-  const { user, roles } = useAuth();
-  const isStaffOrAdmin = roles.includes('admin') || roles.includes('staff');
+const PostItem = React.memo(({ post, isAuthenticated, approvePost, openDisapproveModal }) => {
+  const { roles, currentUser } = useAuth();
+  const isOwner = post.author === currentUser?.profile_name;
+  const isStaffOrAdmin = roles.includes('admin') || roles.includes('superuser');
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [newTag, setNewTag] = useState('');
 
   const { rating, ratePost } = useRatings(isAuthenticated ? post.id : null);
   const {
@@ -25,20 +23,11 @@ const PostItem = React.memo(({ post, isAuthenticated }) => {
     isAuthenticated && showComments ? post.id : null,
     isAuthenticated && showComments
   );
-  
-  const { tags, addTag } = useTags(isAuthenticated ? post.id : null);
 
   const handleAddComment = () => {
     if (newComment.trim() && isAuthenticated) {
       addComment({ content: newComment });
       setNewComment('');
-    }
-  };
-
-  const handleAddTag = () => {
-    if (newTag.trim() && isAuthenticated) {
-      addTag(newTag);
-      setNewTag('');
     }
   };
 
@@ -77,20 +66,26 @@ const PostItem = React.memo(({ post, isAuthenticated }) => {
               </span>
               <span>
                 <Star size={16} />
-                {rating ? rating.value.toFixed(1) : 'N/A'}
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={rating?.value || ''}
-                  onChange={handleRatingChange}
-                />
+                {post.average_rating ? post.average_rating.toFixed(1) : 'N/A'}
               </span>
+              {!isOwner && (
+                <span>
+                  Your Rating:
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={rating?.value || ''}
+                    onChange={handleRatingChange}
+                    className={styles.ratingInput}
+                  />
+                </span>
+              )}
               <span onClick={handleToggleComments}>
                 <MessageSquare size={16} /> {comments?.length || 0}
               </span>
               <span>
-                <Tag size={16} /> {tags?.length || 0}
+                <Tag size={16} /> {post.tags?.length || 0}
               </span>
             </div>
 
@@ -112,33 +107,28 @@ const PostItem = React.memo(({ post, isAuthenticated }) => {
                     </div>
                   ))}
                 </InfiniteScroll>
-                <input
-                  type="text"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add a comment..."
-                />
-                <button onClick={handleAddComment}>Post Comment</button>
+                <div className={styles.addComment}>
+                  <input
+                    type="text"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment..."
+                  />
+                  <button onClick={handleAddComment}>Post Comment</button>
+                </div>
               </div>
             )}
 
-            <div className={styles.tagsSection}>
-              {tags &&
-                tags.map((tag) => (
+            {post.tags?.length > 0 && (
+              <div className={styles.tagsSection}>
+                {post.tags.map((tag) => (
                   <span key={tag.id} className={styles.tag}>
-                    {tag.name}
+                    Tagged: {tag.tagged_user}
                   </span>
                 ))}
-              <input
-                type="text"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                placeholder="Add a tag..."
-              />
-              <button onClick={handleAddTag}>Add Tag</button>
-            </div>
+              </div>
+            )}
 
-            {/* Conditional rendering for staff/admin actions */}
             {isStaffOrAdmin && (
               <div className={styles.adminActions}>
                 <button onClick={() => approvePost(post.id)}>Approve</button>
@@ -149,7 +139,7 @@ const PostItem = React.memo(({ post, isAuthenticated }) => {
         ) : (
           <div className={styles.lockedContent}>
             <Lock size={24} />
-            <p>Sign in to view full content, rate, comment, and add tags.</p>
+            <p>Sign in to view full content, rate, comment, and see tags.</p>
           </div>
         )}
       </div>

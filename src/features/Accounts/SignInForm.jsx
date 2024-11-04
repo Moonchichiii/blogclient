@@ -68,18 +68,12 @@ const SignInForm = ({ onSuccess }) => {
       try {
         const response = await login(formData);
         if (response.data.type === 'success') {
-          if (onSuccess) {
-            onSuccess(); // Close the modal
-          }
+          if (onSuccess) onSuccess();
           navigate('/dashboard');
         }
-        // If 2FA is required, do not navigate or close the modal
-        // The component will re-render to show the 2FA input form
       } catch (error) {
         showToast(error.response?.data?.message || 'An error occurred during login', 'error');
-        if (error.response?.data?.errors) {
-          setErrors(error.response.data.errors);
-        }
+        if (error.response?.data?.errors) setErrors(error.response.data.errors);
       }
     }
   };
@@ -93,18 +87,15 @@ const SignInForm = ({ onSuccess }) => {
     try {
       const response = await verify2FA({ user_id: pending2FA.user_id, token: twoFactorCode });
       if (response.data.type === 'success') {
-        if (onSuccess) {
-          onSuccess(); // Close the modal
-        }
+        if (onSuccess) onSuccess();
         navigate('/dashboard');
       }
     } catch (error) {
-      // Error handling is done in the hook
+      
     }
   };
 
   if (pending2FA) {
-    // Render 2FA code input form
     return (
       <form className={styles.form} onSubmit={handleTwoFactorSubmit}>
         <div className={styles.inputContainer}>

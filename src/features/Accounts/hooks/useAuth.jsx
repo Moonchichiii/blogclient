@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const [isActivating, setIsActivating] = useState(false);
   const [pending2FA, setPending2FA] = useState(null);
   const queryClient = useQueryClient();
-
   const isProduction = process.env.NODE_ENV === 'production';
 
   const tokenManager = {
@@ -48,13 +47,12 @@ export const AuthProvider = ({ children }) => {
     queryKey: ['currentUser'],
     queryFn: () => userEndpoints.getCurrentUser().then((res) => res.data),
     enabled: isAuthenticated,
+    initialData: () => queryClient.getQueryData(['currentUser']),
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 30,
     retry: 1,
     onError: (error) => {
-      if (error.response?.status === 401) {
-        tokenManager.clear();
-      }
+      if (error.response?.status === 401) tokenManager.clear();
     },
   });
 
@@ -62,9 +60,10 @@ export const AuthProvider = ({ children }) => {
     mutationFn: authEndpoints.login,
     onSuccess: (response) => {
       if (response.data.type === 'success') {
-        const { access, refresh } = response.data;
+        const { access, refresh, user } = response.data;
         tokenManager.set(access, refresh);
-        queryClient.invalidateQueries(['currentUser']);
+        queryClient.setQueryData(['currentUser'], user);
+        setIsAuthenticated(true);
         showToast(response.data.message, response.data.type);
       } else if (response.data.type === '2fa_required') {
         setPending2FA({ user_id: response.data.user_id });
@@ -80,9 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutMutation = useMutation({
     mutationFn: authEndpoints.logout,
-    onSuccess: () => {
-      tokenManager.clear();
-    },
+    onSuccess: () => tokenManager.clear(),
     onError: (error) => {
       showToast(error.response?.data?.message || 'Logout failed', 'error');
     },
@@ -100,9 +97,7 @@ export const AuthProvider = ({ children }) => {
 
   const activationMutation = useMutation({
     mutationFn: (token) => authEndpoints.activateAccount(token),
-    onMutate: () => {
-      setIsActivating(true);
-    },
+    onMutate: () => setIsActivating(true),
     onSuccess: (response) => {
       if (response.data.verified) {
         const { access, refresh } = response.data;
@@ -115,9 +110,7 @@ export const AuthProvider = ({ children }) => {
       showToast(error.response?.data?.message || 'Verification failed', 'error');
       tokenManager.clear();
     },
-    onSettled: () => {
-      setIsActivating(false);
-    },
+    onSettled: () => setIsActivating(false),
   });
 
   const verify2FAMutation = useMutation({
@@ -126,7 +119,7 @@ export const AuthProvider = ({ children }) => {
       const { access, refresh } = response.data;
       tokenManager.set(access, refresh);
       queryClient.invalidateQueries(['currentUser']);
-      setPending2FA(null); // Clear pending 2FA after successful verification
+      setPending2FA(null);
       showToast(response.data.message, response.data.type);
     },
     onError: (error) => {
@@ -134,14 +127,8 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  // Wrap mutateAsync to return the response
-  const login = async (credentials) => {
-    return await loginMutation.mutateAsync(credentials);
-  };
-
-  const verify2FA = async (data) => {
-    return await verify2FAMutation.mutateAsync(data);
-  };
+  const login = async (credentials) => await loginMutation.mutateAsync(credentials);
+  const verify2FA = async (data) => await verify2FAMutation.mutateAsync(data);
 
   const value = useMemo(
     () => ({
@@ -179,8 +166,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

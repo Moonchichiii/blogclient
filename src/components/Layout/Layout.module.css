@@ -7,7 +7,6 @@
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-/* The main container for the routed components (Outlet) */
 .outletContainer {
   margin-top: 2rem;
   flex-grow: 1;
@@ -23,7 +22,6 @@ body.lightMode .outletContainer {
   color: var(--text-color-light);
 }
 
-/* Responsive adjustments using a more flexible approach */
 @media (max-width: 1200px) {
   .outletContainer {
     padding: clamp(0.75rem, 3vw, 1.5rem);

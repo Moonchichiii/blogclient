@@ -22,7 +22,7 @@ const PostForm = ({ post, onPostSubmit }) => {
         title: post.title || '',
         content: post.content || '',
         image: post.image || null,
-        tags: post.tags?.map(tag => tag.name) || [],
+        tags: post.tags?.map(tag => tag.tagged_user) || [],
       });
       setImagePreview(post.image || null);
     }
@@ -99,8 +99,8 @@ const PostForm = ({ post, onPostSubmit }) => {
       if (formData.image instanceof File) {
         postData.append('image', formData.image);
       }
-      formData.tags.forEach((tag) => postData.append('tags', tag));
-
+      formData.tags.forEach((tag) => postData.append('tags_input', tag));
+  
       if (post) {
         updatePostMutation.mutate({ id: post.id, postData });
       } else {

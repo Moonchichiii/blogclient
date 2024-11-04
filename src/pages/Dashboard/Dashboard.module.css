@@ -1,7 +1,12 @@
-.dashboard {  
+.dashboard {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-lg);
+}
+
+.navbarSpacing {
+  height: 80px;
+  margin-bottom: var(--spacing-lg);
 }
 
 .title {
@@ -15,6 +20,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 .profileImage {
@@ -26,25 +32,94 @@
 
 .bentoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-lg);
 }
 
 .bentoBox {
   background-color: var(--card-background);
-  border: 1px solid var(--accent-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bentoBox:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+.createPostHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.createPostBox {
+  padding: var(--spacing-xl);
+}
+
+.createButton {
+  background-color: white !important;
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+.popularPosts {
+  grid-column: 1 / -1;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.popularPostsList {
+  width: 100%;
+}
+
+.popularPostItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--background-light);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.popularPostInfo h3 {
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.popularPostInfo p {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.viewLink {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.viewLink:hover {
+  text-decoration: underline;
 }
 
 .bentoBox h2 {
@@ -60,8 +135,8 @@
 }
 
 .actionButton {
-  background-color: var(--button-primary);
-  color: var(--button-text-color);
+  background-color: var(--primary-color);
+  color: white;
   border: none;
   border-radius: 50px;
   padding: 0.5em 1.2em;
@@ -69,67 +144,67 @@
   font-size: 0.9em;
   font-weight: 500;
   margin-top: var(--spacing-md);
-  transition: background-color var(--transition-normal);
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .actionButton:hover {
-  background-color: var(--button-primary-hover);
+  background-color: var(--primary-color-dark);
 }
 
-/* Specific Button Styles */
 .approveButton {
-  background-color: #28a745;
+  background-color: var(--success-color);
 }
 
 .approveButton:hover {
-  background-color: #218838;
+  background-color: var(--success-color-dark);
 }
 
 .disapproveButton {
-  background-color: #dc3545;
+  background-color: var(--danger-color);
 }
 
 .disapproveButton:hover {
-  background-color: #c82333;
+  background-color: var(--danger-color-dark);
 }
 
 .confirmButton {
-  background-color: #dc3545;
+  background-color: var(--danger-color);
 }
 
 .confirmButton:hover {
-  background-color: #c82333;
+  background-color: var(--danger-color-dark);
 }
 
 .cancelButton {
-  background-color: #6c757d;
+  background-color: var(--gray-color);
 }
 
 .cancelButton:hover {
-  background-color: #5a6268;
+  background-color: var(--gray-color-dark);
 }
 
-/* Unapproved Posts List */
 .unapprovedList {
   list-style: none;
   padding: 0;
-  margin: 1rem 0;
+  margin: var(--spacing-md) 0;
+  width: 100%;
 }
 
 .unapprovedItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #f1f1f1;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .actionButtons {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
-/* Modals */
 .modal {
   position: absolute;
   top: 50%;
@@ -140,6 +215,7 @@
   border-radius: var(--border-radius-lg);
   max-width: 500px;
   width: 90%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
 }
 
 .overlay {
@@ -149,6 +225,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
 }
 
 .closeButton {
@@ -164,50 +241,86 @@
 
 .textarea {
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
   resize: vertical;
+  font-family: inherit;
+  font-size: 0.9em;
 }
 
 .modalActions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
 }
+
+
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  .dashboard {
+    padding: var(--spacing-md);
+  }
+
   .title {
     font-size: 1.5rem;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
   }
 
   .bentoBox {
     padding: var(--spacing-md);
   }
 
+  .createPostBox {
+    padding: var(--spacing-lg);
+  }
+
   .bentoBox h2 {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .actionButton {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.9rem;
+    padding: 0.4em 1em;
+    font-size: 0.85em;
+  }
+
+  .popularPostItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
   }
 
   .modal {
+    width: 95%;
     padding: var(--spacing-md);
   }
 }
 
 @media (max-width: 480px) {
-  .bentoGrid {
-    grid-template-columns: 1fr;
+  .profileHeader {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .modal {
-    width: 95%;
+  .actionButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .actionButton {
+    width: 100%;
+    margin-top: var(--spacing-xs);
+  }
+
+  .unapprovedItem {
+    flex-direction: column;
+    gap: var(--spacing-sm);
   }
 }

@@ -1,6 +1,12 @@
 import React from 'react';
 import { Card, Avatar, List, Tag, Progress } from 'antd';
-import { StarOutlined, CommentOutlined, FileTextOutlined, LikeOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  StarOutlined,
+  CommentOutlined,
+  FileTextOutlined,
+  LikeOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 
 const PopularFollowers = ({ popularFollowers }) => {
   return (
@@ -8,7 +14,7 @@ const PopularFollowers = ({ popularFollowers }) => {
       <List
         itemLayout="horizontal"
         dataSource={popularFollowers}
-        renderItem={follower => (
+        renderItem={(follower) => (
           <List.Item>
             <List.Item.Meta
               avatar={<Avatar src={follower.image} icon={<UserOutlined />} />}
@@ -19,7 +25,7 @@ const PopularFollowers = ({ popularFollowers }) => {
                     <StarOutlined /> Average Rating: {follower.average_rating.toFixed(2)}
                   </div>
                   <div>
-                    {follower.tags.map(tag => (
+                    {follower.tags.map((tag) => (
                       <Tag key={tag}>{tag}</Tag>
                     ))}
                   </div>
@@ -31,7 +37,11 @@ const PopularFollowers = ({ popularFollowers }) => {
                   </div>
                   <div>
                     <LikeOutlined /> Popularity Score:
-                    <Progress percent={follower.popularity_score} size="small" status="active" />
+                    <Progress
+                      percent={follower.popularity_score}
+                      size="small"
+                      status="active"
+                    />
                   </div>
                 </>
               }

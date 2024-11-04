@@ -1,4 +1,3 @@
-/* Auth Button Styles */
 .authButton {
     background-color: transparent;
     border: 1px solid var(--text-color);
@@ -102,7 +101,7 @@
     right: 0;
     width: 0;
 }
-/* Auth Button Responsive Styles */
+
 @media (min-width: 1024px) {
     .authButton {
         padding: 0.5em 0.9em; 
@@ -136,6 +135,7 @@
         font-weight: bold; 
     }
 }
+
 @media (min-width: 769px) and (max-width: 1023px) {
     .authButton {
         padding: 0.45em 0.8em;
@@ -171,8 +171,6 @@
     }
 }
 
-
-
 @media (max-width: 480px) {
     .authButton {
         padding: 0.3em 0.5em; 
@@ -191,7 +189,6 @@
     }
 }
 
-/* Auth Button Dark Mode Styles */
 :global(.darkMode) .authButton {
     border-color: var(--dark-text-color);
     color: var(--dark-text-color);
@@ -220,7 +217,6 @@
     color: var(--dark-background-color);
 }
 
-/* Logout Button Styles */
 .logoutButton {
     display: flex;
     align-items: center;
@@ -248,7 +244,7 @@
 }
 
 .logoutButton .sign svg {
-    width: 30px; /* Increased icon size before hover */
+    width: 30px;
     height: 30px;
     transition: all 0.3s ease-in-out;
 }
@@ -284,7 +280,6 @@
     padding-right: 10px;
 }
 
-/* Logout Button Responsive Styles */
 @media (max-width: 768px) {
     .logoutButton {
         width: 45px;
@@ -296,7 +291,7 @@
     }
 
     .logoutButton .sign svg {
-        width: 25px; /* Increased icon size before hover on mobile */
+        width: 25px;
         height: 25px;
     }
 
@@ -310,7 +305,6 @@
     }
 }
 
-/* Logout Button Dark Mode Styles */
 :global(.darkMode) .logoutButton {
     background-color: var(--dark-button-primary);
     color: var(--dark-background-color);

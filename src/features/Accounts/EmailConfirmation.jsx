@@ -91,19 +91,11 @@ const EmailConfirmation = ({ email: initialEmail, onClose, onSuccess }) => {
       <div className={styles.helpText}>
         <p>Can't find the email? Check your spam folder or try these steps:</p>
         <ul>
-          <li>Make sure {email} is correct</li>
-          <li>Check your spam or junk folder</li>
-          <li>Add noreply@theblog.com to your contacts</li>
-          <li>Try resending the verification email</li>
+          <li>1. Make sure {email} is correct</li>
+          <li>2. Check your spam or junk folder</li>          
+          <li>3. Try resending the verification email</li>
         </ul>
-      </div>
-
-      <button 
-        onClick={onClose} 
-        className={styles.closeButton}
-      >
-        Close
-      </button>
+      </div>     
     </div>
   );
 };

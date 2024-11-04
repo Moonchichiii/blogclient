@@ -5,16 +5,16 @@ import styles from './FollowersList.module.css';
 
 const FollowersList = () => {
   const { user } = useAuth();
-  const { followers, isLoading, error, follow, unfollow } = useFollowers(user?.id);
+  const { followers, isLoadingFollowers, followersError, unfollow } = useFollowers(user?.id);
 
-  if (isLoading) return <div>Loading followers...</div>;
-  if (error) return <div>Error loading followers: {error.message}</div>;
+  if (isLoadingFollowers) return <div>Loading followers...</div>;
+  if (followersError) return <div>Error loading followers: {followersError.message}</div>;
 
   return (
     <div className={styles.followersList}>
       <h2>Followers List</h2>
       <ul>
-        {followers.map(follower => (
+        {followers.map((follower) => (
           <li key={follower.id} className={styles.followerItem}>
             {follower.profile_name}
             <button onClick={() => unfollow(follower.id)}>Unfollow</button>

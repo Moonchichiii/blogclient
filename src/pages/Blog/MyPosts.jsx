@@ -6,7 +6,7 @@ const MyPosts = () => {
   return (
     <div className={styles.myPostsContainer}>
       <h2 className={styles.title}>My Posts</h2>
-      <PostList onlyMyPosts={true} />
+      <PostList onlyMyPosts={true} isAuthenticated={true} />
     </div>
   );
 };

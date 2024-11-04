@@ -2,8 +2,8 @@ import React from 'react';
 import { LogOut } from 'lucide-react';
 import styles from './AuthButtons.module.css';
 
-const AuthButtons = ({ isAuthenticated, onSignIn, onSignUp, onLogout }) => {
-  if (isAuthenticated) {
+const AuthButtons = ({ isAuthenticated, onSignIn, onSignUp, onLogout, isMobile }) => {
+  if (isAuthenticated && !isMobile) {
     return (
       <button onClick={onLogout} className={styles.logoutButton}>
         <div className={styles.sign}>
@@ -12,7 +12,7 @@ const AuthButtons = ({ isAuthenticated, onSignIn, onSignUp, onLogout }) => {
         <div className={styles.logoutText}>Logout</div>
       </button>
     );
-  } else {
+  } else if (!isAuthenticated) {
     return (
       <>
         <button onClick={onSignIn} className={styles.authButton}>
@@ -30,6 +30,8 @@ const AuthButtons = ({ isAuthenticated, onSignIn, onSignUp, onLogout }) => {
       </>
     );
   }
+  
+  return null;
 };
 
 export default AuthButtons;

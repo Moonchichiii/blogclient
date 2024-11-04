@@ -36,9 +36,6 @@ export const useComments = (postId, enabled) => {
     onSuccess: () => {
       queryClient.invalidateQueries(['comments', postId]);
     },
-    onError: (error) => {
-      // Handle error if needed
-    },
   });
 
   return {

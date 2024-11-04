@@ -1,3 +1,6 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { followerEndpoints, userEndpoints } from '../../../api/endpoints';
+
 export const useFollowers = (userId) => {
   const queryClient = useQueryClient();
 
@@ -9,7 +12,7 @@ export const useFollowers = (userId) => {
 
   const popularFollowersQuery = useQuery(
     ['popularFollowers', userId],
-    () => profileEndpoints.getPopularFollowers(userId),
+    () => userEndpoints.getPopularFollowers(userId),
     { enabled: !!userId }
   );
 
@@ -44,4 +47,3 @@ export const useFollowers = (userId) => {
     unfollow: unfollowMutation.mutate,
   };
 };
-

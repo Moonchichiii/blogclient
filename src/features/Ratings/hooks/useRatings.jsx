@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { ratingEndpoints } from '../../../api/endpoints';
+import { toast } from 'react-toastify';
 
 export const useRatings = (postId) => {
   const queryClient = useQueryClient();
@@ -19,7 +20,7 @@ export const useRatings = (postId) => {
   }
 
   const {
-    data: rating,
+    data: ratingData,
     isLoading,
     isError,
     error,
@@ -34,14 +35,17 @@ export const useRatings = (postId) => {
     mutationFn: (value) => ratingEndpoints.ratePost(postId, value),
     onSuccess: () => {
       queryClient.invalidateQueries(['ratings', postId]);
+      queryClient.invalidateQueries(['posts']); 
+      toast.success('Rating submitted successfully!');
     },
     onError: (error) => {
-      // Handle error if needed
+      const message = error.response?.data?.message || 'Failed to submit rating.';
+      toast.error(message);
     },
   });
 
   return {
-    rating,
+    rating: ratingData,
     isLoading,
     isError,
     error,

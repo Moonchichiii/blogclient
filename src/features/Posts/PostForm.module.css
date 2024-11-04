@@ -1,13 +1,12 @@
 .form {
   max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--spacing-lg);
   background-color: var(--card-background);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md); /* Maintain consistent spacing */
+  gap: var(--spacing-md);
 }
 
 .formGroup {
@@ -18,57 +17,141 @@
   display: block;
   margin-bottom: var(--spacing-sm);
   color: var(--text-color);
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--heading-font);
 }
 
 .formGroup input,
 .formGroup textarea {
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md);
   border: 1px solid var(--input-border-color);
   border-radius: var(--border-radius-md);
   background-color: var(--background-color);
   color: var(--text-color);
   font-size: 1rem;
+  font-family: var(--body-font);
+  transition: border-color var(--transition-normal);
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.formGroup textarea {
+  min-height: 150px;
+  resize: vertical;
 }
 
 .inputError {
-  border-color: var(--error-color);
+  border-color: var(--error-color) !important;
 }
 
 .errorMessage {
   color: var(--error-color);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   margin-top: var(--spacing-xs);
+  display: block;
 }
 
 .submitButton {
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
   background-color: var(--button-primary);
-  color: var(--button-text-color);
+  color: white;
   border: none;
   border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: background-color var(--transition-normal);
+  transition: background-color var(--transition-normal), transform var(--transition-normal);
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--heading-font);
+  margin-top: var(--spacing-md);
 }
 
 .submitButton:hover {
   background-color: var(--button-primary-hover);
+  transform: translateY(-2px);
 }
 
 .imageUpload {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: var(--spacing-sm);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   border: 2px dashed var(--input-border-color);
   border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all var(--transition-normal);
+  color: var(--text-color);
 }
 
 .imageUpload:hover {
   border-color: var(--accent-color);
+  background-color: var(--background-color);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.imagePreviewContainer {
+  position: relative;
+  margin: var(--spacing-md) 0;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+}
+
+.removeImageBtn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background-color: var(--error-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.removeImageBtn:hover {
+  background-color: var(--error-color);
+  transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+  .form {
+    padding: var(--spacing-md);
+  }
+
+  .formGroup input,
+  .formGroup textarea {
+    padding: var(--spacing-sm);
+  }
+
+  .submitButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .imageUpload {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--spacing-sm);
+  }
 }

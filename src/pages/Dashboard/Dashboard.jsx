@@ -8,6 +8,7 @@ import {
   Users,
   PlusCircle,
   AlertTriangle,
+  TrendingUp
 } from 'lucide-react';
 import PostModal from '../../features/Posts/PostModal';
 import Modal from 'react-modal';
@@ -24,7 +25,6 @@ const Dashboard = () => {
   const location = useLocation();
   const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
 
-  // Get all post-related functionality from usePosts
   const {
     unapprovedPosts,
     isLoadingUnapproved,
@@ -36,14 +36,12 @@ const Dashboard = () => {
     isStaffOrAdmin: currentUser?.is_staff || currentUser?.is_superuser
   });
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle 2FA modal for new registrations
   useEffect(() => {
     if (location.state?.isNewRegistration) {
       setShowTwoFactorModal(true);
@@ -51,7 +49,6 @@ const Dashboard = () => {
     }
   }, [location]);
 
-  // Disapproval Modal Content
   const DisapprovalModalContent = () => (
     <>
       <button onClick={modals.closeDisapproveModal} className={styles.closeButton}>×</button>
@@ -90,9 +87,8 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
-      <div id="top"></div>
+      <div className={styles.navbarSpacing}></div>
 
-      {/* Mobile Profile Header */}
       {windowWidth <= 768 && (
         <div className={styles.profileHeader}>
           {isUserLoading ? (
@@ -115,16 +111,38 @@ const Dashboard = () => {
       )}
 
       <div className={styles.bentoGrid}>
-        {/* Mobile Profile Box */}
-        {windowWidth <= 768 && (
-          <div className={styles.bentoBox}>
-            <User size={24} />
-            <h2>Profile</h2>
-            <p>Email: {currentUser?.email}</p>
-            <p>Bio: {currentUser?.profile?.bio}</p>
-            <Link to="/profile-settings" className={styles.actionButton}>Settings</Link>
+        {/* Create Post Box - Moved to top */}
+        <div className={`${styles.bentoBox} ${styles.createPostBox} ${styles.featured}`}>
+          <div className={styles.createPostHeader}>
+            <PlusCircle size={24} />
+            <h2>Create New Post</h2>
           </div>
-        )}
+          <button onClick={modals.openCreateModal} className={`${styles.actionButton} ${styles.createButton}`}>
+            Create Post
+          </button>
+        </div>
+
+        {/* Most Popular Posts Box */}
+        <div className={`${styles.bentoBox} ${styles.popularPosts}`}>
+          <div className={styles.sectionHeader}>
+            <TrendingUp size={24} />
+            <h2>Most Popular Posts</h2>
+          </div>
+          <div className={styles.popularPostsList}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className={styles.popularPostItem}>
+                <div className={styles.popularPostInfo}>
+                  <h3>Popular Post {i}</h3>
+                  <p>1.2k views • 45 likes</p>
+                </div>
+                <Link to={`/post/${i}`} className={styles.viewLink}>
+                  View →
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        
 
         {/* Stats Boxes */}
         {[
@@ -147,15 +165,6 @@ const Dashboard = () => {
           <p>Followers: {currentUser?.followers?.length || 0}</p>
           <p>Following: {currentUser?.following?.length || 0}</p>
           <Link to="/manage-followers" className={styles.actionButton}>Manage Followers</Link>
-        </div>
-
-        {/* Create Post Box */}
-        <div className={`${styles.bentoBox} ${styles.createPostBox}`}>
-          <PlusCircle size={24} />
-          <h2>Create New Post</h2>
-          <button onClick={modals.openCreateModal} className={styles.actionButton}>
-            Create Post
-          </button>
         </div>
 
         {/* Unapproved Posts Box */}

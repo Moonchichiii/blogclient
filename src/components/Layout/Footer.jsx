@@ -24,15 +24,13 @@ const Footer = () => {
             <h3>About Us</h3>
             <p>The Blog is a modern platform where users share their ideas and stories. Join our community to connect with like-minded individuals.</p>
           </div>
-          <div className={styles.footerSection}>
+          <div className={`${styles.footerSection} ${styles.desktopOnly}`}>
             <h3>Quick Links</h3>
             <ul className={styles.quickLinks}>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/about">About</Link></li>
               <li><Link to="/blog">Blog</Link></li>
               {isAuthenticated && <li><Link to="/dashboard">Dashboard</Link></li>}
-              <li><Link to="/terms">Terms</Link></li>
-              <li><Link to="/privacy">Privacy</Link></li>
             </ul>
           </div>
         </div>
@@ -66,6 +64,10 @@ const Footer = () => {
       </div>
 
       <div className={styles.footerBottom}>
+        <div className={styles.legalLinks}>
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
+        </div>
         <p>&copy; {new Date().getFullYear()} The Blog. All rights reserved.</p>
         <ul className={styles.socialLinks}>
           <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={20} /></a></li>
