@@ -23,7 +23,7 @@ export const authEndpoints = {
 export const userEndpoints = {
   getCurrentUser: () => api.get('/api/accounts/current-user/'),
   updateProfileName: (data) => api.put('/api/accounts/update-profile-name/', data),
-  getPopularFollowers: (userId) => api.get(`/api/accounts/${userId}/popular-followers/`),
+  getPopularFollowers: (userId) => api.get(`/api/followers/${userId}/popular-followers/`),
 };
 
 // Post endpoints
@@ -57,10 +57,12 @@ export const commentEndpoints = {
   deleteComment: (commentId) => api.delete(`/api/comments/${commentId}/`),
 };
 
-// Rating endpoints
 export const ratingEndpoints = {
-  ratePost: (postId, value) => api.post('/api/ratings/rate/', { post: postId, value }),
-  getRating: (postId) => api.get(`/api/ratings/rate/${postId}/`),
+  ratePost: (postId, value) => api.post('/api/ratings/', { 
+    post: postId, 
+    value: Math.min(Math.max(value, 1), 5) 
+  }),
+  getRating: (postId) => api.get(`/api/ratings/${postId}/`),
 };
 
 // Tag endpoints
@@ -73,12 +75,13 @@ export const tagEndpoints = {
     }),
 };
 
-// Follower endpoints
 export const followerEndpoints = {
   followUser: (followedId) => api.post('/api/followers/follow/', { followed: followedId }),
   unfollowUser: (followedId) => api.delete('/api/followers/follow/', { data: { followed: followedId } }),
   getFollowers: (userId) => api.get(`/api/followers/${userId}/`),
+  getPopularFollowers: (userId) => api.get(`/api/followers/${userId}/popular-followers/`),
 };
+
 
 // Settings endpoints
 export const settingsEndpoints = {

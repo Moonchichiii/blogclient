@@ -1,42 +1,41 @@
 .searchBar {
-    display: flex;
-    justify-content: center;
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .searchInputWrapper {
-    position: relative;
-    width: 70%;
-    max-width: 500px;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    left: var(--spacing-sm);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-color);
-    pointer-events: none;
-  }
-  
-  .searchInput {
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    padding-left: 40px; /* space for the icon */
-    background-color: var(--card-background);
-    border: 1px solid var(--input-border-color);
-    border-radius: var(--border-radius-md);
-    font-size: 0.9em;
-    color: var(--text-color);
-    transition: border-color var(--transition-normal);
-  }
-  
-  .searchInput:focus {
-    border-color: var(--accent-color);
-    outline: none;
-  }
-  
-  .searchInput::placeholder {
-    color: var(--text-color);
-  }
-  
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.searchInputWrapper {
+  position: relative;
+  width: 70%;
+  max-width: 500px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-left: 40px; 
+  background-color: var(--card-background);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius-md);
+  font-size: 0.9em;
+  color: var(--text-color);
+  transition: border-color var(--transition-normal);
+}
+
+.searchInput:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--text-color);
+}

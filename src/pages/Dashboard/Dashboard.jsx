@@ -17,6 +17,8 @@ import { useAuth } from '../../features/Accounts/hooks/useAuth';
 import { usePosts } from '../../features/Posts/hooks/usePosts';
 import AuthModal from '../../features/Accounts/AuthModal';
 
+import DashboardPopularPosts from './components/DashboardPopularPosts';
+
 Modal.setAppElement('#root');
 
 const Dashboard = () => {
@@ -120,7 +122,7 @@ const Dashboard = () => {
                   className={styles.profileImage}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/fallback-avatar.png';
+                    e.target.src = 'src/assets/images/fallback-avatar.webp';
                   }}
                 />
               )}
@@ -161,26 +163,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Most Popular Posts Box */}
-        <div className={`${styles.bentoBox} ${styles.popularPosts}`}>
-          <div className={styles.sectionHeader}>
-            <TrendingUp size={24} />
-            <h2>Most Popular Posts</h2>
-          </div>
-          <div className={styles.popularPostsList}>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className={styles.popularPostItem}>
-                <div className={styles.popularPostInfo}>
-                  <h3>Popular Post {i}</h3>
-                  <p>1.2k views • 45 likes</p>
-                </div>
-                <Link to={`/post/${i}`} className={styles.viewLink}>
-                  View →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
+        <DashboardPopularPosts />
 
         {/* Stats Boxes */}
         {[
@@ -204,7 +187,7 @@ const Dashboard = () => {
             <p>Followers: {userData.followers.length}</p>
             <p>Following: {userData.following.length}</p>
           </div>
-          <Link to="/manage-followers" className={styles.actionButton}>Manage Network</Link>
+          <Link to="/followers" className={styles.actionButton}>Manage Network</Link>
         </div>
 
         {/* Unapproved Posts Box */}

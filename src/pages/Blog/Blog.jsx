@@ -1,3 +1,4 @@
+// src/pages/Blog/Blog.jsx
 import React, { useState } from 'react';
 import PostList from '../../features/Posts/PostList';
 import SearchBar from '../../components/SearchBar/SearchBar';
@@ -25,26 +26,17 @@ const Blog = () => {
   return (
     <div className={styles.blogContainer}>
       <h2 className={styles.title}>Blog Posts</h2>
-
-      <div className={styles.controls}>
-        <SearchBar
-          setSearchQuery={setSearchQuery}
-          placeholder="Search posts..."
-          className={styles.searchBar}
-        />
-
-        <select
-          onChange={(e) => setOrdering(e.target.value)}
-          value={ordering}
-          className={styles.orderingSelect}
-        >
-          <option value="-created_at">Newest First</option>
-          <option value="created_at">Oldest First</option>
-          <option value="-average_rating">Highest Rated</option>
-          <option value="-total_ratings">Most Rated</option>
-          <option value="-comments_count">Most Commented</option>
-        </select>
-      </div>
+      <SearchBar setSearchQuery={setSearchQuery} />
+      <select
+        onChange={(e) => setOrdering(e.target.value)}
+        value={ordering}
+        className={styles.orderingSelect}
+        aria-label="Order posts by"
+      >
+        <option value="-created_at">Newest First</option>
+        <option value="created_at">Oldest First</option>
+        <option value="-average_rating">Highest Rated</option>
+      </select>
 
       <PostList
         searchQuery={searchQuery}
@@ -53,12 +45,15 @@ const Blog = () => {
       />
 
       {isAuthenticated && (
-        <button
-          onClick={() => handleOpenPostModal()}
-          className={styles.createPostButton}
-        >
-          Create New Post
-        </button>
+        <div className={styles.createPostContainer}>
+          <button
+            onClick={() => handleOpenPostModal()}
+            className={styles.createPostButton}
+            aria-label="Create new post"
+          >
+            Create New Post
+          </button>
+        </div>
       )}
 
       <PostModal

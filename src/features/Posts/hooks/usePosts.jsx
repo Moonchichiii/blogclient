@@ -1,29 +1,32 @@
+// src/features/Posts/hooks/usePosts.jsx
 import { useState, useCallback } from 'react';
 import {
   useMutation,
   useQueryClient,
-  useQuery,
   useInfiniteQuery,
 } from '@tanstack/react-query';
 import { postEndpoints } from '../../../api/endpoints';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../Accounts/hooks/useAuth';
+import { useComments } from '../../Comments/hooks/useComments';
+import { useRatings } from '../../Ratings/hooks/useRatings';
+import { useTags } from '../../Tags/hooks/useTags';
 
 // Constants for better maintainability
 const POSTS_PER_PAGE = 5;
 const STALE_TIME = 5 * 60 * 1000; // 5 minutes
 const CACHE_TIME = 30 * 60 * 1000; // 30 minutes
 
+// Query key factory for dynamic keys
 const QUERY_KEYS = {
-  posts: 'posts',
-  unapprovedPosts: 'unapprovedPosts',
-  previews: 'previews'
+  posts: (params) => ['posts', params],
+  unapprovedPosts: ['unapprovedPosts'],
+  previews: ['previews'],
 };
 
 export const usePosts = (params = {}) => {
   const queryClient = useQueryClient();
-  const { isAuthenticated, roles } = useAuth();
-
+  const { isAuthenticated, roles, currentUser } = useAuth();
   const isStaffOrAdmin =
     isAuthenticated && (roles.includes('admin') || roles.includes('superuser'));
 
@@ -41,10 +44,10 @@ export const usePosts = (params = {}) => {
       setModalState((prev) => ({ ...prev, isCreateOpen: true })), []),
 
     closeCreateModal: useCallback(() =>
-      setModalState((prev) => ({ 
-        ...prev, 
+      setModalState((prev) => ({
+        ...prev,
         isCreateOpen: false,
-        selectedPost: null 
+        selectedPost: null
       })), []),
 
     openDisapproveModal: useCallback((post) =>
@@ -69,9 +72,9 @@ export const usePosts = (params = {}) => {
       })), []),
   };
 
-  // Enhanced Posts Query with optimistic updates and better caching
+  // Enhanced Posts Query with caching and dynamic query keys
   const postsQuery = useInfiniteQuery({
-    queryKey: [QUERY_KEYS.posts, params],
+    queryKey: QUERY_KEYS.posts(params),
     queryFn: async ({ pageParam = 1 }) => {
       // Select appropriate endpoint based on params
       const endpoint = params.onlyMyPosts
@@ -99,12 +102,13 @@ export const usePosts = (params = {}) => {
     enabled: isAuthenticated || !params.onlyMyPosts,
   });
 
-  // Enhanced Unapproved Posts Query
-  const unapprovedPostsQuery = useQuery({
-    queryKey: [QUERY_KEYS.unapprovedPosts],
+  // Enhanced Unapproved Posts Query retained
+  const unapprovedPostsQuery = useInfiniteQuery({
+    queryKey: QUERY_KEYS.unapprovedPosts,
     queryFn: () => postEndpoints.getUnapprovedPosts().then((res) => res.data),
     enabled: isStaffOrAdmin,
     staleTime: STALE_TIME,
+    cacheTime: CACHE_TIME,
     onError: (error) => {
       const message = error.response?.data?.message || 'Failed to fetch unapproved posts.';
       toast.error(message);
@@ -116,16 +120,16 @@ export const usePosts = (params = {}) => {
     create: useMutation({
       mutationFn: (postData) => postEndpoints.createPost(postData),
       onMutate: async (newPost) => {
-        await queryClient.cancelQueries([QUERY_KEYS.posts]);
-        const previousPosts = queryClient.getQueryData([QUERY_KEYS.posts]);
+        await queryClient.cancelQueries(QUERY_KEYS.posts(params));
+        const previousPosts = queryClient.getQueryData(QUERY_KEYS.posts(params));
 
         // Optimistically update posts list
         if (previousPosts?.pages) {
-          queryClient.setQueryData([QUERY_KEYS.posts], {
+          queryClient.setQueryData(QUERY_KEYS.posts(params), {
             pages: [
-              { 
+              {
                 results: [newPost, ...previousPosts.pages[0].results],
-                nextPage: previousPosts.pages[0].nextPage 
+                nextPage: previousPosts.pages[0].nextPage
               },
               ...previousPosts.pages.slice(1),
             ],
@@ -135,13 +139,13 @@ export const usePosts = (params = {}) => {
         return { previousPosts };
       },
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEYS.posts]);
+        queryClient.invalidateQueries(QUERY_KEYS.posts(params));
         toast.success('Post created successfully!');
         modals.closeCreateModal();
       },
       onError: (error, _, context) => {
         if (context?.previousPosts) {
-          queryClient.setQueryData([QUERY_KEYS.posts], context.previousPosts);
+          queryClient.setQueryData(QUERY_KEYS.posts(params), context.previousPosts);
         }
         toast.error(error.response?.data?.message || 'Failed to create post.');
       },
@@ -150,8 +154,8 @@ export const usePosts = (params = {}) => {
     update: useMutation({
       mutationFn: ({ id, postData }) => postEndpoints.updatePost(id, postData),
       onMutate: async ({ id, postData }) => {
-        await queryClient.cancelQueries([QUERY_KEYS.posts]);
-        const previousPosts = queryClient.getQueryData([QUERY_KEYS.posts]);
+        await queryClient.cancelQueries(QUERY_KEYS.posts(params));
+        const previousPosts = queryClient.getQueryData(QUERY_KEYS.posts(params));
 
         // Optimistically update the modified post
         if (previousPosts?.pages) {
@@ -162,7 +166,7 @@ export const usePosts = (params = {}) => {
             ),
           }));
 
-          queryClient.setQueryData([QUERY_KEYS.posts], {
+          queryClient.setQueryData(QUERY_KEYS.posts(params), {
             ...previousPosts,
             pages: updatedPages,
           });
@@ -171,12 +175,12 @@ export const usePosts = (params = {}) => {
         return { previousPosts };
       },
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEYS.posts]);
+        queryClient.invalidateQueries(QUERY_KEYS.posts(params));
         toast.success('Post updated successfully!');
       },
       onError: (error, _, context) => {
         if (context?.previousPosts) {
-          queryClient.setQueryData([QUERY_KEYS.posts], context.previousPosts);
+          queryClient.setQueryData(QUERY_KEYS.posts(params), context.previousPosts);
         }
         toast.error(error.response?.data?.message || 'Failed to update post.');
       },
@@ -185,8 +189,8 @@ export const usePosts = (params = {}) => {
     delete: useMutation({
       mutationFn: (id) => postEndpoints.deletePost(id),
       onMutate: async (id) => {
-        await queryClient.cancelQueries([QUERY_KEYS.posts]);
-        const previousPosts = queryClient.getQueryData([QUERY_KEYS.posts]);
+        await queryClient.cancelQueries(QUERY_KEYS.posts(params));
+        const previousPosts = queryClient.getQueryData(QUERY_KEYS.posts(params));
 
         // Optimistically remove the deleted post
         if (previousPosts?.pages) {
@@ -195,7 +199,7 @@ export const usePosts = (params = {}) => {
             results: page.results.filter(post => post.id !== id),
           }));
 
-          queryClient.setQueryData([QUERY_KEYS.posts], {
+          queryClient.setQueryData(QUERY_KEYS.posts(params), {
             ...previousPosts,
             pages: updatedPages,
           });
@@ -204,12 +208,12 @@ export const usePosts = (params = {}) => {
         return { previousPosts };
       },
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEYS.posts]);
+        queryClient.invalidateQueries(QUERY_KEYS.posts(params));
         toast.success('Post deleted successfully!');
       },
       onError: (error, _, context) => {
         if (context?.previousPosts) {
-          queryClient.setQueryData([QUERY_KEYS.posts], context.previousPosts);
+          queryClient.setQueryData(QUERY_KEYS.posts(params), context.previousPosts);
         }
         toast.error(error.response?.data?.message || 'Failed to delete post.');
       },
@@ -218,7 +222,8 @@ export const usePosts = (params = {}) => {
     approve: useMutation({
       mutationFn: (id) => postEndpoints.approvePost(id),
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEYS.posts, QUERY_KEYS.unapprovedPosts]);
+        queryClient.invalidateQueries(QUERY_KEYS.posts(params));
+        queryClient.invalidateQueries(QUERY_KEYS.unapprovedPosts);
         toast.success('Post approved successfully!');
       },
       onError: (error) => {
@@ -229,7 +234,8 @@ export const usePosts = (params = {}) => {
     disapprove: useMutation({
       mutationFn: ({ id, reason }) => postEndpoints.disapprovePost(id, reason),
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEYS.posts, QUERY_KEYS.unapprovedPosts]);
+        queryClient.invalidateQueries(QUERY_KEYS.posts(params));
+        queryClient.invalidateQueries(QUERY_KEYS.unapprovedPosts);
         toast.success('Post disapproved successfully!');
         modals.closeDisapproveModal();
       },
@@ -239,7 +245,7 @@ export const usePosts = (params = {}) => {
     }),
   };
 
-  // Enhanced Action Handlers with useCallback
+  // Action Handlers
   const handlers = {
     approvePost: useCallback(async (id) => {
       if (window.confirm('Are you sure you want to approve this post?')) {
@@ -251,16 +257,21 @@ export const usePosts = (params = {}) => {
       }
     }, [mutations.approve]),
 
+    openDisapproveModal: useCallback((post) => {
+      modals.openDisapproveModal(post);
+    }, [modals.openDisapproveModal]),
+
     disapprovePost: useCallback(async () => {
-      if (!modalState.selectedPost || !modalState.disapproveReason.trim()) {
+      const { selectedPost, disapproveReason } = modalState;
+      if (!selectedPost || !disapproveReason.trim()) {
         toast.warning('Please provide a reason for disapproval.');
         return;
       }
 
       try {
         await mutations.disapprove.mutateAsync({
-          id: modalState.selectedPost.id,
-          reason: modalState.disapproveReason,
+          id: selectedPost.id,
+          reason: disapproveReason,
         });
       } catch (error) {
         // Error handling is managed in the mutation's onError
@@ -285,7 +296,6 @@ export const usePosts = (params = {}) => {
     // Modal Management
     modalState,
     modals,
-    isStaffOrAdmin,
 
     // Post Actions
     ...handlers,
@@ -299,5 +309,12 @@ export const usePosts = (params = {}) => {
     isDeleting: mutations.delete.isLoading,
     isApproving: mutations.approve.isLoading,
     isDisapproving: mutations.disapprove.isLoading,
+
+    // Hook Integrations (if necessary)
+    comments: useComments(),
+    ratings: useRatings(),
+    tags: useTags(),
   };
 };
+
+export default usePosts;

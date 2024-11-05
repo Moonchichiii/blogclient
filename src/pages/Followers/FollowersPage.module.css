@@ -1,0 +1,48 @@
+.followersPage {
+    padding: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 10rem;
+    height: auto;
+  }
+  
+  .chartContainer {
+    background: var(--card-background);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .followersList {
+    margin-top: var(--spacing-lg);
+  }
+  
+  .followerItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--card-background);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .followerItem button {
+    background: var(--button-primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+  
+  .followerItem button:hover {
+    background: var(--button-primary-hover);
+  }
+  
+  .popularFollowers {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+  }

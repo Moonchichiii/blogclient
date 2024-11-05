@@ -19,6 +19,8 @@ const Blog = lazy(() => import('./pages/Blog/Blog'));
 const About = lazy(() => import('./pages/About/About'));
 const MyPosts = lazy(() => import('./pages/Blog/MyPosts'));
 
+const Followers = lazy(() => import('./pages/Followers/Followerspage'));
+
 // Route protection components
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -102,6 +104,13 @@ const App = () => {
                 <MyPosts />
               </ProtectedRoute>
             } />
+
+           <Route path="/followers" element={
+              <ProtectedRoute>
+                <Followers />
+              </ProtectedRoute>
+            } />
+
 
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />

@@ -1,4 +1,42 @@
-.blogContainer {  
+/* src/features/Posts/PostList.module.css */
+
+.myMasonryGrid {
+  display: flex;
+  margin-left: -var(--spacing-lg); /* gutter size offset */
+  width: auto;
+  margin-bottom: var(--spacing-lg);
+}
+
+.myMasonryGridColumn {
+  padding-left: var(--spacing-lg); /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Style for Masonry grid columns */
+.myMasonryGridColumn > .postItem {
+  margin-bottom: var(--spacing-lg);
+}
+
+.infiniteScroll {
+  overflow: visible !important; /* Override InfiniteScroll default overflow */
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: var(--spacing-lg);
+}
+
+.noPosts {
+  text-align: center;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  margin-top: var(--spacing-lg);
+}
+
+
+/* .blogContainer {  
     max-width: 100%;
     margin: 0 auto;
     padding: 2rem;
@@ -181,35 +219,35 @@
     background-clip: padding-box;
   }
   
-  /* Ensure consistent spacing between grid items */
+  
   .myMasonryGridColumn > div {
     margin-bottom: var(--spacing-lg);
   }
   
   /* Loader Styling */
-  .loader {
+  /* .loader {
     text-align: center;
     margin: 2rem 0;
-  }
+  } */
   
   /* Error Message Styling */
-  .error {
+  /* .error {
     color: var(--error-color);
     text-align: center;
     font-size: 1.2rem;
     margin-top: var(--spacing-lg);
-  }
+  } */
   
   /* No Posts Message */
-  .noPosts {
+  /* .noPosts {
     text-align: center;
     color: var(--text-color);
     font-size: 1.2rem;
     margin-top: var(--spacing-lg);
-  }
+  } */
   
-  /* Infinite Scroll Styling */
+/*   
   .infiniteScroll {
-    /* Add any additional styles if needed */
-  }
   
+  }
+   */

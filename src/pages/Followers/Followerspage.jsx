@@ -9,23 +9,31 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import FollowersList from '../../components/FollowersList';
-import PopularFollowers from '../../components/PopularFollowers';
-import { useFollowers } from '../../hooks/useFollowers';
-import { useAuth } from '../../hooks/useAuth';
+import FollowersList from '../../features/Followers/FollowersList';
+import PopularFollowers from '../../features/Followers/PopularFollowers';
+
+import { useFollowers} from '../../features/Followers/hooks/useFollowers';
+import { useAuth } from '../../features/Accounts/hooks/useAuth';
 import styles from './FollowersPage.module.css';
 
 const FollowersChart = ({ data }) => (
-  <ResponsiveContainer width="100%" height={400}>
-    <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="followers" stroke="#8884d8" activeDot={{ r: 8 }} />
-    </LineChart>
-  </ResponsiveContainer>
+  <div className={styles.chartContainer}>
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line 
+          type="monotone" 
+          dataKey="followers" 
+          stroke="var(--primary-color)" 
+          activeDot={{ r: 8 }} 
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
 );
 
 const FollowersPage = () => {
@@ -41,26 +49,50 @@ const FollowersPage = () => {
     unfollow,
   } = useFollowers(user?.id);
 
-  if (isLoadingFollowers || isLoadingPopularFollowers) return <div>Loading...</div>;
-  if (followersError || popularFollowersError)
-    return <div>Error: {followersError?.message || popularFollowersError?.message}</div>;
+  if (isLoadingFollowers || isLoadingPopularFollowers) {
+    return (
+      <div className={styles.followersPage}>
+        <div>Loading followers data...</div>
+      </div>
+    );
+  }
 
-  const followerData = followers.reduce((acc, follower) => {
+  if (followersError || popularFollowersError) {
+    return (
+      <div className={styles.followersPage}>
+        <div>Error: {followersError?.message || popularFollowersError?.message}</div>
+      </div>
+    );
+  }
+
+  const followerData = followers?.reduce((acc, follower) => {
     const month = new Date(follower.created_at).toLocaleString('default', { month: 'short' });
     acc[month] = (acc[month] || 0) + 1;
     return acc;
   }, {});
 
-  const chartData = Object.entries(followerData).map(([name, followers]) => ({ name, followers }));
+  const chartData = Object.entries(followerData || {}).map(([name, followers]) => ({
+    name,
+    followers,
+  }));
 
   return (
     <div className={styles.followersPage}>
-      <h1>Followers Page</h1>
-      <div className={styles.chartContainer}>
-        <FollowersChart data={chartData} />
+      <h1>Your Followers</h1>
+      <FollowersChart data={chartData} />
+      <div className={styles.popularFollowers}>
+        <PopularFollowers 
+          popularFollowers={popularFollowers} 
+          onFollow={follow}
+          onUnfollow={unfollow}
+        />
       </div>
-      <PopularFollowers popularFollowers={popularFollowers} />
-      <FollowersList />
+      <div className={styles.followersList}>
+        <FollowersList 
+          followers={followers} 
+          onUnfollow={unfollow}
+        />
+      </div>
     </div>
   );
 };

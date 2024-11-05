@@ -1,7 +1,7 @@
 .blogContainer {
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  justify-content: center;
+  margin-top: 5rem;
   padding: var(--spacing-lg);
   background-color: var(--background-color);
   color: var(--text-color);
@@ -17,95 +17,6 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-}
-
-/* Responsive Masonry Layout */
-.blogPost {
-  background-color: var(--card-background);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-  margin-bottom: var(--spacing-lg); /* Added explicit margin bottom */
-}
-
-.blogPost {
-  background-color: var(--card-background);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-}
-
-.blogPost:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.blogHeader {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-}
-
-.blogImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-normal);
-}
-
-.blogPost:hover .blogImage {
-  transform: scale(1.05);
-}
-
-.blogContent {
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-}
-
-.blogTitle {
-  font-family: var(--heading-font);
-  color: var(--heading-color);
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  transition: color var(--transition-normal);
-}
-
-.blogTitle:hover {
-  color: var(--accent-color);
-}
-
-.blogExcerpt {
-  color: var(--text-color);
-  flex-grow: 1;
-  margin-bottom: var(--spacing-md);
-}
-
-/* Responsiveness for smaller screens */
-@media (max-width: 768px) {
-  .blogPosts {
-    grid-template-columns: 1fr;
-  }
-
-  .orderingSelect {
-    max-width: 70%;
-    font-size: 1.25rem;
-    margin: var(--spacing-md) auto;
-  }
-
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .loadMoreButton {
-    width: 100%;
-  }
 }
 
 .orderingSelect {
@@ -124,14 +35,34 @@
 .orderingSelect:hover,
 .orderingSelect:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.2);
+  box-shadow: 0 0 0 2px rgba(255, 154, 139, 0.2); 
   outline: none;
 }
 
-.loadMoreButton {
-  display: block;
-  margin: 2rem auto 0;
-  padding: 0.75rem 1.5rem;
+.myMasonryGrid {
+  display: flex;
+  margin-left: -var(--spacing-lg);
+  width: auto;
+  margin-bottom: var(--spacing-lg);
+}
+
+.myMasonryGridColumn {
+  padding-left: var(--spacing-lg);
+  background-clip: padding-box;
+}
+
+/* Ensure consistent spacing between grid items */
+.myMasonryGridColumn > .postItem {
+  margin-bottom: var(--spacing-lg);
+}
+
+.createPostContainer {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+}
+
+.createPostButton {
+  padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--button-primary);
   color: var(--button-text-color);
   border: none;
@@ -142,72 +73,36 @@
   transition: background-color var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.loadMoreButton:hover,
-.loadMoreButton:focus {
+.createPostButton:hover,
+.createPostButton:focus {
   background-color: var(--button-primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   outline: none;
 }
 
-
-/* Masonry Grid Styles */
-.myMasonryGrid {
-  display: flex;
-  margin-left: calc(-1 * var(--spacing-lg)); /* Increased from md to lg */
-  width: auto;
-  margin-bottom: var(--spacing-lg);
-}
-
-.myMasonryGridColumn {
-  padding-left: var(--spacing-lg); /* Increased from md to lg */
-  background-clip: padding-box;
-}
-
-/* Add this new style for the posts within Masonry */
-.myMasonryGridColumn > div {
-  margin-bottom: var(--spacing-lg); /* Increased space between posts */
-}
-.createPostButton {
-  display: block;
-  margin: var(--spacing-lg) auto 0;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background-color: var(--button-primary);
-  color: var(--button-text-color);
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.createPostButton:hover {
-  background-color: var(--button-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .controls {
-    flex-direction: column;
-    gap: var(--spacing-sm);
+  .title {
+    font-size: 2.5rem;
   }
 
-  .searchBar {
-    max-width: 100%;
+  .orderingSelect {
+    max-width: 70%;
+    font-size: 1.25rem;
   }
 
   .myMasonryGrid {
-    margin-left: 0;
+    margin-left: -var(--spacing-md);
+    padding-left: var(--spacing-md);
   }
 
-  .myMasonryGridColumn {
-    padding-left: 0;
+  .myMasonryGridColumn > .postItem {
+    margin-bottom: var(--spacing-md);
   }
 
   .createPostButton {
     width: 100%;
-    margin-top: var(--spacing-md);
+    max-width: 300px;
   }
 }

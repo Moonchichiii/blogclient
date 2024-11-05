@@ -28,6 +28,8 @@
     --button-primary-hover: #ff7f7f;
     --button-secondary: #98ddca;
     --button-secondary-hover: #7fd7b5;
+    --tag-background: #e0f7fa;
+    --tag-text-color: #006064;
   
     /* Dark Theme */
     --dark-background-color: #121212;
@@ -48,6 +50,8 @@
     --dark-button-primary-hover: #c49090;
     --dark-button-secondary: #a0c1b8;
     --dark-button-secondary-hover: #8fb3a9;
+    --tag-background: #004d40;
+  --tag-text-color: #b2dfdb;
   }
 
 /* Dark Mode Overrides */

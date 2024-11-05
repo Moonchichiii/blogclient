@@ -22,8 +22,9 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
   const queryClient = useQueryClient();
 
   // Extract profile data from the user object
-  const profileName = user?.profile_name;
-  const profileImage = user?.profile?.image_url;
+  const profileName = user?.profile?.profile_name || "";
+  const profileImage = user?.profile?.image?.thumbnail || "src/assets/images/fallback-avatar.webp";
+ 
 
   // Navigation configuration based on authentication state
   const { mainNav } = getNavigationConfig(isAuthenticated);

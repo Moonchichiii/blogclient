@@ -1,0 +1,185 @@
+.bentoBox {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bentoBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popularPosts {
+    grid-column: 1 / -1;
+  }
+  
+  .sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .sectionHeader h2 {
+    font-size: 1.2rem;
+    color: var(--heading-color);
+    font-family: var(--heading-font);
+    margin: 0;
+  }
+  
+  .popularPostsList {
+    width: 100%;
+  }
+  
+  .popularPostItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--spacing-md);
+    background-color: var(--background-light);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-sm);
+    transition: background-color 0.2s ease;
+  }
+  
+  .popularPostItem:hover {
+    background-color: var(--background-hover);
+  }
+  
+  .popularPostInfo {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .popularPostInfo h3 {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--heading-color);
+  }
+  
+  .postMetrics {
+    display: flex;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .metric {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .metric svg {
+    color: var(--primary-color);
+  }
+  
+  .postDate {
+    font-size: 0.8em;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+  
+  .viewLink {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    padding-left: var(--spacing-md);
+  }
+  
+  .viewLink:hover {
+    transform: translateX(4px);
+  }
+  
+  /* Loading State */
+  .loadingState {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
+  
+  .skeletonPost {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .skeletonPost:last-child {
+    border-bottom: none;
+  }
+  
+  .skeletonTitle {
+    height: 24px;
+    background-color: var(--background-hover);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-sm);
+    width: 75%;
+  }
+  
+  .skeletonMetrics {
+    height: 16px;
+    background-color: var(--background-hover);
+    border-radius: var(--border-radius-sm);
+    width: 50%;
+  }
+  
+  /* Error and Empty States */
+  .errorState,
+  .emptyState {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-color);
+  }
+  
+  .retryButton,
+  .createPostButton {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius-md);
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .retryButton:hover,
+  .createPostButton:hover {
+    background-color: var(--primary-color-dark);
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: .5;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .popularPostItem {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+  
+    .viewLink {
+      padding-left: 0;
+      margin-top: var(--spacing-sm);
+    }
+  
+    .postMetrics {
+      flex-wrap: wrap;
+    }
+  }
