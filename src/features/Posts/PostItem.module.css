@@ -15,6 +15,38 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
+/* Approval Status Styles */
+.unapprovedPost {
+  position: relative;
+  border: 2px solid var(--warning-color);
+}
+
+.approvalBadge {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.approved {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.pending {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+/* Post Image */
 .postImage {
   width: 100%;
   height: 240px;
@@ -26,6 +58,7 @@
   transform: scale(1.05);
 }
 
+/* Post Content */
 .postContent {
   padding: 1.5rem;
   flex: 1;
@@ -53,6 +86,7 @@
   overflow: hidden;
 }
 
+/* Post Meta */
 .postMeta {
   display: flex;
   flex-wrap: wrap;
@@ -75,14 +109,18 @@
   color: var(--accent-color);
 }
 
+/* Rating Input */
+.ratingInput,
 .postMeta input[type="number"] {
   width: 50px;
   padding: 0.25rem;
   border: 1px solid var(--border-color);
   border-radius: 0.25rem;
   font-size: 0.875rem;
+  margin-left: 0.5rem;
 }
 
+/* Tags */
 .tagsSection {
   display: flex;
   flex-wrap: wrap;
@@ -104,12 +142,7 @@
   color: white;
 }
 
-.ratingInput {
-  width: 50px;
-  margin-left: 0.5rem;
-}
-
-
+/* Comments */
 .commentsSection {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -127,6 +160,7 @@
 .comment p {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
+  color: var(--text-color);
 }
 
 .comment small {
@@ -146,24 +180,52 @@
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-button {
-  background-color: var(--accent-color);
+/* Admin Actions */
+.adminActions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--input-border-color);
+}
+
+.approveButton,
+.disapproveButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  transition: all var(--transition-normal);
+}
+
+.approveButton {
+  background-color: var(--success-color);
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
+}
+
+.disapproveButton {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.pendingNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--warning-color);
+  color: white;
+  border-radius: var(--border-radius-md);
   font-size: 0.875rem;
 }
 
-button:hover {
-  background-color: var(--accent-color-hover);
-  transform: translateY(-1px);
-}
-
+/* Locked Content */
 .lockedContent {
   text-align: center;
   padding: 2rem;
@@ -174,6 +236,25 @@ button:hover {
   gap: 1rem;
 }
 
+/* Buttons */
+button {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: var(--accent-color-hover);
+  transform: translateY(-1px);
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   .postImage {
     height: 200px;
@@ -194,6 +275,10 @@ button:hover {
   }
 
   .addComment {
+    flex-direction: column;
+  }
+
+  .adminActions {
     flex-direction: column;
   }
 }

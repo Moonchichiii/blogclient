@@ -86,6 +86,7 @@ const SignUpForm = ({ onSuccess }) => {
     e.preventDefault();
     if (validateForm()) {
       try {
+        console.log('Form Data being sent:', formData);
         await register(formData);
         showToast('Please check your email to confirm your account.', 'info');
         if (onSuccess) onSuccess(formData.email);

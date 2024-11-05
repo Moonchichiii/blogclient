@@ -6,8 +6,15 @@ export const authEndpoints = {
   register: (userData) => api.post('/api/accounts/register/', userData),
   activateAccount: (token) => api.get('/api/accounts/activate/', { params: { token } }),
   resendVerification: (email) => api.post('/api/accounts/resend-verification/', { email }),
+  
+  setupTwoFactor: () => api.post('/api/accounts/setup-2fa/'),
+  confirmTwoFactor: (token) => api.put('/api/accounts/setup-2fa/', { token }),
+  cancelTwoFactorSetup: () => api.delete('/api/accounts/setup-2fa/'),
+  verifyTwoFactor: (data) => api.post('/api/accounts/verify-2fa/', data),
+
   verifyTwoFactor: (data) => api.post('/api/accounts/verify-2fa/', data),
   disableTwoFactor: () => api.delete('/api/accounts/setup-2fa/'),
+
   refreshToken: (refreshToken) => api.post('/api/accounts/token/refresh/', { refresh: refreshToken }),
   logout: () => api.post('/api/accounts/logout/'),
 };
@@ -76,7 +83,8 @@ export const followerEndpoints = {
 // Settings endpoints
 export const settingsEndpoints = {
   // Profile settings
-  updateProfile: (userData) => multipartApi.put('/api/accounts/update-profile/', userData),
+  updateProfile: (userData) => multipartApi.put('/api/profiles/current/', userData),
+  updateProfileName: (userId, data) => api.patch(`/api/profiles/${userId}/`, data),
   uploadProfilePicture: (formData) => multipartApi.post('/api/accounts/upload-profile-picture/', formData),
 
   // Account settings
@@ -91,6 +99,7 @@ export const settingsEndpoints = {
   setupTwoFactor: () => api.post('/api/accounts/setup-2fa/'),
   confirmTwoFactor: (token) => api.put('/api/accounts/setup-2fa/', { token }),
   cancelTwoFactorSetup: () => api.delete('/api/accounts/setup-2fa/'),
+  verifyTwoFactor: (data) => api.post('/api/accounts/verify-2fa/', data),
 
   // Notification settings
   getNotificationSettings: () => api.get('/api/notifications/settings/'),

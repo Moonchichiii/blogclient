@@ -5,25 +5,26 @@ import { useAuth } from '../../Accounts/hooks/useAuth';
 import showToast from '../../../utils/toast';
 
 export const useSettings = () => {
-    const { user: currentUser } = useAuth();
-    const queryClient = useQueryClient();
-  
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalContent, setModalContent] = useState(null);
-    const [notificationSettings, setNotificationSettings] = useState({
-      emailNotifications: false,
-      commentNotifications: false,
-      newFollowerNotifications: false,
-    });
-  
-  
-   // Initialize form data from current user
-   const [formData, setFormData] = useState({
+  const { user: currentUser } = useAuth();
+  const queryClient = useQueryClient();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [notificationSettings, setNotificationSettings] = useState({
+    emailNotifications: false,
+    commentNotifications: false,
+    newFollowerNotifications: false,
+  });
+
+  // Initialize form data from current user
+  const [formData, setFormData] = useState({
     bio: currentUser?.profile?.bio || '',
-    profile_name: currentUser?.profile_name || '',
+    profile_name: currentUser?.profile?.profile_name || '',
     image: null,
   });
-  const [imagePreview, setImagePreview] = useState(currentUser?.profile?.image || null);
+  const [imagePreview, setImagePreview] = useState(
+    currentUser?.profile?.image?.url || null
+  );
 
   // Form Handling
   const handleChange = (event) => {
@@ -61,20 +62,37 @@ export const useSettings = () => {
   // Profile Mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      const formDataObj = new FormData();
-      Object.keys(data).forEach((key) => {
-        if (data[key] !== null && data[key] !== undefined) {
-          formDataObj.append(key, data[key]);
-        }
-      });
-      return settingsEndpoints.updateProfile(formDataObj);
+      // Handle image uploads
+      if (data.image) {
+        const formData = new FormData();
+        formData.append('image', data.image);
+        return settingsEndpoints.updateProfile(formData);
+      }
+      
+      // Handle profile_name updates
+      if (data.profile_name) {
+        return settingsEndpoints.updateProfileName(currentUser.id, {
+          profile_name: data.profile_name
+        });
+      }
+      
+      // Handle bio updates
+      if (data.bio !== undefined) {
+        return settingsEndpoints.updateProfile({
+          bio: data.bio
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['currentUser']);
       showToast('Profile updated successfully', 'success');
     },
     onError: (error) => {
-      showToast(error.response?.data?.message || 'Failed to update profile', 'error');
+      showToast(
+        error.response?.data?.message || 'Failed to update profile',
+        'error'
+      );
+      throw error; // Propagate error to component for handling
     },
   });
 
@@ -155,7 +173,11 @@ export const useSettings = () => {
 
   // Action Handlers
   const handleProfileUpdate = async (data) => {
-    await updateProfileMutation.mutateAsync(data);
+    try {
+      await updateProfileMutation.mutateAsync(data);
+    } catch (error) {
+      throw error; // Propagate error to component
+    }
   };
 
   const handleEmailUpdate = async (data) => {

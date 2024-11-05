@@ -25,6 +25,21 @@ const Dashboard = () => {
   const location = useLocation();
   const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
 
+  // Safely extract user data while maintaining existing structure
+  const profile = currentUser?.profile || {};
+  const account = currentUser?.account || {};
+  
+  // Maintain compatibility with existing code while using new structure
+  const userData = {
+    ...currentUser,
+    profile_name: profile.profile_name,
+    followers: { length: profile.follower_count || 0 },
+    following: { length: profile.following_count || 0 },
+    posts: { length: currentUser?.posts?.length || 0 },
+    comments: { length: currentUser?.comments?.length || 0 },
+    ratings: { length: currentUser?.ratings?.length || 0 },
+  };
+
   const {
     unapprovedPosts,
     isLoadingUnapproved,
@@ -96,13 +111,17 @@ const Dashboard = () => {
           ) : (
             <>
               <h1 className={styles.title}>
-                Welcome, {currentUser?.profile_name}
+                Welcome, {userData.profile_name}
               </h1>
-              {currentUser?.profile?.image && (
+              {profile.image?.url && (
                 <img
-                  src={currentUser.profile.image}
-                  alt={`${currentUser.profile_name}'s profile`}
+                  src={profile.image.url}
+                  alt={`${userData.profile_name}'s profile`}
                   className={styles.profileImage}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/fallback-avatar.png';
+                  }}
                 />
               )}
             </>
@@ -111,7 +130,7 @@ const Dashboard = () => {
       )}
 
       <div className={styles.bentoGrid}>
-        {/* Create Post Box - Moved to top */}
+        {/* Create Post Box */}
         <div className={`${styles.bentoBox} ${styles.createPostBox} ${styles.featured}`}>
           <div className={styles.createPostHeader}>
             <PlusCircle size={24} />
@@ -120,6 +139,26 @@ const Dashboard = () => {
           <button onClick={modals.openCreateModal} className={`${styles.actionButton} ${styles.createButton}`}>
             Create Post
           </button>
+        </div>
+
+        {/* User Stats Box - New addition */}
+        <div className={`${styles.bentoBox} ${styles.statsBox}`}>
+          <User size={24} />
+          <h2>Account Stats</h2>
+          <div className={styles.statsGrid}>
+            <div className={styles.statItem}>
+              <label>Popularity</label>
+              <span>{profile.popularity_score?.toFixed(1) || '0.0'}</span>
+            </div>
+            <div className={styles.statItem}>
+              <label>Status</label>
+              <span>{account.is_verified ? 'Verified' : 'Unverified'}</span>
+            </div>
+            <div className={styles.statItem}>
+              <label>Security</label>
+              <span>{account.has_2fa ? '2FA Enabled' : '2FA Disabled'}</span>
+            </div>
+          </div>
         </div>
 
         {/* Most Popular Posts Box */}
@@ -142,13 +181,12 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-        
 
         {/* Stats Boxes */}
         {[
-          { icon: FileText, title: 'My Posts', count: currentUser?.posts?.length, link: '/my-posts' },
-          { icon: MessageSquare, title: 'My Comments', count: currentUser?.comments?.length, link: '/my-comments' },
-          { icon: Star, title: 'My Ratings', count: currentUser?.ratings?.length, link: '/my-ratings' }
+          { icon: FileText, title: 'My Posts', count: userData.posts.length, link: '/my-posts' },
+          { icon: MessageSquare, title: 'My Comments', count: userData.comments.length, link: '/my-comments' },
+          { icon: Star, title: 'My Ratings', count: userData.ratings.length, link: '/my-ratings' }
         ].map(({ icon: Icon, title, count, link }) => (
           <div key={title} className={styles.bentoBox}>
             <Icon size={24} />
@@ -161,10 +199,12 @@ const Dashboard = () => {
         {/* Followers Box */}
         <div className={styles.bentoBox}>
           <Users size={24} />
-          <h2>Followers</h2>
-          <p>Followers: {currentUser?.followers?.length || 0}</p>
-          <p>Following: {currentUser?.following?.length || 0}</p>
-          <Link to="/manage-followers" className={styles.actionButton}>Manage Followers</Link>
+          <h2>Network</h2>
+          <div className={styles.followStats}>
+            <p>Followers: {userData.followers.length}</p>
+            <p>Following: {userData.following.length}</p>
+          </div>
+          <Link to="/manage-followers" className={styles.actionButton}>Manage Network</Link>
         </div>
 
         {/* Unapproved Posts Box */}
@@ -209,8 +249,8 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Modals */}
-      <PostModal 
+       {/* Modals */}
+       <PostModal 
         isOpen={modalState.isCreateOpen}
         onClose={modals.closeCreateModal}
       />

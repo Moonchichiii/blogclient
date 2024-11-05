@@ -1,9 +1,10 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePosts } from './hooks/usePosts';
 import PostItem from './PostsItem';
 import { Loader } from 'lucide-react';
 import styles from './PostList.module.css';
+import Masonry from 'react-masonry-css';
 import { throttle } from 'lodash';
 
 const PostList = ({ searchQuery, ordering, onlyMyPosts = false, isAuthenticated }) => {
@@ -28,26 +29,39 @@ const PostList = ({ searchQuery, ordering, onlyMyPosts = false, isAuthenticated 
     [hasNextPage, fetchNextPage]
   );
 
-  if (isLoading) return <Loader />;
-  if (error) return <div>Error: {error.message}</div>;
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 2,
+    700: 1,
+  };
+
+  if (isLoading) return <div className={styles.loader}><Loader /></div>;
+  if (error) return <div className={styles.error}>Error: {error.message}</div>;
 
   return (
     <InfiniteScroll
       dataLength={posts.length}
       next={loadMore}
       hasMore={!!hasNextPage}
-      loader={<Loader />}
-      className={styles.postList}
+      loader={<div className={styles.loader}><Loader /></div>}
+      endMessage={<p className={styles.noPosts}>No more posts</p>}
+      className={styles.infiniteScroll}
     >
-      {posts.length > 0 ? (
-        posts.map((post) =>
-          post?.id ? (
-            <PostItem key={post.id} post={post} isAuthenticated={isAuthenticated} />
-          ) : null
-        )
-      ) : (
-        <div>No posts available</div>
-      )}
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className={styles.myMasonryGrid}
+        columnClassName={styles.myMasonryGridColumn}
+      >
+        {posts.length > 0 ? (
+          posts.map((post) =>
+            post?.id ? (
+              <PostItem key={post.id} post={post} isAuthenticated={isAuthenticated} />
+            ) : null
+          )
+        ) : (
+          <div className={styles.noPosts}>No posts available</div>
+        )}
+      </Masonry>
     </InfiniteScroll>
   );
 };

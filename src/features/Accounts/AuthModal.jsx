@@ -6,6 +6,7 @@ import EmailConfirmation from './EmailConfirmation';
 import TwoFactorSetup from './TwoFactorSetup';
 import styles from './AuthModal.module.css';
 
+
 const AuthModal = ({
   isOpen,
   onClose,
@@ -16,14 +17,17 @@ const AuthModal = ({
   const [view, setView] = useState(initialView);
   const [email, setEmail] = useState('');
 
+
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
+
 
   const handleSignUpSuccess = (userEmail) => {
     setEmail(userEmail);
     setView('emailConfirmation');
   };
+
 
   const handleEmailConfirmationSuccess = () => {
     if (onSuccess) {
@@ -33,9 +37,11 @@ const AuthModal = ({
     }
   };
 
+
   const handleTwoFactorSetupSuccess = () => {
     onSuccess?.();
   };
+
 
   const handleTwoFactorSetupSkip = () => {
     if (disableClose) {
@@ -45,11 +51,13 @@ const AuthModal = ({
     }
   };
 
+
   const handleModalClose = () => {
     if (!disableClose) {
       onClose();
     }
   };
+
 
   return (
     <Modal
@@ -104,5 +112,6 @@ const AuthModal = ({
     </Modal>
   );
 };
+
 
 export default AuthModal;

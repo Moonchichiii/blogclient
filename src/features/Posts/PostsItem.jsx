@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { User, Calendar, Star, MessageSquare, Tag, Lock } from 'lucide-react';
+import { User, Calendar, Star, MessageSquare, Tag, Lock, AlertCircle, CheckCircle } from 'lucide-react';
 import styles from './PostItem.module.css';
 import { useComments } from '../Comments/hooks/useComments';
 import { useRatings } from '../Ratings/hooks/useRatings';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAuth } from '../Accounts/hooks/useAuth';
+
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const PostItem = React.memo(({ post, isAuthenticated, approvePost, openDisapproveModal }) => {
   const { roles, currentUser } = useAuth();
@@ -43,14 +45,32 @@ const PostItem = React.memo(({ post, isAuthenticated, approvePost, openDisapprov
   };
 
   return (
-    <article className={styles.postItem}>
-      {post.image && (
-        <img
-          src={post.image}
-          alt={post.title}
-          className={styles.postImage}
-        />
+    <article className={`${styles.postItem} ${!post.is_approved ? styles.unapprovedPost : ''}`}>
+      {/* Approval Status Badge */}
+      {(isStaffOrAdmin || isOwner) && (
+        <div className={`${styles.approvalBadge} ${post.is_approved ? styles.approved : styles.pending}`}>
+          {post.is_approved ? (
+            <>
+              <CheckCircle size={16} />
+              <span>Approved</span>
+            </>
+          ) : (
+            <>
+              <AlertCircle size={16} />
+              <span>Pending Approval</span>
+            </>
+          )}
+        </div>
       )}
+
+{post.image && (
+  <LazyLoadImage
+    src={post.image}
+    alt={post.title}
+    className={styles.postImage}
+    effect="blur"
+  />
+)}
       <div className={styles.postContent}>
         <h2 className={styles.postTitle}>{post.title}</h2>
         {isAuthenticated ? (
@@ -129,10 +149,31 @@ const PostItem = React.memo(({ post, isAuthenticated, approvePost, openDisapprov
               </div>
             )}
 
-            {isStaffOrAdmin && (
+            {/* Admin Actions */}
+            {isStaffOrAdmin && !post.is_approved && (
               <div className={styles.adminActions}>
-                <button onClick={() => approvePost(post.id)}>Approve</button>
-                <button onClick={() => openDisapproveModal(post)}>Disapprove</button>
+                <button
+                  onClick={() => approvePost(post.id)}
+                  className={styles.approveButton}
+                >
+                  <CheckCircle size={16} />
+                  Approve
+                </button>
+                <button
+                  onClick={() => openDisapproveModal(post)}
+                  className={styles.disapproveButton}
+                >
+                  <AlertCircle size={16} />
+                  Disapprove
+                </button>
+              </div>
+            )}
+
+            {/* Owner Notice */}
+            {isOwner && !post.is_approved && (
+              <div className={styles.pendingNotice}>
+                <AlertCircle size={16} />
+                <p>This post is pending approval from moderators.</p>
               </div>
             )}
           </>

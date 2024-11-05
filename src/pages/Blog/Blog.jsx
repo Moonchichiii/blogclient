@@ -25,16 +25,26 @@ const Blog = () => {
   return (
     <div className={styles.blogContainer}>
       <h2 className={styles.title}>Blog Posts</h2>
-      <SearchBar setSearchQuery={setSearchQuery} />
-      <select
-        onChange={(e) => setOrdering(e.target.value)}
-        value={ordering}
-        className={styles.orderingSelect}
-      >
-        <option value="-created_at">Newest First</option>
-        <option value="created_at">Oldest First</option>
-        <option value="-average_rating">Highest Rated</option>
-      </select>
+
+      <div className={styles.controls}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          placeholder="Search posts..."
+          className={styles.searchBar}
+        />
+
+        <select
+          onChange={(e) => setOrdering(e.target.value)}
+          value={ordering}
+          className={styles.orderingSelect}
+        >
+          <option value="-created_at">Newest First</option>
+          <option value="created_at">Oldest First</option>
+          <option value="-average_rating">Highest Rated</option>
+          <option value="-total_ratings">Most Rated</option>
+          <option value="-comments_count">Most Commented</option>
+        </select>
+      </div>
 
       <PostList
         searchQuery={searchQuery}
@@ -43,14 +53,12 @@ const Blog = () => {
       />
 
       {isAuthenticated && (
-        <div>
-          <button
-            onClick={() => handleOpenPostModal()}
-            className={styles.createPostButton}
-          >
-            Create New Post
-          </button>
-        </div>
+        <button
+          onClick={() => handleOpenPostModal()}
+          className={styles.createPostButton}
+        >
+          Create New Post
+        </button>
       )}
 
       <PostModal

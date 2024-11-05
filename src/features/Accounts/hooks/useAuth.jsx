@@ -1,12 +1,15 @@
 // useAuth.jsx
 
+
 import React, { createContext, useContext, useState, useMemo } from 'react';
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { authEndpoints, userEndpoints } from '../../../api/endpoints';
 import showToast from '../../../utils/toast';
 
+
 const AuthContext = createContext(null);
+
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('access_token'));
@@ -14,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [pending2FA, setPending2FA] = useState(null);
   const queryClient = useQueryClient();
   const isProduction = process.env.NODE_ENV === 'production';
+
 
   const tokenManager = {
     set: (access, refresh) => {
@@ -43,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     },
   };
 
+
   const userQuery = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => userEndpoints.getCurrentUser().then((res) => res.data),
@@ -56,11 +61,12 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
+
   const loginMutation = useMutation({
     mutationFn: authEndpoints.login,
     onSuccess: (response) => {
       if (response.data.type === 'success') {
-        const { access, refresh, user } = response.data;
+        const { tokens: { access, refresh }, user } = response.data;
         tokenManager.set(access, refresh);
         queryClient.setQueryData(['currentUser'], user);
         setIsAuthenticated(true);
@@ -75,7 +81,8 @@ export const AuthProvider = ({ children }) => {
     onError: (error) => {
       showToast(error.response?.data?.message || 'Login failed', 'error');
     },
-  });
+});
+
 
   const logoutMutation = useMutation({
     mutationFn: authEndpoints.logout,
@@ -84,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       showToast(error.response?.data?.message || 'Logout failed', 'error');
     },
   });
+
 
   const registerMutation = useMutation({
     mutationFn: authEndpoints.register,
@@ -94,6 +102,7 @@ export const AuthProvider = ({ children }) => {
       showToast(error.response?.data?.message || 'Registration failed', 'error');
     },
   });
+
 
   const activationMutation = useMutation({
     mutationFn: (token) => authEndpoints.activateAccount(token),
@@ -113,6 +122,7 @@ export const AuthProvider = ({ children }) => {
     onSettled: () => setIsActivating(false),
   });
 
+
   const verify2FAMutation = useMutation({
     mutationFn: ({ user_id, token }) => authEndpoints.verifyTwoFactor({ user_id, token }),
     onSuccess: (response) => {
@@ -127,8 +137,10 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
+
   const login = async (credentials) => await loginMutation.mutateAsync(credentials);
   const verify2FA = async (data) => await verify2FAMutation.mutateAsync(data);
+
 
   const value = useMemo(
     () => ({
@@ -161,8 +173,10 @@ export const AuthProvider = ({ children }) => {
     ]
   );
 
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
