@@ -116,7 +116,7 @@ body.lightMode .footerSection p {
   position: absolute;
   right: 12px;
   top: 50%;
-  transform: translateY(-50%);
+  /* transform: translateY(-80%); */
   background-color: transparent;
   border: none;
   color: var(--text-color);
@@ -127,6 +127,7 @@ body.lightMode .footerSection p {
 .inputContainer svg:hover {
   color: var(--button-primary-hover);
   transform: scale(1.1);
+  background-color: transparent;
 }
 
 .footerBottom {

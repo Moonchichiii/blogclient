@@ -1,4 +1,3 @@
-// src/pages/Blog/Blog.jsx
 import React, { useState } from 'react';
 import PostList from '../../features/Posts/PostList';
 import SearchBar from '../../components/SearchBar/SearchBar';

@@ -67,59 +67,10 @@
   margin-bottom: var(--spacing-md);
 }
 
-.createPostBox {
-  padding: var(--spacing-xl);
-}
-
 .createButton {
   background-color: white !important;
   color: var(--primary-color) !important;
   font-weight: 600;
-}
-
-.popularPosts {
-  grid-column: 1 / -1;
-}
-
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
-}
-
-.popularPostsList {
-  width: 100%;
-}
-
-.popularPostItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md);
-  background-color: var(--background-light);
-  border-radius: var(--border-radius-md);
-  margin-bottom: var(--spacing-sm);
-}
-
-.popularPostInfo h3 {
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-}
-
-.popularPostInfo p {
-  color: var(--text-secondary);
-  font-size: 0.9em;
-}
-
-.viewLink {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.viewLink:hover {
-  text-decoration: underline;
 }
 
 .bentoBox h2 {
@@ -134,6 +85,37 @@
   color: var(--text-color);
 }
 
+.statsGrid,
+.adminStats {
+  display: grid;
+  gap: var(--spacing-md);
+  width: 100%;
+  margin: var(--spacing-md) 0;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.statItem label {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.statItem span {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.followStats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+}
+
 .actionButton {
   background-color: var(--primary-color);
   color: white;
@@ -143,122 +125,25 @@
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
-  margin-top: var(--spacing-md);
   transition: background-color 0.2s ease;
   text-decoration: none;
   display: inline-block;
 }
 
 .actionButton:hover {
-  background-color: var(--primary-color-dark);
-}
-
-.approveButton {
-  background-color: var(--success-color);
-}
-
-.approveButton:hover {
-  background-color: var(--success-color-dark);
-}
-
-.disapproveButton {
-  background-color: var(--danger-color);
-}
-
-.disapproveButton:hover {
-  background-color: var(--danger-color-dark);
-}
-
-.confirmButton {
-  background-color: var(--danger-color);
-}
-
-.confirmButton:hover {
-  background-color: var(--danger-color-dark);
-}
-
-.cancelButton {
-  background-color: var(--gray-color);
-}
-
-.cancelButton:hover {
-  background-color: var(--gray-color-dark);
-}
-
-.unapprovedList {
-  list-style: none;
-  padding: 0;
-  margin: var(--spacing-md) 0;
-  width: 100%;
-}
-
-.unapprovedItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--button-primary-hover);
 }
 
 .actionButtons {
   display: flex;
   gap: var(--spacing-sm);
-}
-
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--card-background);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-lg);
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-.closeButton {
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-color);
-}
-
-.textarea {
-  width: 100%;
-  padding: var(--spacing-md);
   margin-top: var(--spacing-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  resize: vertical;
-  font-family: inherit;
+}
+
+.loading {
+  opacity: 0.7;
   font-size: 0.9em;
 }
-
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-lg);
-}
-
-
-
 
 /* Responsive Styles */
 @media (max-width: 768px) {
@@ -278,10 +163,6 @@
     padding: var(--spacing-md);
   }
 
-  .createPostBox {
-    padding: var(--spacing-lg);
-  }
-
   .bentoBox h2 {
     font-size: 1.1rem;
   }
@@ -289,17 +170,6 @@
   .actionButton {
     padding: 0.4em 1em;
     font-size: 0.85em;
-  }
-
-  .popularPostItem {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
-  }
-
-  .modal {
-    width: 95%;
-    padding: var(--spacing-md);
   }
 }
 
@@ -318,63 +188,4 @@
     width: 100%;
     margin-top: var(--spacing-xs);
   }
-
-  .unapprovedItem {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-}
-
-
-
-
-
-
-
-
-
-
-.loadingState,
-.errorState,
-.emptyState {
-  padding: var(--spacing-lg);
-  text-align: center;
-}
-
-.skeletonPost {
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.skeletonPost:last-child {
-  border-bottom: none;
-}
-
-.retryButton,
-.createPostButton {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: var(--border-radius-md);
-  border: none;
-  cursor: pointer;
-}
-
-.postMetrics {
-  display: flex;
-  gap: var(--spacing-md);
-  color: var(--text-secondary);
-  font-size: 0.9em;
-}
-
-.metric {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.postDate {
-  font-size: 0.8em;
-  color: var(--text-tertiary);
 }

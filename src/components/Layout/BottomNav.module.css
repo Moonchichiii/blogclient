@@ -7,7 +7,7 @@
     background-color: var(--nav-background-color);
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    display: none; /* Hide by default */
+    display: none;
   }
   
   .navItems {
@@ -30,7 +30,7 @@
   
   .navItem:hover {
     color: var(--primary-color);
-    transform: translateY(-5px); /* Gives a hovering effect */
+    transform: translateY(-5px);
   }
   
   .navItem svg {
@@ -48,11 +48,11 @@
     }
   
     .navbarContainer {
-      padding-bottom: 60px; /* To account for the bottom navigation */
+      padding-bottom: 60px;
     }
   
     .bottomNav {
-      display: block; /* Show bottom nav on smaller screens */
+      display: block;
     }
   }
   

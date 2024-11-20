@@ -6,6 +6,21 @@ import styles from './PostModal.module.css';
 const PostModal = React.memo(({ isOpen, onClose, postToEdit, viewOnly = false }) => {
     if (!isOpen) return null;
 
+    // Helper function to safely format date
+    const formatDate = (dateString) => {
+        try {
+            return new Date(dateString).toLocaleDateString();
+        } catch {
+            return dateString; // Fallback to whatever was passed
+        }
+    };
+
+    // Helper function to safely get author name
+    const getAuthorName = (author) => {
+        if (typeof author === 'string') return author;
+        return author?.profile_name || author?.name || 'Unknown Author';
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <div className={styles.modalContent}>
@@ -24,8 +39,8 @@ const PostModal = React.memo(({ isOpen, onClose, postToEdit, viewOnly = false })
                         )}
                         <p className={styles.postContent}>{postToEdit?.content}</p>
                         <div className={styles.postMeta}>
-                            <span>By {postToEdit?.author}</span>
-                            <span>{postToEdit?.formattedDate}</span>
+                            <span>By {getAuthorName(postToEdit?.author)}</span>
+                            <span>{postToEdit?.formattedDate || formatDate(postToEdit?.created_at)}</span>
                         </div>
                     </div>
                 ) : (

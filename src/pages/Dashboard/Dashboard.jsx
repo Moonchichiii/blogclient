@@ -3,12 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   User,
   FileText,
-  MessageSquare,
   Star,
   Users,
   PlusCircle,
   AlertTriangle,
-  TrendingUp
 } from 'lucide-react';
 import PostModal from '../../features/Posts/PostModal';
 import Modal from 'react-modal';
@@ -16,41 +14,36 @@ import styles from './Dashboard.module.css';
 import { useAuth } from '../../features/Accounts/hooks/useAuth';
 import { usePosts } from '../../features/Posts/hooks/usePosts';
 import AuthModal from '../../features/Accounts/AuthModal';
-
 import DashboardPopularPosts from './components/DashboardPopularPosts';
 
 Modal.setAppElement('#root');
 
 const Dashboard = () => {
-  const { user: currentUser, isLoading: isUserLoading } = useAuth();
+  const { 
+    user: currentUser, 
+    isLoading: isUserLoading, 
+    hasAnyRole 
+  } = useAuth();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const location = useLocation();
   const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
 
-  // Safely extract user data while maintaining existing structure
   const profile = currentUser?.profile || {};
   const account = currentUser?.account || {};
-  
-  // Maintain compatibility with existing code while using new structure
+
+  const isAdminUser = hasAnyRole(['admin', 'superuser', 'staff']);
+
   const userData = {
     ...currentUser,
     profile_name: profile.profile_name,
     followers: { length: profile.follower_count || 0 },
     following: { length: profile.following_count || 0 },
     posts: { length: currentUser?.posts?.length || 0 },
-    comments: { length: currentUser?.comments?.length || 0 },
     ratings: { length: currentUser?.ratings?.length || 0 },
   };
 
-  const {
-    unapprovedPosts,
-    isLoadingUnapproved,
-    modalState,
-    modals,
-    handleApprovePost,
-    handleDisapprovePost
-  } = usePosts({
-    isStaffOrAdmin: currentUser?.is_staff || currentUser?.is_superuser
+  const { unapprovedPosts, isLoadingUnapproved, modalState, modals } = usePosts({
+    isStaffOrAdmin: isAdminUser,
   });
 
   useEffect(() => {
@@ -84,18 +77,8 @@ const Dashboard = () => {
             rows={4}
           />
           <div className={styles.modalActions}>
-            <button
-              onClick={handleDisapprovePost}
-              className={`${styles.actionButton} ${styles.confirmButton}`}
-            >
-              Submit
-            </button>
-            <button
-              onClick={modals.closeDisapproveModal}
-              className={`${styles.actionButton} ${styles.cancelButton}`}
-            >
-              Cancel
-            </button>
+            <button onClick={handleDisapprovePost} className={`${styles.actionButton} ${styles.confirmButton}`}>Submit</button>
+            <button onClick={modals.closeDisapproveModal} className={`${styles.actionButton} ${styles.cancelButton}`}>Cancel</button>
           </div>
         </>
       )}
@@ -112,9 +95,7 @@ const Dashboard = () => {
             <p>Loading user data...</p>
           ) : (
             <>
-              <h1 className={styles.title}>
-                Welcome, {userData.profile_name}
-              </h1>
+              <h1 className={styles.title}>Welcome, {userData.profile_name}</h1>
               {profile.image?.url && (
                 <img
                   src={profile.image.url}
@@ -132,8 +113,7 @@ const Dashboard = () => {
       )}
 
       <div className={styles.bentoGrid}>
-        {/* Create Post Box */}
-        <div className={`${styles.bentoBox} ${styles.createPostBox} ${styles.featured}`}>
+        <div className={`${styles.bentoBox} ${styles.featured}`}>
           <div className={styles.createPostHeader}>
             <PlusCircle size={24} />
             <h2>Create New Post</h2>
@@ -143,8 +123,7 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/* User Stats Box - New addition */}
-        <div className={`${styles.bentoBox} ${styles.statsBox}`}>
+        <div className={styles.bentoBox}>
           <User size={24} />
           <h2>Account Stats</h2>
           <div className={styles.statsGrid}>
@@ -165,11 +144,9 @@ const Dashboard = () => {
 
         <DashboardPopularPosts />
 
-        {/* Stats Boxes */}
         {[
           { icon: FileText, title: 'My Posts', count: userData.posts.length, link: '/my-posts' },
-          { icon: MessageSquare, title: 'My Comments', count: userData.comments.length, link: '/my-comments' },
-          { icon: Star, title: 'My Ratings', count: userData.ratings.length, link: '/my-ratings' }
+          { icon: Star, title: 'My Ratings', count: userData.ratings.length, link: '/my-ratings' },
         ].map(({ icon: Icon, title, count, link }) => (
           <div key={title} className={styles.bentoBox}>
             <Icon size={24} />
@@ -179,7 +156,6 @@ const Dashboard = () => {
           </div>
         ))}
 
-        {/* Followers Box */}
         <div className={styles.bentoBox}>
           <Users size={24} />
           <h2>Network</h2>
@@ -188,55 +164,39 @@ const Dashboard = () => {
             <p>Following: {userData.following.length}</p>
           </div>
           <Link to="/followers" className={styles.actionButton}>Manage Network</Link>
-        </div>
+        </div>        
 
-        {/* Unapproved Posts Box */}
-        {(currentUser?.is_staff || currentUser?.is_superuser) && (
-          <div className={`${styles.bentoBox} ${styles.unapprovedPostsBox}`}>
+        {isAdminUser && (
+          <div className={styles.bentoBox}>                      
             <AlertTriangle size={24} />
-            <h2>Unapproved Posts</h2>
-            {isLoadingUnapproved ? (
-              <p>Loading unapproved posts...</p>
-            ) : (
-              <>
-                <p>Total: {unapprovedPosts?.length || 0}</p>
-                {unapprovedPosts?.length > 0 && (
-                  <ul className={styles.unapprovedList}>
-                    {unapprovedPosts.map((post) => (
-                      <li key={post.id} className={styles.unapprovedItem}>
-                        <span>{post.title || 'Untitled Post'}</span>
-                        <div className={styles.actionButtons}>
-                          <button
-                            onClick={() => handleApprovePost(post.id)}
-                            className={`${styles.actionButton} ${styles.approveButton}`}
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => modals.openDisapproveModal(post)}
-                            className={`${styles.actionButton} ${styles.disapproveButton}`}
-                          >
-                            Disapprove
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <Link to="/unapproved-posts" className={styles.actionButton}>
-                  Review Posts
+            <h2>Admin Posts Management</h2>
+            <div className={styles.adminContent}>
+              <div className={styles.adminStats}>
+                <div className={styles.statItem}>
+                  <label>Pending Approval</label>
+                  <span>{isLoadingUnapproved ? (
+                    <span className={styles.loading}>Loading...</span>
+                  ) : (
+                    unapprovedPosts?.length || 0
+                  )}</span>
+                </div>
+              </div>
+              <div className={styles.actionButtons}>
+                <Link to="/admin/posts" className={styles.actionButton}>
+                  Manage All Posts
                 </Link>
-              </>
-            )}
+                {unapprovedPosts?.length > 0 && (
+                  <Link to="/admin/posts?tab=unapproved" className={styles.actionButton}>
+                    Review Pending ({unapprovedPosts.length})
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-       {/* Modals */}
-       <PostModal 
-        isOpen={modalState.isCreateOpen}
-        onClose={modals.closeCreateModal}
-      />
+      <PostModal isOpen={modalState.isCreateOpen} onClose={modals.closeCreateModal} />
 
       <Modal
         isOpen={modalState.isDisapproveOpen}

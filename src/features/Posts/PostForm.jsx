@@ -10,8 +10,7 @@ const PostForm = ({ post, onPostSubmit }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    image: null,
-    tags: [],
+    image: null,    
   });
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
@@ -21,8 +20,7 @@ const PostForm = ({ post, onPostSubmit }) => {
       setFormData({
         title: post.title || '',
         content: post.content || '',
-        image: post.image || null,
-        tags: post.tags?.map(tag => tag.tagged_user) || [],
+        image: post.image || null,        
       });
       setImagePreview(post.image || null);
     }
@@ -73,18 +71,12 @@ const PostForm = ({ post, onPostSubmit }) => {
     }
   };
 
-  const handleTagsChange = (e) => {
-    const tags = e.target.value.split(',').map(tag => tag.trim());
-    setFormData((prev) => ({ ...prev, tags }));
-    setErrors((prev) => ({ ...prev, tags: '' }));
-  };
-
+ 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (formData.title.length > 200) newErrors.title = 'Title must be 200 characters or less';
-    if (!formData.content.trim()) newErrors.content = 'Content is required';
-    if (formData.tags.length > 5) newErrors.tags = 'Maximum 5 tags are allowed';
+    if (!formData.content.trim()) newErrors.content = 'Content is required';    
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -99,8 +91,6 @@ const PostForm = ({ post, onPostSubmit }) => {
       if (formData.image instanceof File) {
         postData.append('image', formData.image);
       }
-      formData.tags.forEach((tag) => postData.append('tags_input', tag));
-  
       if (post) {
         updatePostMutation.mutate({ id: post.id, postData });
       } else {
@@ -133,19 +123,7 @@ const PostForm = ({ post, onPostSubmit }) => {
           className={errors.content ? styles.inputError : ''}
         />
         {errors.content && <span className={styles.errorMessage}>{errors.content}</span>}
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="tags">Tags (comma-separated)</label>
-        <input
-          type="text"
-          id="tags"
-          name="tags"
-          value={formData.tags.join(', ')}
-          onChange={handleTagsChange}
-          className={errors.tags ? styles.inputError : ''}
-        />
-        {errors.tags && <span className={styles.errorMessage}>{errors.tags}</span>}
-      </div>
+      </div>      
       <div className={styles.formGroup}>
         <label htmlFor="image" className={styles.imageUpload}>
           <Image size={24} />

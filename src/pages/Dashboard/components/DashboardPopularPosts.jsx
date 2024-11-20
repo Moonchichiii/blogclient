@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Star, MessageSquare, Eye } from 'lucide-react';
+import { TrendingUp, Star, MessageSquare, Eye, Plus } from 'lucide-react';
 import { useDashboardPosts } from '../hooks/useDashboardPosts';
 import PostModal from '../../../features/Posts/PostModal';
 import styles from './DashboardPopularPosts.module.css';
@@ -8,6 +8,17 @@ import styles from './DashboardPopularPosts.module.css';
 const DashboardPopularPosts = () => {
     const { data, isLoading, error } = useDashboardPosts();
     const [selectedPost, setSelectedPost] = useState(null);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+    const handleOpenCreateModal = () => {
+        setSelectedPost(null); 
+        setIsCreateModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedPost(null);
+        setIsCreateModalOpen(false);
+    };
 
     if (isLoading) {
         return (
@@ -56,9 +67,9 @@ const DashboardPopularPosts = () => {
                 </div>
                 <div className={styles.emptyState}>
                     <p>No popular posts yet</p>
-                    <Link to="/create-post" className={styles.createPostButton}>
-                        Create your first post
-                    </Link>
+                    <button onClick={handleOpenCreateModal} className={styles.createPostButton}>
+                        <Plus size={16} /> Create your first post
+                    </button>
                 </div>
             </div>
         );
@@ -70,6 +81,9 @@ const DashboardPopularPosts = () => {
                 <div className={styles.sectionHeader}>
                     <TrendingUp size={24} />
                     <h2>Most Popular Posts</h2>
+                    <button onClick={handleOpenCreateModal} className={styles.createPostButton}>
+                        <Plus size={16} /> Create New Post
+                    </button>
                 </div>
                 <div className={styles.popularPostsList}>
                     {popularPosts.map((post) => (
@@ -97,6 +111,7 @@ const DashboardPopularPosts = () => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     setSelectedPost(post);
+                                    setIsCreateModalOpen(true);
                                 }}
                                 className={styles.viewLink}
                                 title={`View ${post.title}`}
@@ -109,10 +124,10 @@ const DashboardPopularPosts = () => {
             </div>
 
             <PostModal 
-                isOpen={!!selectedPost}
-                onClose={() => setSelectedPost(null)}
+                isOpen={isCreateModalOpen}
+                onClose={handleCloseModal}
                 postToEdit={selectedPost}
-                viewOnly={true}
+                viewOnly={!selectedPost} 
             />
         </>
     );

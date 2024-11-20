@@ -17,14 +17,16 @@ const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const TwoFactorSetupPage = lazy(() => import('./features/Accounts/TwoFactorSetup'));
 const Blog = lazy(() => import('./pages/Blog/Blog'));
 const About = lazy(() => import('./pages/About/About'));
-const MyPosts = lazy(() => import('./pages/Blog/MyPosts'));
-
+const MyPosts = lazy(() => import('./pages/MyPosts/MyPosts'));
 const Followers = lazy(() => import('./pages/Followers/Followerspage'));
+const AdminPosts = lazy(() => import('./pages/AdminPosts/AdminPosts'));
 
 // Route protection components
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/" replace />;
+const ProtectedRoute = ({ children, roles }) => {
+  const { isAuthenticated, userRoles } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (roles && !roles.some(role => userRoles.includes(role))) return <Navigate to="/dashboard" replace />;
+  return children;
 };
 
 const PublicRoute = ({ children }) => {
@@ -35,10 +37,7 @@ const PublicRoute = ({ children }) => {
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme === 'dark';
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   useEffect(() => {
@@ -46,9 +45,7 @@ const App = () => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  const toggleTheme = () => {
-    setIsDarkMode(prev => !prev);
-  };
+  const toggleTheme = () => setIsDarkMode(prev => !prev);
 
   return (
     <ErrorBoundary>
@@ -70,11 +67,7 @@ const App = () => {
       }>
         <Routes>
           {/* Public Only Routes */}
-          <Route path="/" element={
-            <PublicRoute>
-              <Landing />
-            </PublicRoute>
-          } />
+          <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
 
           {/* Layout Wrapper for Main Content */}
           <Route element={<Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}>
@@ -84,34 +77,13 @@ const App = () => {
             <Route path="/blog" element={<Blog />} />
 
             {/* Protected Routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            } />
-            <Route path="/setup-2fa" element={
-              <ProtectedRoute>
-                <TwoFactorSetupPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/my-posts" element={
-              <ProtectedRoute>
-                <MyPosts />
-              </ProtectedRoute>
-            } />
-
-           <Route path="/followers" element={
-              <ProtectedRoute>
-                <Followers />
-              </ProtectedRoute>
-            } />
-
-
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/setup-2fa" element={<ProtectedRoute><TwoFactorSetupPage /></ProtectedRoute>} />
+            <Route path="/my-posts" element={<ProtectedRoute><MyPosts /></ProtectedRoute>} />
+            <Route path="/followers" element={<ProtectedRoute><Followers /></ProtectedRoute>} />
+            <Route path="/admin/posts" element={<ProtectedRoute roles={['admin', 'staff', 'superuser']}><AdminPosts /></ProtectedRoute>} />
+            
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Route>

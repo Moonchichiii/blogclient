@@ -15,17 +15,3 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--spacing-md);
   color: var(--heading-color);
 }
-
-button {
-  background-color: var(--button-primary);
-  color: var(--button-text-color);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), transform var(--transition-normal);
-}
-
-button:hover {
-  background-color: var(--button-primary-hover);
-  transform: translateY(-2px);
-}

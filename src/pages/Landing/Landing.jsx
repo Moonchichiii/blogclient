@@ -10,7 +10,6 @@ const Landing = () => {
   const { isAuthenticated, activateAccount, isActivating } = useAuth();
   const [isProcessingToken, setIsProcessingToken] = useState(false);
 
-  // **Ensure all hooks are called before any return statements**
 
   useEffect(() => {
     const token = searchParams.get('token');

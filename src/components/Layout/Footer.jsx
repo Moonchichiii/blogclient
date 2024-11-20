@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Send, ArrowUp, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import styles from './Footer.module.css';
 import { useAuth } from '../../features/Accounts/hooks/useAuth';
 
 const Footer = () => {
   const { isAuthenticated } = useAuth();
+  const form = useRef(); // UseRef for the form
+
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState(''); // Add message state
 
-  const handleSubmit = (e) => {
+  const sendEmail = (e) => {
     e.preventDefault();
-    console.log('Submitted email:', email, 'Subject:', subject);
-    setEmail('');
-    setSubject('');
+
+    emailjs
+      .sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_PUBLIC_KEY')
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          setEmail('');
+          setSubject('');
+          setMessage(''); // Clear fields after successful send
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+        }
+      );
   };
 
   return (
@@ -37,9 +52,10 @@ const Footer = () => {
         <div className={styles.footerContact}>
           <div className={styles.footerSection}>
             <h3>Get in Touch</h3>
-            <form onSubmit={handleSubmit} className={styles.contactForm}>
+            <form ref={form} onSubmit={sendEmail} className={styles.contactForm}>
               <input
                 type="text"
+                name="user_name"
                 placeholder="Subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
@@ -49,15 +65,24 @@ const Footer = () => {
               <div className={styles.inputContainer}>
                 <input
                   type="email"
+                  name="user_email"
                   placeholder="Your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required                  
+                  required
                 />
                 <button type="submit" aria-label="Send">
-                  <Send size={16} />
+                  <Send size={15} />
                 </button>
               </div>
+              <textarea
+                name="message"
+                placeholder="Your message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                className={styles.messageInput}
+              />
             </form>
           </div>
         </div>
